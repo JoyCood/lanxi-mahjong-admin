@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="msapplication-tap-highlight" content="no" />
+<meta name="format-detection" content="telephone=no" />
+<base href="{{_BaseURL}}" />
+<link type="text/css" href="css/3rd/bootstrap.min.css?ver={{_Config.resVersion}}" rel="stylesheet" />
+<link type="text/css" href="css/3rd/jquery.toastmessage.css?ver={{_Config.resVersion}}" rel="stylesheet" />
+<link type="text/css" href="css/admin/global.css?ver={{_Config.resVersion}}" rel="stylesheet" />
+<link type="text/css" href="css/admin/login.css?ver={{_Config.resVersion}}" rel="stylesheet" />
+<link type="text/css" href="css/font-awesome-4.1.0/font-awesome.min.css?ver={{_Config.res3rdVersion}}" rel="stylesheet" />
+<script type="text/javascript" src="js/3rd/jquery-1.11.1.min.js?ver={{_Config.res3rdVersion}}"></script>
+<script type="text/javascript" src="js/3rd/jquery.toastmessage.js?ver={{_Config.res3rdVersion}}"></script>
+<script type="text/javascript" src="js/admin/app.js?ver={{_Config.resVersion}}"></script>
+<script type="text/javascript" src="js/admin/admin.js?ver={{_Config.resVersion}}"></script>
+<title>用户登录 {{_Config.title}}</title>
+<style type="text/css">
+#logo-img { width: 30px; float: left; }
+#logo-text { float: left; line-height: 30px; padding-left: 5px; }
+</style>
+</head>
+
+<body>
+<section id="login-section">
+	<form id="login-form" method="POST" action="login.html">
+		<p id="login-title" class="noslt"></p>
+		<fieldset id="login-fieldset" class="noslt">
+			<legend>
+				<img id="logo-img" src="image/logo.png" title="{{_Config.title}}" />
+				<span id="logo-text">{{_Config.title}}&middot; 登录 </span>
+			</legend>
+			<div id="login-content">
+				<p><input type="text" id="login-username" name="username" placeholder="请输入用户名" autocomplete="off" autofocus="on" /></p>
+				<p id="login-username-msg" class="login-msg"></p>
+				<p><input type="password" id="login-password" name="password" placeholder="请输入密码" autocomplete="off" /></p>
+				<p id="login-password-msg" class="login-msg"></p>
+				<p>
+					<label id="login-check" class="checked" style="visibility: hidden;">
+						<i class="fa fa-check"></i>
+						记住用户名
+						<input type="hidden" value="1" />
+					</label>
+					<button type="submit" id="login-submit">确定</button>
+				</p>
+			</div>
+			<input type="hidden" id="login-from" value="{{from}}" />
+			<div id="login-footer" class="noslt">
+			{{_Config.copyright}}
+			</div>
+		</fieldset>
+	</form>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#login-check').on('click', function() {
+		var label = $(this);
+		if(!label.hasClass('checked')) {
+			$('input[type="hidden"]').val('1');
+			$('i.fa', this).addClass('fa-check');
+			label.addClass('checked');
+		} else {
+			$('input[type="hidden"]', this).val('');
+			$('i.fa', this).removeClass('fa-check');
+			label.removeClass('checked');
+		}
+	});
+
+	$('#login-form').on('submit', function() {
+		var nameElement = $('#login-username');
+		var passElement = $('#login-password');
+		var name 		= $.trim(nameElement.val());
+		var pass 		= passElement.val();
+		var rs 			= true;
+		if(name.length == 0) {
+			nameElement.addClass('login-invalid');
+			$('#login-username-msg').html('请输入用户名');
+			rs = false;
+		} else {
+			nameElement.removeClass('login-invalid');
+			$('#login-username-msg').html('');
+		}
+		if(pass.length == 0) {
+			passElement.addClass('login-invalid');
+			$('#login-password-msg').html('请输入密码');
+			rs = false;
+		} else {
+			passElement.removeClass('login-invalid');
+			$('#login-password-msg').html('');
+		}
+		if(!rs) {
+			$('input.login-invalid:first', this).focus();
+		} else {
+			App.ajax({
+				url: 'login.html', 
+				type: 'post',
+				dataType: 'json',
+				data: $(this).serialize(),
+				success: function(response) {
+					if(response.result) {
+						var from = $.trim($('#login-from').val());
+						location.href = from || 'index.html';
+					} else {
+						App.except(response.message || '登录失败，请检查用户名或密码是否正确。');
+						$('#login-username').focus();
+					}
+				}
+			});
+		}
+		return false;
+	});
+
+	$('#login-username, #login-password').on('change', function() {
+		$(this).removeClass('login-invalid');
+		$(this).parent().next().html('');
+	});
+});
+</script>
+</body>
+</html>
