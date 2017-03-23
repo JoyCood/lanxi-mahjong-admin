@@ -28,12 +28,12 @@ $app->hook('slim.before.router', function() use($app){
 
     if(!isset($_SESSION[Config::$session['REGION_USER']]) || !$_SESSION[Config::$session['REGION_USER']]) {
         if(!in_array($path, array(
-	    '/test.html',
-	    '/login.html',
-	    '/logout.html'
-    ))) {
+	        '/test.html',
+	        '/login.html',
+	        '/logout.html'
+        ))) {
             $app->redirect(BASE_URL . '/login.html?from=' . urlencode($_SERVER['REQUEST_URI']));	
-	}
+	    }
     }
 });
 
