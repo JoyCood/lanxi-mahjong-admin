@@ -77,6 +77,7 @@ $app->post('/login.html', function() use($app){
 	}
 
 	if($rs) {
+		$_SESSION[Config::$session['REGION_ID']]    = $data['id'];
 		$_SESSION[Config::$session['REGION_USER']]  = $data['username'];
         $_SESSION[Config::$session['REGION_GROUP']] = $data['group'];
 	    
@@ -91,6 +92,11 @@ $app->post('/login.html', function() use($app){
 	$app->view()->renderJSON(array(
 	    'result' => $rs
 	));
+});
+
+//公告
+$app->group('/notice', function() use($app){
+    require 'notice.php';
 });
 
 $app->get('/test.html', function() use($app){

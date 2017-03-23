@@ -5,8 +5,9 @@ define('AdminTemplatePath', DOC_ROOT . '/view');
 class Config
 {
     public static $session = array(
-        'REGION_USER' => 'lanxi_username',
-	'REGION_GROUP' => 'lanxi_group',
+	'REGION_ID'    => 'admin_id'
+        'REGION_USER'  => 'admin_user',
+	'REGION_GROUP' => 'admin_group',
     );
     
     public static $admin = array(
@@ -25,7 +26,9 @@ class Config
     public static $db = array(
 	'DB' => 'lanxi',
 	'collection' => array(
-	    'admin'
+	    'admin',
+            'agent_agent_notice' //公告
+
 	) 
     );
 }
