@@ -19,6 +19,7 @@ class ModelNoticeMain
 	    $collection = $this->collection();
 		$data = Helper::allowed($data, $this->allowed);
 		$result = $collection->insert($data);
+		print_r($result);
         return $data;
 	}
 
@@ -49,6 +50,17 @@ class ModelNoticeMain
 		$projection = (array)$projection;
 		$collection = $this->collection();
 		return $collection->findOne($filters, $projection);
+	}
+
+	public function deleteById($ids) {
+	    $ids = (array)$ids;
+		$size = sizeof($ids);
+		for($idx=0; $idx<$size; $idx++){
+		    $ids[$idx] = new MongoId($ids[$idx]);
+		}
+		return $this->collection()->remove(array(
+		    '_id' => array('$in' => $ids)
+		));
 	}
 
 	//分页

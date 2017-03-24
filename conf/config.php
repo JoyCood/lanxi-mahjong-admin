@@ -5,7 +5,7 @@ define('AdminTemplatePath', DOC_ROOT . '/view');
 class Config
 {
     public static $session = array(
-	'REGION_ID'    => 'admin_id'
+	'REGION_ID'    => 'admin_id',
         'REGION_USER'  => 'admin_user',
 	'REGION_GROUP' => 'admin_group',
     );

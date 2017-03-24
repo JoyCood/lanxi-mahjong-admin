@@ -49,6 +49,45 @@ class Admin {
 	return $instance[$name];
     }
 
+    /**
+     * 分页查询
+     * @param  $collection 	object  mongo collection
+     * @param  $pn 			integer 页码
+     * @param  $filters		array 	过滤条件
+     * @param  $sort		array   排序
+     * @return array
+     * */
+    static public function pagination($url, $collection, $pn = 1, $filters = array(), $sort = array(), $limit = null) { 
+	$cursor  = $collection->find($filters);
+	$count   = $cursor->count();
+	$pn      = intval($pn);
+	$pn      = $pn < 0? 1: $pn;
+	$sort    = empty($sort)? array('Time' => -1): $sort;
+	$limit   = $limit? $limit: Config::$admin['listRowsNum'];
+	$skip    = ($pn - 1) * $limit;
+	$result  = $cursor->sort($sort)->limit($limit)->skip($skip);
+	$url 	 = self::setURIPageNumber($url? $url: $_SERVER['REQUEST_URI'], '');
+
+	return array(
+		'total' => $count,
+		'pn'    => $pn,
+		'pages' => ceil($count / $limit),
+		'rows'  => count($result),
+		'items' => $result,
+		'url'	=> $url
+	);
+    }
+
+    static public function setURIPageNumber($url, $pn = 1) {
+	$url = preg_replace('/[&\?]pn=[^&]*/', '', $url);
+	if(strpos($url, '?') === false) {
+		$url = $url. '?pn=';
+	} else {
+		$url = $url. '&pn=';
+	}
+	return $url. $pn;
+    }
+
     static public function error($message, $code = '10000') {
 	$app 	= self::$app;
 	$error 	= array(
