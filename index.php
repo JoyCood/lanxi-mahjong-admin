@@ -99,6 +99,11 @@ $app->group('/notice', function() use($app){
     require 'notice.php';
 });
 
+//代理商
+$app->group('/trader', function() use($app){
+    require 'trader.php';
+});
+
 $app->get('/test.html', function() use($app){
     $app->render('test.html');
 });
