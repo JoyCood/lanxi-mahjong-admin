@@ -27,7 +27,7 @@ class Config
 	'DB' => 'lanxi',
 	'collection' => array(
 	    'admin',
-            'agent_agent_notice', //公告
+        'agent_agent_notice', //公告
 	    'agent_user' //代理商
 
 	) 
