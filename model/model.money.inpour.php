@@ -26,4 +26,36 @@ class ModelMoneyInpour
 	public function find($filter=array(), $projection=array()) {
         return $this->collection()->find($filter, $projection);	
 	}
+
+	public function findOne($filter=array(), $projection=array()) {
+        return $this->collection()->findOne($filter, $projection);	
+	}
+
+	//分页
+	public function pagination($url = '', $pnValue=null) {
+		$params = Helper::parseQueryString($url? $url: $_SERVER['REQUEST_URI']);
+	    $pn    = Helper::popValue($params, 'pn', 1);
+	    $sort  = Helper::popValue($params, 'sort', 'CTime');	
+		$order = Helper::popValue($params, 'order', -1); 
+	
+		$filters = array();
+
+		$start = Helper::popValue($params, 'start');
+		if($start) {
+		    $filters['$and'][] = array('Ctime' => array('$gte'=>$start));
+		}
+
+		$end = Helper::popValue($params, 'end');
+		if($end) {
+		    $filters['$and'][] = array('Ctime' => array('$lte'=>$end));
+		}
+		
+		return Admin::pagination(
+		    $url, 
+			$this->collection(),
+			is_null($pnValue)? $pn: $pnValue,
+			$filters,
+			array($sort=> intval($order) > 0? 1: -1)
+		);
+	}
 }

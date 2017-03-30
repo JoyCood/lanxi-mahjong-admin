@@ -19,7 +19,6 @@ $app->get('/form.html', function() use($app){
 	}
 
 	$app->render('notice/form.html', array(
-	    'id'   => $id,
 		'data' => $data
 	));
 });

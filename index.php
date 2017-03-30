@@ -104,6 +104,11 @@ $app->group('/trader', function() use($app){
     require 'trader.php';
 });
 
+//跟钱有关的
+$app->group('/money', function() use($app){
+    require 'money.php';
+});
+
 $app->get('/test.html', function() use($app){
     $app->render('test.html');
 });
