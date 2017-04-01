@@ -135,7 +135,7 @@ class ModelAdminMain {
 	 * 生成加密密码
 	 */
 	public function password($password) {
-		return md5('_swim_'. $password);
+		return md5('_tangfeng_'. $password);
 	}
 
 	public function getUserByUsername($username) {

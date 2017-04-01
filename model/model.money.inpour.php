@@ -2,21 +2,21 @@
 
 class ModelMoneyInpour
 {
-	private $allowed = array(
-        'Transid',    #交易流水号
-	    'Userid',     #用户id
-	    'Itemid',     #购买商品id
-	    'Amount',	  #购买商品数量
-		'Money',      #交易总金额(单位为分)
-		'Transtime',  #交易完成时间 yyyy-mm-dd hh24:mi:ss
-		'Result',     #交易结果
-		'Currency',   #货币类型
-		'Paytype',    #支付方式
-		'Clientip',   #客户端ip
-		'Parent',     #上级代理商游戏id
-		'Ctime',      #本条记录生成时间
-		'Lv',         #代理商等级
-		'Rebate',     #本次交易返点金额
+	private $fields = array(
+        'Transid',    #string  交易流水号
+	    'Userid',     #string  用户id
+	    'Itemid',     #string  购买商品id
+	    'Amount',	  #string  购买商品数量
+		'Money',      #uint32  交易总金额(单位为分)
+		'Transtime',  #string  交易完成时间 yyyy-mm-dd hh24:mi:ss
+		'Result',     #int     交易结果(0交易成功，1交易失败，2交易中，3发货中)
+		'Currency',   #string  货币类型
+		'Paytype',    #uint32  支付方式
+		'Clientip',   #string  客户端ip
+		'Parent',     #string  上级代理商游戏id
+		'Ctime',      #int64   本条记录生成时间
+		'Lv',         #uint32  代理商等级
+		'Rebate',     #uint32  本次交易返点金额
 	); 
 
 	public function collection() {

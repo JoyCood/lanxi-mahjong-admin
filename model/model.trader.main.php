@@ -9,24 +9,24 @@ class ModelTraderMain
 		3  //待审核
     );
 
-	private $allowed = array(
-        'Gameid', //游戏id
-	    'Phone',  //手机号
-	    'Nickname', //昵称
-	    'Wechat', //微信号
-	    'Auth',   //验证码
-	    'Pwd',    //密码
-	    'CIP',    //注册时的ip地址
-	    'CTime',  //注册时间
-		'JTime',  //绑定时间
-	    'Addr',   //物理地址
-	    'LIP',    //最后登录ip
-	    'LTime',  //最后登录时间
-	    'Lv',     //代理等级
-	    'Parent', //上级代理id
-	    'Charge', //充值金额（单位：分）
-	    'Status', //状态  正常0  锁定1  黑名单2 待审核3
-	    'Balance' //可提现余额	
+	private $fields = array(
+        'Gameid',   #string  游戏id
+	    'Phone',    #string  手机号
+	    'Nickname', #string  昵称
+	    'Wechat',   #string  微信号
+	    'Auth',     #string  验证码
+	    'Pwd',      #string  密码
+	    'CIP',      #uint32  注册时的ip地址
+	    'CTime',    #uint32  注册时间
+		'JTime',    #uint32  绑定时间
+	    'Addr',     #string  物理地址
+	    'LIP',      #uint32  最后登录ip
+		'LTime',    #uint32  最后登录时间
+	    'Lv',       #uint32  代理等级
+	    'Parent',   #string  上级代理id
+	    'Charge',   #uint32  充值金额（单位/分）
+	    'Status',   #uint32  状态  正常0  锁定1  黑名单2 待审核3
+	    'Balance'   #uint32  可提现余额(单位/分)
 	);
 
 	public function collection() {
@@ -39,7 +39,7 @@ class ModelTraderMain
 
 	//更新数据
 	public function update($filter, $data) {
-		$data = Helper::allowed($data, $this->allowed);
+		$data = Helper::allowed($data, $this->fields);
 	    return $this->collection()->update($filter, array('$set' => $data));
 	}
 

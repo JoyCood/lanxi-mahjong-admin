@@ -2,13 +2,13 @@
 
 class ModelMoneyWithdraw
 {
-    private $allowed = array(
-	    'MoneyTotal',  //可提现金额
-		'Money',       //申请提现金额
-		'Gameid',      //游戏id
-		'Phone',       //手机号
-		'Time',        //申请提现时间
-		'Wechat'       //微信id
+    private $fields = array(
+	    'MoneyTotal',  #uint32  可提现金额
+		'Money',       #uint32  申请提现金额
+		'Gameid',      #string  游戏id
+		'Phone',       #string  手机号
+		'Time',        #uint32  申请提现时间
+		'Wechat'       #string  微信id
 	);    
     
 	public function collection() {

@@ -109,6 +109,11 @@ $app->group('/money', function() use($app){
     require 'money.php';
 });
 
+//管理员
+$app->group('/admin', function() use($app){
+    require 'admin.php';
+});
+
 $app->get('/test.html', function() use($app){
     $app->render('test.html');
 });
