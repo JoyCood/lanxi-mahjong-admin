@@ -14,7 +14,6 @@ if(!DEBUG) {
     error_reporting(0);
 }
 
-require('conf/config.php');
 require('lib/Slim/Slim.php');
 require('helper/helper.php');
 require('src/admin.php');

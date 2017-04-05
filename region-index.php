@@ -1,5 +1,5 @@
 <?php 
-require('conf/config.php');
+require('conf/region-config.php');
 require('common.php');
 \Slim\Slim::registerAutoloader();
 

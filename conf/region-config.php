@@ -1,6 +1,6 @@
 <?php !defined('TANG_FENG') AND exit('Access Denied!');
 
-define('AdminTemplatePath', DOC_ROOT . '/view/admin');
+define('AdminTemplatePath', DOC_ROOT . '/view/region');
 
 class Config
 {
@@ -16,7 +16,7 @@ class Config
 		'slim' => array(
 	    	'templates.path' => AdminTemplatePath
         ),
-		'sessionSecret' => '^_^ admin ^_^',
+		'sessionSecret' => '91a02ac42f99738aa6d2dc0738a0ae56',
 		'resVersion' => 1,
 		'res3rdVersion' => 1
     );
