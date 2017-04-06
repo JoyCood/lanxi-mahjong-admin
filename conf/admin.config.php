@@ -1,44 +1,51 @@
 <?php
 define('DEBUG', true);
-define('AdminTemplatePath', DOC_ROOT . '/view/admin');
-define('LogDir', 'logs/admin');
-
 class Config
 {
-    public static $session = array(
-        'USER'  => 'lanxi_admin_user',
-		'GROUP' => 'lanxi_admin_group',
-    );
-    
-    public static $admin = array(
-        'title'         => '后台管理',
-		'listRowsNum'   => 30,
-	
-		'slim'          => array(
-								'templates.path' => AdminTemplatePath
-						   ),
-		'sessionSecret' => '61789127738e4799de0e2bd462d5a10b',
-		'resVersion'    => 1,
-		'res3rdVersion' => 1
-    );
+	const SESSION_USER  = 'lanxi-admin-user';
+	const SESSION_GROUP = 'lanxi-admin-group';
 
-    //数据库表
-    public static $db = array(
-		'DB'         => DB_NAME,
-		'collection' => array(
-			'admin'
-		) 
-    );
+	static private $Options;
 
-	public static $notauth = array(
-		'/admin/login',
-		'/admin/logout'
-	);
+	static public function & get($key, $field) {
+		return self::$Options[$key][$field];
+	}
 
-	public static $routes = array(
-		'/admin/'           => 'GET::AdminController::indexAction',
-		'/admin/login'      => 'GET::AdminController::loginAction',
-		'/admin/login-auth' => 'POST::AdminController::loginAuthAction',
-		'/admin/logout'     => 'POST::AdminController::logoutAction',
-	);
+	static public function & getOptions($key) {
+		return self::$Options[$key];
+	}
+
+	static public function init() {
+		self::$Options = array(
+			'db' => require('db.config.php'),
+
+			'settings' => array(
+				'title'         => '后台管理',
+				'listRowsNum'   => 30,
+				'slim'          => array(
+										'templates.path' => DOC_ROOT. '/view/admin'
+								),
+				'sessionSecret' => '61789127738e4799de0e2bd462d5a10b',
+				'resVersion'    => 1,
+				'res3rdVersion' => 1
+			),
+
+			'log' => array(
+				'dir'  => DOC_ROOT. '/logs/admin',
+				'file' => 'log-'. date('Y-m-d'). '.log',
+			),
+
+			'notauth' => array(
+				'/admin/login',
+				'/admin/logout',
+			),
+
+			'routes' => array(
+				'/admin/'           => 'GET::AdminController::indexAction',
+				'/admin/login'      => 'GET::AdminController::loginAction',
+				'/admin/login-auth' => 'POST::AdminController::loginAuthAction',
+				'/admin/logout'     => 'POST::AdminController::logoutAction',
+			)
+		);
+	}
 }

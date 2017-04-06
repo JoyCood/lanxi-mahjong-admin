@@ -1,41 +1,51 @@
 <?php
 define('DEBUG', true);
-define('AdminTemplatePath', DOC_ROOT . '/view/region');
-define('LogDir', DOC_ROOT . '/logs/region');
-
 class Config
 {
-    public static $session = array(
-        'USER'  => 'lanxi_region_user',
-		'GROUP' => 'lanxi_region_group',
-    );
-    
-    public static $admin = array(
-        'title'         => '区域代理',
-		'listRowsNum'   => 30,
-	
-		'slim'          => array(
-								'templates.path' => AdminTemplatePath
-						   ),
-		'sessionSecret' => '91a02ac42f99738aa6d2dc0738a0ae56',
-		'resVersion'    => 1,
-		'res3rdVersion' => 1
-    );
+	const SESSION_USER  = 'lanxi-region-user';
+	const SESSION_GROUP = 'lanxi-region-group';
 
-    //数据库表
-    public static $db = array(
-		'DB'         => DB_NAME,
-		'collection' => array(
-			'admin'
-		) 
-    );
+	static private $Options;
 
-	public static $notauth = array(
-		'/region/login',
-		'/region/logout'
-	);
+	static public function & get($key, $field) {
+		return self::$Options[$key][$field];
+	}
 
-	public static $routes = array(
-		'/region/' => 'GET::AdminController::indexAction'
-	);
+	static public function & getOptions($key) {
+		return self::$Options[$key];
+	}
+
+	static public function init() {
+		self::$Options = array(
+			'db' => require('db.config.php'),
+
+			'settings' => array(
+				'title'         => '区域管理',
+				'listRowsNum'   => 30,
+				'slim'          => array(
+										'templates.path' => DOC_ROOT. '/view/region'
+								),
+				'sessionSecret' => 'a0e0eba2c41369c5797dbb3ab158b9e6',
+				'resVersion'    => 1,
+				'res3rdVersion' => 1
+			),
+
+			'log' => array(
+				'dir'  => DOC_ROOT. '/logs/region',
+				'file' => 'log-'. date('Y-m-d'). '.log',
+			),
+
+			'notauth' => array(
+				'/region/login',
+				'/region/logout',
+			),
+
+			'routes' => array(
+				'/region/'           => 'GET::AdminController::indexAction',
+				'/region/login'      => 'GET::AdminController::loginAction',
+				'/region/login-auth' => 'POST::AdminController::loginAuthAction',
+				'/region/logout'     => 'POST::AdminController::logoutAction',
+			)
+		);
+	}
 }

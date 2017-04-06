@@ -10,10 +10,10 @@ class Admin {
 
 		require 'src/twig.php';
 		$twigView = new View\Twig();
-		$twigView->setConfig(Config::$admin);
+		$twigView->setConfig(Config::get('settings', 'slim'));
 
-		$app->config(array_merge(Config::$admin['slim'], array(
-					'view' => $twigView	
+		$app->config(array_merge(Config::get('settings', 'slim'), array(
+			'view' => $twigView	
 		)));
 
 		self::$app = $app;
@@ -22,13 +22,15 @@ class Admin {
     //选择collection
     static public function db($collection) {
         if(!is_object(self::$db)) {
-			$mongo = new MongoClient(DB_SERVER, array(
-				'connect' => DB_CONNECT
+			$dbConfig = Config::getOptions('db');
+			$server   = "mongodb://{$db['host']}:{$db['port']}";
+			$mongo    = new MongoClient($server, array(
+				'connect' => $db['connect']
 			));
-			self::$db = $mongo->selectDB(Config::$db['DB']);
+			self::$db = $mongo->selectDB($db['name']);
 		}
 
-		$allowedCollections = Config::$db['collection'];
+		$allowedCollections = Config::get('db', 'collections');
 		if(in_array($collection, $allowedCollections)) {
 			return self::$db->$collection;
 		} else {
