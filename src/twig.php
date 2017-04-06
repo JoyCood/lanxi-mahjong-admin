@@ -20,11 +20,11 @@ class Twig extends SlimView
 		$loader = new \Twig_Loader_Filesystem($this->getTemplatesDirectory());
 		$twig = new \Twig_Environment($loader);
 
-		$twig->addGlobal('_BaseURL', BASE_URL. '/');
-		$twig->addGlobal('_Config', \Config::getOptions('slim'));
+		$twig->addGlobal('BASE_URL', BASE_URL. '/');
+		$twig->addGlobal('CONFIG', \Config::getOptions('settings'));
 		//$twig->addGlobal('_Storage', \Config::$storage);
 		// $twig->addGlobal('_Admin', $this->config['admin']);
-		$twig->addGlobal('_Ajax', 
+		$twig->addGlobal('AJAX', 
 			(isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
 			($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'))
 		);
