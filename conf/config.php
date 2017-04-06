@@ -1,31 +1,34 @@
-<?php !defined('TANG_FENG') AND exit('Access Denied!');
-
+<?php
 define('AdminTemplatePath', DOC_ROOT . '/view/admin');
 
 class Config
 {
     public static $session = array(
-        'REGION_USER'  => 'lanxi_username',
-		'REGION_GROUP' => 'lanxi_group',
+        'USER'  => 'lanxi_admin_user',
+		'GROUP' => 'lanxi_admin_group',
     );
     
     public static $admin = array(
-        'title' => '网站标题',
+        'title' => '后台管理',
 		'listRowsNum' => 30,
 	
 		'slim' => array(
 	    	'templates.path' => AdminTemplatePath
         ),
-		'sessionSecret' => '^_^ admin ^_^',
+		'sessionSecret' => '61789127738e4799de0e2bd462d5a10b',
 		'resVersion' => 1,
 		'res3rdVersion' => 1
     );
 
     //数据库表
     public static $db = array(
-	'DB' => 'lanxi',
-	'collection' => array(
-	    'admin'
-	) 
+		'DB' => DB_NAME,
+			'collection' => array(
+				'admin'
+			) 
     );
+
+	public static $routes = array(
+		'/admin/' => 'GET::AdminController::indexAction'
+	);
 }
