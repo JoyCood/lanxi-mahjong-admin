@@ -21,7 +21,7 @@ class Twig extends SlimView
 		$twig = new \Twig_Environment($loader);
 
 		$twig->addGlobal('_BaseURL', BASE_URL. '/');
-		$twig->addGlobal('_Config', \Config::getOptions('slim'));
+		$twig->addGlobal('_Config', \Config::$admin);
 		//$twig->addGlobal('_Storage', \Config::$storage);
 		// $twig->addGlobal('_Admin', $this->config['admin']);
 		$twig->addGlobal('_Ajax', 
