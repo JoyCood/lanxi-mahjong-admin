@@ -12,7 +12,7 @@ require('src/admin.php');
 date_default_timezone_set('Asia/Shanghai');
 
 \Slim\Slim::registerAutoloader();
-\Config::init();
+Config::init();
 if(DEBUG) {
 	ini_set('display_errors', 'On');
     error_reporting(E_ALL);
