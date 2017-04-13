@@ -3,11 +3,22 @@
 <head>
 <title>{{TITLE}} - {{CONFIG.title}}</title>
 <meta charset="UTF-8" />
+<base href="{{BASE_URL}}" />
+<link rel="stylesheet" href="css/3rd/bootstrap.min.css?v={{CONFIG.res3rdVersion}}" />
+<link rel="stylesheet" href="css/font-awesome-4.1.0/font-awesome.min.css?v={{CONFIG.res3rdVersion}}" />
+<link rel="stylesheet" href="css/admin/global.css?v={{CONFIG.resVersion}}" />
 {% block css %}{% endblock %}
+<script src="js/3rd/jquery-1.11.1.min.js?v={{CONFIG.res3rdVersion}}"></script>
+<script src="js/3rd/bootstrap.min.js?v={{CONFIG.res3rdVersion}}"></script>
+<script src="js/admin/app.js?v={{CONFIG.resVersion}}"></script>
+<script src="js/admin/admin.js?v={{CONFIG.resVersion}}"></script>
 {% block javascript %}{% endblock %}
 </head>
 <body>
-    
+{% block header %}{% endblock %}
+{% block main %}{% endblock %}
+{% block aside %}{% endblock %}
+{% block footer %}{% endblock %}
 {% block js %}{% endblock %}
 </body>
 </html>

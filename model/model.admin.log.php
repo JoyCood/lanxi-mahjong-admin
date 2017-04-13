@@ -1,5 +1,4 @@
-<?php !defined('TANG_FENG') AND exit('Access Denied!');
-
+<?php
 class ModelAdminLog
 {
     private $fields = array(

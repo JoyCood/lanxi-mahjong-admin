@@ -84,6 +84,7 @@ class Twig extends SlimView
 		header('Content-Type: application/json');
 		header('APP-STATE: APP');
 		echo json_encode($ary);
+		exit;
 	}
 }
 

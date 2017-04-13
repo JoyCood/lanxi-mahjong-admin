@@ -23,11 +23,11 @@ class Admin {
     static public function db($collection) {
         if(!is_object(self::$db)) {
 			$dbConfig = Config::getOptions('db');
-			$server   = "mongodb://{$db['host']}:{$db['port']}";
+			$server   = "mongodb://{$dbConfig['host']}:{$dbConfig['port']}";
 			$mongo    = new MongoClient($server, array(
-				'connect' => $db['connect']
+				'connect' => $dbConfig['connect']
 			));
-			self::$db = $mongo->selectDB($db['name']);
+			self::$db = $mongo->selectDB($dbConfig['name']);
 		}
 
 		$allowedCollections = Config::get('db', 'collections');
@@ -51,28 +51,6 @@ class Admin {
 			$instance[$name] = new $class;
 		}
 		return $instance[$name];
-    }
-
-    static public function error($message, $code = '10000') {
-		$app 	= self::$app;
-		$error 	= array(
-			'code' 		=> $code,
-			'message' 	=> $message
-		);
-
-		// $response = $app->response;
-		// $response->setStatus('500');
-		// $response->headers->set('APP-ERROR', json_encode($error));
-		header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
-		header('APP-ERROR:'. json_encode($error));
-
-		if($app->request->isAjax()) {
-			$app->view()->renderJSON($error);
-		} else {
-			$app->render('error.html', $error);
-		}
-		exit();
-		// $app->halt(500);
     }
 
     static public function getPermission() {

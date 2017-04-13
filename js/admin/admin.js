@@ -90,16 +90,54 @@ App.PushBox = new function() {
 }
 
 App.Notific = new function() {
+	var _box = function() {
+		var box = $('#app-notify');
+		if(box.length == 0) {
+			box = $('<div id="app-notify"></div>');
+			box.on('click', 'button.close', function() {
+				$(this).closest('div.app-notify-item').trigger('removeItem');
+			});
+			box.appendTo(document.body);
+		}
+		return box;
+	}
+	var _type;
+	var _message;
 	var _alert = function(type, msg, callback) {
-		$().toastmessage('showToast', {
-			text             : msg,
-			sticky           : false,
-			inEffectDuration : 100,   // in effect duration in miliseconds
-			stayTime         : 5000,
-			position         : 'top-center',
-			type             : type,
-			close            : callback
-		});
+		var box   = _box();
+		var items = box.children('div.alert');
+		var item  = $('<div class="alert alert-' + type + ' alert-dismissible" role="alert">');
+		item.html([
+			'<div>',
+				'<button type="button" class="close"><span>&times;</span></button>',
+				msg,
+			'</div>'
+		].join(''));
+		item.on('removeItem.anty', function() {
+			var item = $(this);
+			item.children().slideUp(100, function() {
+				item.off('.anty').remove();
+				item = null;
+			});
+		}).on('timer.anty', function() {
+			var item = $(this);
+			item.data('data-timer', setTimeout(function() {
+				item.trigger('removeItem');
+				item = null;
+			}, 5000));
+		}).on('mouseleave.anty', function() {
+			$(this).trigger('timer');
+		}).on('mouseenter.anty', function() {
+			clearTimeout($(this).data('data-timer'));
+		}).trigger('timer');
+		if(items.length > 0) {
+			items.eq(0).before(item);
+			items.eq(1).remove();
+		} else {
+			item.appendTo(box);
+		}
+		item.css('opacity');
+		item.addClass('app-notify-item');
 	}
 
 	this.popover = function(type, msg, callback) {
@@ -119,6 +157,8 @@ App.Notific = new function() {
 	}
 
 	this.error = function(msg, callback) {
-		_alert('error', msg, callback);
+		_alert('danger', msg, callback);
 	}
+
+	this.alert = this.error;
 }

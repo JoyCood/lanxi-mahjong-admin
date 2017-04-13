@@ -12,13 +12,13 @@ var App = function() {
 				opts.url = form.attr('action');
 			}
 			if(!opts.type) {
-				opts.type = form.attr('method') || 'post';
+				opts.type = (form.attr('method') || 'post').toLowerCase();
 			}
 			if(!opts.target) {
 				opts.target = form.attr('target');
 			}
 			if(!opts.dataType) {
-				opts.dataType = form.attr('data-type') || 'html';
+				opts.dataType = form.attr('data-type') || 'json';
 			}
 			form.find('button').each(function() {
 				var disabled = this.disabled;
@@ -70,23 +70,23 @@ var App = function() {
 						app.popover(
 							(jqXHR.errorCode? ('[' + jqXHR.errorCode + ']: '): '') + 
 							(jqXHR.error || '请求错误。'),
-							'error'
+							'danger'
 						);
 						break;
 					case 'except':
-						app.popover('请求异常。', 'error');
+						app.popover('请求异常。', 'danger');
 						break;
 					case 'timeout':
-						app.popover('请求超时，请检查网络是否正常。', 'error');
+						app.popover('请求超时，请检查网络是否正常。', 'danger');
 						break;
 					case 'abort':
 						break;
 					default:
 						var err = JSON.parse(jqXHR.getResponseHeader('APP-ERROR') || '{}');
 						if(err.message) {
-							app.popover(err.message, 'error');
+							app.popover(err.message, 'danger');
 						} else {
-							app.popover((errorThrown? ('[' + errorThrown + ']: '): '') + textStatus, 'error');
+							app.popover((errorThrown? ('[' + errorThrown + ']: '): '') + textStatus, 'danger');
 						}
 						break;
 				}
@@ -106,7 +106,18 @@ var App = function() {
 		}
 
 		app.Loading.show();
+		opts.url = 'admin/login-auth';
 		return $.ajax(opts);
+	}
+
+	app.submitForm = function(form, opts) {
+		var rs = (opts.checkValidity || $.noop).call($(form));
+		if((rs === undefined || rs) && app.checkValidity(form)) {
+			opts.form = form;
+			return app.ajax(opts);
+		} else {
+			return false;
+		}
 	}
 
 	app.checkValidity = function(form) {
@@ -184,7 +195,7 @@ var App = function() {
 	}
 
 	app.alert = function(message, fn) {
-		alert(message);
+		app.Notific.alert(message);
 		fn && fn();
 	}
 

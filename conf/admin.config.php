@@ -31,6 +31,7 @@ class Config
 			// 免登录
 			'notauth' => array(
 				'/admin/login',
+				'/admin/login-auth',
 				'/admin/logout',
 			),
 			// 路径设置
