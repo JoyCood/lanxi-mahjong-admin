@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="css/3rd/bootstrap.min.css?v={{CONFIG.res3rdVersion}}" />
 <link rel="stylesheet" href="css/font-awesome-4.1.0/font-awesome.min.css?v={{CONFIG.res3rdVersion}}" />
 <link rel="stylesheet" href="css/admin/global.css?v={{CONFIG.resVersion}}" />
+<link rel="stylesheet" href="css/admin/layout.css?v={{CONFIG.resVersion}}" />
 {% block css %}{% endblock %}
 <script src="js/3rd/jquery-1.11.1.min.js?v={{CONFIG.res3rdVersion}}"></script>
 <script src="js/3rd/bootstrap.min.js?v={{CONFIG.res3rdVersion}}"></script>
@@ -15,10 +16,92 @@
 {% block javascript %}{% endblock %}
 </head>
 <body>
-{% block header %}{% endblock %}
-{% block main %}{% endblock %}
-{% block aside %}{% endblock %}
-{% block footer %}{% endblock %}
+{% block header %}
+<header id="main-header">
+    <a id="logo" href="admin/">代理商管理</a>
+    <nav>
+        <a href="javascript:;">
+            <i class="fa fa-user"></i>
+            张学友
+        </a>
+        <a id="main-menu-toggle" href="javascript:;"><i class="fa fa-bars"></i></a>
+    </nav>
+</header>
+{% endblock %}
+
+<div id="main">
+    <main id="main-body">
+    {% block main %}
+    {% endblock %}
+    </main>
+
+    {% block footer %}
+    <footer id="main-footer">
+        <div style="padding-top: 16px; text-align: center;">Lanxi Majiang</div>
+    </footer>
+    {% endblock %}
+</div>
+
+{% block aside %}
+<aside id="main-aside">
+    <i class="fa fa-sort-asc"></i>
+    <nav>
+        <a href="javascript:;" title="首页">
+            <i class="fa fa-home"></i>
+            <span>首页</span>
+        </a>
+    </nav>
+    <nav>
+        <a href="admin/" title="首页">
+            <i class="fa fa-adn"></i>
+            <span>代理商管理</span>
+        </a>
+        <a href="admin/" title="公告">
+            <i class="fa fa-comment-o"></i>
+            <span>公告</span>
+        </a>
+        <a href="admin/" title="代理商">
+            <i class="fa fa-adn"></i>
+            <span>代理商</span>
+        </a>
+        <a href="admin/" title="下级代理">
+            <i class="fa fa-stumbleupon-circle"></i>
+            <span>下级代理</span>
+        </a>
+        <a href="admin/" title="返现申请">
+            <i class="fa fa-yen"></i>
+            <span>返现申请</span>
+        </a>
+        <a href="admin/" title="付费流水">
+            <i class="fa fa-list-ol"></i>
+            <span>付费流水</span>
+        </a>
+        <a href="admin/" title="返现汇总">
+            <i class="fa fa-list-alt"></i>
+            <span>返现汇总</span>
+        </a>
+    </nav>
+    <nav>
+        <a href="admin/" title="游戏数据管理">
+            <i class="fa fa-trello"></i>
+            <span>游戏数据管理</span>
+        </a>
+        <a href="admin/" title="玩家数据">
+            <i class="fa fa-child"></i>
+            <span>玩家数据</span>
+        </a>
+        <a href="admin/" title="充值记录">
+            <i class="fa fa-database"></i>
+            <span>充值记录</span>
+        </a>
+    </nav>
+</aside>
+{% endblock %}
+
+<div id="app-loading">
+    <i class="fa fa-cog fa-spin fa-2x"></i>
+</div>
+
 {% block js %}{% endblock %}
 </body>
 </html>

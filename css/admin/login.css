@@ -1,9 +1,12 @@
 body { 
 	background-color: #465568; 
 }
+#main-body { padding: 0; }
+
 #login-box {
     max-width: 420px; min-width: 300px;
-    margin: 100px auto 0;
+    margin: 0 auto;
+    padding-top: 148px;
 }
 #login-form {
     padding: 10px 32px 30px;
