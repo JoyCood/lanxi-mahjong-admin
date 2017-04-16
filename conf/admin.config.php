@@ -55,7 +55,7 @@ class Config
 				'/admin/trader/'          => 'GET::TraderController::indexAction',
 				'/admin/trader/list'      => 'GET::TraderController::listAction',
 				'/admin/trader/form'      => 'GET::TraderController::formAction',
-				'/admin/trader/form-save' => 'POST::TraderController::formSaveAction',
+				'/admin/trader/save'      => 'POST::TraderController::formSaveAction',
 				'/admin/trader/delete'    => 'POST::TraderController::deleteAction',
 			)
 		);

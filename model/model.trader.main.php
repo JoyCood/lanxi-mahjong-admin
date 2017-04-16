@@ -2,6 +2,8 @@
 
 class ModelTraderMain 
 {
+	const PASSWORD_SALT = 'TANG_FENG';
+
 	public $status = array(
 	    0, //正常
 		1, //锁定
@@ -77,6 +79,10 @@ class ModelTraderMain
 	    );
         
 		return $data;
+	}
+
+	public function password($pass) {
+		return md5(self::PASSWORD_SALT. $pass);
 	}
 
 }

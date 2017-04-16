@@ -44,31 +44,39 @@ class TraderController extends BaseController{
 
     // 更新代理商资料
     public function formSaveAction() {
-        $id        = trim($this->request->post('id'));
-        $password  = trim($this->request->post('password'));
-        $password2 = trim($this->request->post('password2'));
-        $status    = intval($this->request->post('status'));
-        $doc = array();
+        $id       = trim($this->request->post('Id'));
+        $password = trim($this->request->post('Pwd'));
+        $confirm  = trim($this->request->post('Cfm'));
+        $status   = intval($this->request->post('Status'));
+        $gameId   = intval($this->request->post('Gameid'));
+        $parent   = intval($this->request->post('Parent'));
+        $phone    = trim($this->request->post('Phone'));
+        $wechat   = trim($this->request->post('Wechat'));
 
-        if($password) {
-            if($password != $password2) {
-                Admin::error('密码不一致。');
+        $Trader = Admin::model('trader.main');
+        $doc    = array();
+
+        if(empty($id)) {
+            if(empty($password)) {
+                $this->error('请输入密码');
             }
-            $doc['Pwd'] = md5($password);
+        }
+        if($password) {
+            if($password != $confirm) {
+                $this->error('密码不一致');
+            }
+            $doc['Pwd'] = $Trader->password($password);
         }
 
-        $trader = Admin::model('trader.main');
-
-        if(!in_array($status, $trader->status)) {
-            Admin::error('请选择正确的帐户状态。');
+        if(!in_array($status, $Trader->status)) {
+            $this->error('请选择正确的帐户状态');
         }
-
         $doc['Status'] = $status;
-        $filters = array('_id' => new MongoId);
-        $result = $trader->update($filters, $doc);
-        $this->render('trader/list.html', array(
-            'data' => $trader->pagination($this->request->post('__url'))	
-        ));
+
+        $filters = array('_id' => new MongoId($id));
+        $result  = $Trader->update($filters, $doc);
+
+        $this->renderJSON((boolean)$result);
     }
 
     public function deleteAction() {

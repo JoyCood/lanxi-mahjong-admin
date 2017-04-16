@@ -24,6 +24,9 @@ class BaseController {
     }
 
     protected function renderJSON($data) {
+        if(is_bool($data)) {
+            $data = array('result' => $data);
+        }
         $this->app->view->renderJSON(array_merge(
             $this->viewData,
             $data

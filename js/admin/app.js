@@ -109,8 +109,8 @@ var App = function() {
 	}
 
 	app.submitForm = function(form, opts) {
-		var rs = (opts.checkValidity || $.noop).call($(form));
-		if((rs === undefined || rs) && app.checkValidity(form)) {
+		var rs = app.checkValidity(form);
+		if((rs === undefined || rs) && (opts.checkValidity || $.noop).call($(form))) {
 			opts.form = form;
 			return app.ajax(opts);
 		} else {
@@ -128,6 +128,7 @@ var App = function() {
 			if(required) {
 				switch(this.type) {
 					case 'text':
+					case 'number':
 						this.value = val = $.trim(val);
 					case 'textarea':
 					case 'password':

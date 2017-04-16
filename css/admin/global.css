@@ -89,7 +89,7 @@ input[type="radio"]:checked ~ label:before {
 
 .app-dialog {
 	position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 11;
-	transition: transform .2s ease-in-out;
+	transition: transform .2s ease-in;
 	transform: translate3d(0, -100%, 0);
 	display: none;
 }

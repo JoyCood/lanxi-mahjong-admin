@@ -24,28 +24,10 @@ Trader.formAction = function(id) {
         }
     });
 }
-var formDialog = function() {
-    if(!Trader.Form.dialog) {
-        Trader.Form.dialog = new App.Dialog({
-            id: 'trader-form'
-        });
-        Trader.Form.dialog.footer(null);
-    }
-    return Trader.Form.dialog;
-}
-Trader.Form = {
-    open: function(id) {
-        var form = formDialog();
-        App.ajax({
-            url: 'admin/trader/form?id=' + encodeURIComponent(id),
-            success: function(response) {
-                response = $(response);
-                form.title(response.attr('data-title'));
-                form.content(response);
-                form.open();
-            }
-        });
-    }
-}
 
+Trader.submit = function(form) {
+    App.submitForm(form, {
+        
+    });
+}
 })();
