@@ -33,13 +33,15 @@ class AdminController extends BaseController {
                 ), $user['id']);
                 $this->renderJSON(array('result' => true));
             } else {
-                $this->error('密码不正确或帐号已经被信用。');
+                $this->error('密码不正确或帐号已经被停用。');
             }
         }
-        $this->error('密码不存在或帐号已经被信用。');
+        $this->error('密码不存在或帐号已经被停用。');
     }
 
     public function logoutAction() {
+        session_destroy();
+        $this->renderJSON(array('result' => true));
     }
 
     public function logAction() {

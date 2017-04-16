@@ -1,6 +1,7 @@
 body { 
     background-color: #e9ecf3; 
 }
+
 #main {
     min-height: 100%;
     position:relative;
@@ -52,7 +53,7 @@ body {
     display: none; 
 }
 #main-aside>nav {
-    margin-top: 10px;
+    margin-top: 5px;
 }
 #main-aside>nav>a:first-child {
     padding-left: 10px;
@@ -60,11 +61,11 @@ body {
 }
 #main-aside>nav>a {
     display: block;
-    padding: 0 24px;
+    padding: 5px 24px;
     color: #485a6a; text-decoration: none;
 
 }
-#main-aside>nav>a:hover {
+#main-aside>nav>a:hover, #main-aside>nav>a.active  {
     color: #5C9ACF;
     background-color: #f9f9f9;
 }
@@ -82,11 +83,11 @@ body {
     bottom: 0;
     width: 100%;
     height: 50px;
-    background-color: #ddd;
+    /*background-color: #ddd;*/
 }
 
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
     #main-header>#logo {
         display: inline-block; 
         margin: 5px; padding: 5px;

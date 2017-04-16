@@ -2,9 +2,13 @@
 require(DOC_ROOT. '/control/BaseController.php');
 
 class TraderController extends BaseController{
-    public function inpourAction() {
+    public function init() {
+        $this->addViewData('MENU_ITEM', 'trader');
+    }
+
+    public function indexAction() {
         $trader = Admin::model('trader.main');
-        $data = $trader->pagination();
+        $data = array(); //$trader->pagination();
         $this->render('trader/index.html', array(
             'data' => $data,
             'wechat' => $this->request->get('wechat'),
@@ -13,8 +17,18 @@ class TraderController extends BaseController{
         ));
     }
 
-    // 代理商祥情
+    public function listAction() {
+        $this->render('trader/list.html', array(
+            // 'data' => $data,
+            // 'wechat' => $this->request->get('wechat'),
+            // 'phone'  => $this->request->get('phone'),
+            // 'gameid' => $this->request->get('gameid')
+        ));
+    }
+
+    // 代理商详情
     public function formAction() {
+        $this->render('trader/form.html'); exit;
         $id = $this->request->get('id', '');
         $data = array();
         if($id) {
@@ -23,7 +37,7 @@ class TraderController extends BaseController{
         }
 
         $this->render('trader/form.html', array(
-            $id    => $id,
+            'id'   => $id,
             'data' => $data
         ));
     }

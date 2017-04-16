@@ -3,19 +3,35 @@ class BaseController {
     protected $app;
     protected $request;
     protected $response;
+    protected $viewData = array();
     
     public function __construct($app) {
         $this->app      = & $app;
         $this->request  = & $app->request;
         $this->response = & $app->response;
+
+        $this->init();
+    }
+
+    protected function init() {
     }
 
     protected function render($view, $data = array()) {
-        $this->app->render($view, $data);
+        $this->app->render($view, array_merge(
+            $this->viewData,
+            $data
+        ));
     }
 
     protected function renderJSON($data) {
-        $this->app->view->renderJSON($data);
+        $this->app->view->renderJSON(array_merge(
+            $this->viewData,
+            $data
+        ));
+    }
+
+    protected function addViewData($key, $val) {
+        $this->viewData[$key] = $val;
     }
 
     protected function error($message, $code = '10000') {

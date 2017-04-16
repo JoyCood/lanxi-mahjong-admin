@@ -5,6 +5,60 @@ a:hover { color: #5C9ACF; text-decoration: none; cursor: pointer; }
 	height: 38px;
 }
 
+input[type="radio"] {
+	display: none;
+}
+input[type="radio"] ~ label {
+	display: inline-block; cursor: pointer;
+    padding: 6px 12px;
+    font-size: 15px; font-weight: normal;
+	border: 1px solid #9cc2cb;
+    border-radius: 4px;
+	background-color: #9cc2cb;
+	user-select: none; -webkit-user-select: none;
+}
+input[type="radio"] ~ label:before {
+	float: left; padding-right: 6px;
+	font-family: FontAwesome;
+	content: "\f10c";
+}
+input[type="radio"]:checked ~ label {
+	background-color: #78a300;
+	border-color: #78a300;
+	color: #fff;
+}
+input[type="radio"]:checked ~ label:before {
+	content: "\f192";
+}
+
+.breadcrumb > li + li:before {
+    font-family: FontAwesome;
+    color: #485a6a;
+    content: "\f105";
+    padding: 0 5px;
+}
+
+.portlet {
+	background-color: #fff;
+	border-radius: 5px;
+	padding: 16px;
+}
+.portlet>header {
+	position: relative;
+	border-bottom: 1px solid #eee;
+}
+.portlet>header>h1 {
+	margin: 0; padding: 6px 10px 16px;
+	font-size: 18px; font-weight: normal;
+	color: #697882;
+}
+.portlet>header>nav {
+	position: absolute; top: 0; right: 16px;
+}
+.portlet>main {
+	padding: 10px;
+}
+
 #app-loading {
 	opacity: .75;
 	position: fixed; z-index: 100;
@@ -48,7 +102,7 @@ a:hover { color: #5C9ACF; text-decoration: none; cursor: pointer; }
 	transform: translate3d(-50%, -50%, 0);
 	border-radius: 4px;
 	background-color: #fff;
-	box-shadow: 0 0 5px #ddd;
+	box-shadow: 0 0 6px #999;
 }
 .app-dialog-header {
 	position: relative;
@@ -71,6 +125,7 @@ a:hover { color: #5C9ACF; text-decoration: none; cursor: pointer; }
 }
 .app-dialog-content {
 	min-height: 40px; margin: 0 6px;
+	padding-bottom: 16px;
 }
 .app-dialog-footer {
 	text-align: center; padding: 5px 10px 10px;

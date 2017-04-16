@@ -1,0 +1,112 @@
+<div id="trader-container">
+    <ol class="breadcrumb">
+        <li><a href="admin/"><i class="fa fa-home"></i> 首页</a></li>
+        <li><a href="admin/trader/">代理商</a></li>
+        <li class="active">{{id? '': '新建'}}</li>
+    </ol>
+    <div class="portlet">
+        <header>
+            <h1>代理商</h1>
+            <nav>
+                <a href="javascript:history.back();" type="button" class="btn btn-default"><i class="fa fa-angle-left"></i> 返回</a>
+            </nav>
+        </header>
+        <main>
+            <form class="form-horizontal" data-title="代理商">
+                <div class="app-dialog-content">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="trader-game-id" class="col-sm-3 control-label">游戏ID:</label>
+                                <div class="col-sm-9">
+                                    <input id="trader-game-id" name="Gameid" type="number" class="form-control" placeholder="游戏ID" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="trader-phone" class="col-sm-3 control-label">手机号:</label>
+                                <div class="col-sm-9">
+                                    <input id="trader-phone" name="Phone" type="text" class="form-control" placeholder="手机号" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="trader-password" class="col-sm-3 control-label">密码:</label>
+                                <div class="col-sm-9">
+                                    <input id="trader-password" name="Pwd" type="text" class="form-control" placeholder="密码" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="trader-confirm" class="col-sm-3 control-label">确认密码:</label>
+                                <div class="col-sm-9">
+                                    <input id="trader-confirm" name="Cfm" type="text" class="form-control" placeholder="确认密码" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="trader-wechat" class="col-sm-3 control-label">微信号:</label>
+                                <div class="col-sm-9">
+                                    <input id="trader-wechat" name="Wechat" type="text" class="form-control" placeholder="微信号" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="trader-level" class="col-sm-3 control-label">代理等级:</label>
+                                <div class="col-sm-9">
+                                    <input id="trader-level" name="Lv" type="number" class="form-control" placeholder="代理等级" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="trader-parent" class="col-sm-3 control-label">父代理ID:</label>
+                                <div class="col-sm-9">
+                                    <input id="trader-parent" name="Parent" type="number" class="form-control" placeholder="父代理ID" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="trader-charge" class="col-sm-3 control-label">充值金额:</label>
+                                <div class="col-sm-9">
+                                    <input id="trader-charge" name="Charge" type="number" class="form-control" placeholder="充值金额" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="trader-balance" class="col-sm-3 control-label">可提现余额:</label>
+                                <div class="col-sm-9">
+                                    <input id="trader-balance" name="Balance" type="number" class="form-control" placeholder="可提现余额" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="trader-ctime" class="col-sm-3 control-label">注册时间:</label>
+                                <div class="col-sm-9">
+                                    <input id="trader-ctime" name="CTime" type="number" class="form-control" placeholder="注册时间" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">状态:</label>
+                                <div class="col-sm-9">
+                                    <span>
+                                        <input id="trader-status-normal" name="Status" type="radio" value="0" />
+                                        <label for="trader-status-normal">正常</label>
+                                    </span>
+                                    <span>
+                                        <input id="trader-status-locked" name="Status" type="radio" value="1" />
+                                        <label for="trader-status-locked">锁定</label>
+                                    </span>
+                                    <span>
+                                        <input id="trader-status-blocked" name="Status" type="radio" value="2" />
+                                        <label for="trader-status-blocked">黑名单</label>
+                                    </span>
+                                    <span>
+                                        <input id="trader-status-pending" name="Status" type="radio" value="3" />
+                                        <label for="trader-status-pending">待审核</label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="app-dialog-footer">
+                    <button type="submit" class="btn btn-primary" app-role="app-dialog-close" app-value="1">确定</button>
+                    <button type="reset" class="btn" app-role="app-dialog-close" app-value="0">取消</button>
+                </footer>
+            </form>
+        </main>
+    </div>
+</div>

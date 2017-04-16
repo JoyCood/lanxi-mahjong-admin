@@ -53,6 +53,7 @@ class Config
 				'/admin/notice/delete'    => 'POST::NoticeController::deleteAction',
 				// 代理商
 				'/admin/trader/'          => 'GET::TraderController::indexAction',
+				'/admin/trader/list'      => 'GET::TraderController::listAction',
 				'/admin/trader/form'      => 'GET::TraderController::formAction',
 				'/admin/trader/form-save' => 'POST::TraderController::formSaveAction',
 				'/admin/trader/delete'    => 'POST::TraderController::deleteAction',

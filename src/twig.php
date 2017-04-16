@@ -109,7 +109,8 @@ class SwimTwigExtension extends \Twig_Extension {
 			// 'json'  => new Twig_Function_Method($this, 'json_encode')
 			'is_video' 	 => new \Twig_Function_Method($this, 'fn_isVideo'),
 			'image_src'  => new \Twig_Function_Method($this, 'fn_imageSrc'),
-			'check_perm' => new \Twig_Function_Method($this,  'fn_checkPermission')
+			'check_perm' => new \Twig_Function_Method($this,  'fn_checkPermission'),
+			'session'    => new \Twig_Function_Method($this,  'fn_session')
 
 		);
 	}
@@ -162,6 +163,10 @@ class SwimTwigExtension extends \Twig_Extension {
 
 	public function fn_isVideo($src) {
 		return \Helper::isVideo($src);
+	}
+
+	public function fn_session($key) {
+		return $_SESSION[$key];
 	}
 
 	public function fn_imageSrc($src, $prefix) {

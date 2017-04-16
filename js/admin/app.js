@@ -67,26 +67,25 @@ var App = function() {
 				// textStatus: "timeout", "error", "abort", and "parsererror", 'custom', 'except'
 				switch(textStatus) {
 					case 'custom':
-						app.popover(
+						app.Notific.alert(
 							(jqXHR.errorCode? ('[' + jqXHR.errorCode + ']: '): '') + 
-							(jqXHR.error || '请求错误。'),
-							'danger'
+							(jqXHR.error || '请求错误。')
 						);
 						break;
 					case 'except':
-						app.popover('请求异常。', 'danger');
+						app.Notific.alert('请求异常。');
 						break;
 					case 'timeout':
-						app.popover('请求超时，请检查网络是否正常。', 'danger');
+						app.Notific.alert('请求超时，请检查网络是否正常。');
 						break;
 					case 'abort':
 						break;
 					default:
 						var err = JSON.parse(jqXHR.getResponseHeader('APP-ERROR') || '{}');
 						if(err.message) {
-							app.popover(err.message, 'danger');
+							app.Notific.alert(err.message);
 						} else {
-							app.popover((errorThrown? ('[' + errorThrown + ']: '): '') + textStatus, 'danger');
+							app.Notific.alert((errorThrown? ('[' + errorThrown + ']: '): '') + textStatus);
 						}
 						break;
 				}
@@ -106,7 +105,6 @@ var App = function() {
 		}
 
 		app.Loading.show();
-		opts.url = 'admin/login-auth';
 		return $.ajax(opts);
 	}
 
@@ -389,10 +387,10 @@ App.Dialog = function(options) {
 	var init = function(options) {
 		dialog = $([ 
 			'<div id="app-dialog-' + inc + '" class="app-dialog">',
-				'<div class="app-dialog-container">',
+				'<div' + (options.id? ' id="' + options.id + '"': '') + ' class="app-dialog-container">',
 					'<header class="app-dialog-header">',
 						'<span class="app-dialog-title"></span>',
-						'<a class="app-dialog-close" app-role="app-dialog-close" app-value="1">&times;</a>',
+						'<a class="app-dialog-close" app-role="app-dialog-close" app-value="0">&times;</a>',
 					'</header>',
 					'<div class="app-dialog-body">',
 						'<div class="app-dialog-content"></div>',
@@ -407,6 +405,33 @@ App.Dialog = function(options) {
 			}
 		}).on('click', '[app-role="app-dialog-close"]', function() {
 			close($(this).attr('app-value'));
+		}).on('mousedown', 'span.app-dialog-title', function(e) {
+			dialog.data('margin', {
+				top: parseInt(dialog.children().css('margin-top')) || 0,
+				left: parseInt(dialog.children().css('margin-left')) || 0
+			});
+			dialog.data('offset', {
+				'x': e.pageX,
+				'y': e.pageY
+			});
+			$(window).on('mousemove.admv', function(e) {
+				var position = dialog.data('margin');
+				var offset   = dialog.data('offset');
+				var top      = e.pageY - offset.y;
+				var left     = e.pageX - offset.x;
+				dialog.children().css({
+					marginTop: position.top + top,
+					marginLeft: position.left + left
+				});
+				return false;
+			}).on('mouseup.admv', function() {
+				$(window).off('.admv');
+			});
+		}).on('dblclick', function() {
+			dialog.children().css({
+				'margin-left': '',
+				'margin-top': ''
+			});
 		});
 
 		title(options.title || '');
@@ -422,11 +447,17 @@ App.Dialog = function(options) {
 		if(rs || rs == undefined) {
 			dialog.css('display', 'block').css('opacity');
 			dialog.removeClass('open');
+			$(document).off('keydown.adkp');
 		}
 	}
 	var open = function() {
 		dialog.css('display', 'block').css('opacity');
 		dialog.addClass('open');
+		$(document).on('keydown.adkp', function(e) {
+			if(e.keyCode == 27) {
+				dialog.find('a.app-dialog-close').trigger('click');
+			}
+		});
 	}
 
 	this.title   = title;
@@ -437,7 +468,11 @@ App.Dialog = function(options) {
 		dialog.find('div.app-dialog-body').empty().append($(content));
 	}
 	this.footer = function(content) {
-		dialog.find('footer.app-dialog-footer').empty().append($(content));
+		if(content) {
+			dialog.find('footer.app-dialog-footer').empty().append($(content)).show();
+		} else {
+			dialog.find('footer.app-dialog-footer').empty().hide();
+		}
 	}
 	this.open = function() {
 		open();
@@ -496,8 +531,3 @@ App.alert = App.Alert.alert;
 App.info = App.Alert.info;
 App.confirm = App.Alert.confirm;
 
-$(document).on('ready', function() {
-	// new App.Dialog({title: 'aaa'});
-	App.confirm('这是真的吗?', function(state) {
-	});
-});

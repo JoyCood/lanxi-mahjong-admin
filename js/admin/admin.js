@@ -1,4 +1,18 @@
 $(document).on('ready', function() {
+	$('#main-user-icon').on('click', function() {
+		App.confirm('确定要出退登录吗？', function(state) {
+			if(state) {
+				App.ajax({
+					url: 'admin/logout',
+					type: 'post',
+					dataType: 'json',
+					success: function() {
+						location.href = 'admin/';
+					}
+				});
+			}
+		});
+	});
 	$('#main-menu-toggle').on('click', function(e) {
 		var aside = $('#main-aside');
 		if(!aside.is(':visible')) {
@@ -17,7 +31,17 @@ $(document).on('ready', function() {
 		}
 	});
 
+	$(window).on('hashchange', function() {
+		var hash    = (location.hash || '').substr(1).split('/');
+		var action  = (hash[0] || 'index') + 'Action';
+		var params  = hash.slice(1);
+		if(window.Controller) {
+			if(action in window.Controller) {
+				window.Controller[action].call(window.Controller, params);
+			} else {
+				(window.Controller.index || $.noop).call(window.Controller, params);
+			}
+		}
+	}).trigger('hashchange');
 });
-setTimeout(function() {
-	App.Loading.hide();
-}, 1000);
+
