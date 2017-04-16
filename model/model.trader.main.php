@@ -39,6 +39,12 @@ class ModelTraderMain
 	    return $this->collection()->findOne($filter, $projection);
 	}
 
+	//插入数据
+	public function insert($data) {
+		$data = Helper::allowed($data, $this->fields);
+	    return $this->collection()->insert($data);
+	}
+
 	//更新数据
 	public function update($filter, $data) {
 		$data = Helper::allowed($data, $this->fields);

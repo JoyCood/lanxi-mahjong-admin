@@ -43,5 +43,14 @@ $(document).on('ready', function() {
 			}
 		}
 	}).trigger('hashchange');
+	App.hash = function(hash) {
+		var loc = location.href;
+		var url = loc.split('#')[0] + '#' + hash;
+		if(loc == url) {
+			$(window).trigger('hashchange');
+		} else {
+			location.href = url;
+		}
+	}
 });
 
