@@ -14,7 +14,7 @@ class Config
 			'db' => require('db.config.php'),
 			// 网站设置
 			'settings' => array(
-				'title'         => '后台管理',
+				'title'         => '代理商管理系统',
 				'listRowsNum'   => 30,
 				'slim'          => array(
 										'templates.path' => DOC_ROOT. '/view/admin'

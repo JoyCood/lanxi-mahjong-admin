@@ -9,7 +9,7 @@
 {% block main %}
 <div id="login-box">
     <form id="login-form" method="POST" action="admin/login-auth">
-        <div id="login-caption">代理商管理系统</div>
+        <div id="login-caption">{{CONFIG.title}}</div>
         <div id="login-body" class="form-group">
             <input name="username" type="text" class="form-control" value="admin" placeholder="请输入帐号" autocomplete="off" app-required="on" />
             <input name="password" type="password" class="form-control" value="Lanxi123!" placeholder="请输入密码" app-required="on" />

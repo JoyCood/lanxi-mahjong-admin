@@ -1,13 +1,14 @@
 {% set action = id? '编辑': '新建' %}
+{% set caption = '代理商' %}
 <div id="trader-container">
     <ol class="breadcrumb">
         <li><a href="admin/"><i class="fa fa-home"></i> 首页</a></li>
-        <li><a href="admin/trader/">代理商</a></li>
+        <li><a href="admin/trader/">{{caption}}</a></li>
         <li class="active">{{action}}</li>
     </ol>
     <div class="portlet">
         <header>
-            <h1>{{action}}代理商 {#% if id %}#{{id}}{% endif %#}</h1>
+            <h1>{{action}}{{caption}} {#% if id %}#{{id}}{% endif %#}</h1>
             <nav>
                 {% if data %}<a href="admin/trader/#form" type="button" class="btn btn-default">新建</a>{% endif %}
                 <a href="javascript:history.back();" type="button" class="btn btn-default"><i class="fa fa-angle-left"></i> 返回</a>

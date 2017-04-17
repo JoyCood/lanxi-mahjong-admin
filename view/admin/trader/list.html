@@ -1,18 +1,48 @@
 <div id="trader-container">
     <ol class="breadcrumb">
         <li><a href="admin/"><i class="fa fa-home"></i> 首页</a></li>
-        <li><a href="admin/trader/">代理商</a></li>
+        <li><a href="admin/trader/">Agent</a></li>
         <li class="active">列表</li>
     </ol>
-    <div class="portlet">
+    <div class="portlet hs-table">
         <header>
-            <h1>代理商</h1>
+            <h1>Agent</h1>
             <nav>
                 <a href="admin/trader/#form" type="button" class="btn btn-default">新建</a>
             </nav>
         </header>
-        <main>
-            
-        </main>
+        {{data.items|dump}}
+        <table>
+            <thead>
+                <tr>
+                    <th width="40"><input type="checkbox" hs-check="all" /></th>
+                    <th>游戏ID</th>
+                    <th width="100">手机号</th>
+                    <th width="100">微信号</th>
+                    <th width="120">代理等级</th>
+                    <th width="120">上级代理</th>
+                </tr>
+            </thead> 
+            <tbody>
+                {% for item in data.items %}
+                <tr>
+                    <td><input type="checkbox" hs-check="item" /></td>
+                    <td>A</td>
+                    <td>B</td>
+                    <td>C</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" id="table1-foot">^_^</td>
+                </tr>
+            </tfoot>		
+        </table>
     </div>
+    <script>
+        $('#trader-container>div.hs-table').hsTable();
+    </script>
 </div>

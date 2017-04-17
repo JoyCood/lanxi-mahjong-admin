@@ -7,22 +7,14 @@ class TraderController extends BaseController{
     }
 
     public function indexAction() {
-        $trader = Admin::model('trader.main');
-        $data = array(); //$trader->pagination();
-        $this->render('trader/index.html', array(
-            'data' => $data,
-            'wechat' => $this->request->get('wechat'),
-            'phone'  => $this->request->get('phone'),
-            'gameid' => $this->request->get('gameid')
-        ));
+        $this->render('trader/index.html');
     }
 
     public function listAction() {
+        $Trader = Admin::model('trader.main');
+        $data   = $Trader->pagination($this->request->get('_url', ''));
         $this->render('trader/list.html', array(
-            // 'data' => $data,
-            // 'wechat' => $this->request->get('wechat'),
-            // 'phone'  => $this->request->get('phone'),
-            // 'gameid' => $this->request->get('gameid')
+            'data' => $data,
         ));
     }
 
@@ -34,7 +26,6 @@ class TraderController extends BaseController{
             $filters = array('_id' => new MongoId($id));
             $data    = Admin::model('trader.main')->findOne($filters);
         }
-
         $this->render('trader/form.html', array(
             'id'   => $id,
             'data' => $data

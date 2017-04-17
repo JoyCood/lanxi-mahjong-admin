@@ -109,13 +109,14 @@ var App = function() {
 	}
 
 	app.submitForm = function(form, opts) {
-		var rs = app.checkValidity(form);
-		if((rs === undefined || rs) && (opts.checkValidity || $.noop).call($(form))) {
-			opts.form = form;
-			return app.ajax(opts);
-		} else {
-			return false;
+		if(app.checkValidity(form)) {
+			var rs = (opts.checkValidity || $.noop).call($(form));
+			if(rs === undefined || rs) {
+				opts.form = form;
+				return app.ajax(opts);
+			} 
 		}
+		return false;
 	}
 
 	app.checkValidity = function(form) {
