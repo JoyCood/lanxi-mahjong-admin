@@ -382,11 +382,40 @@ App.Notific = new function() {
 	this.alert = this.error;
 }
 
+App.Mask = new function() {
+	var count  = 0;
+	var create = function() {
+		var mask = $('#app-mask');
+		if(mask.length == 0) {
+			mask = $('<div id="app-mask"></div>');
+			mask.appendTo(document.body);
+		}
+		return mask;
+	}
+
+	this.show = function() {
+		if(count == 0) {
+			create().show();
+		}
+		count++;
+	}
+
+	this.hide = function() {
+		count--;
+		if(count <= 0) {
+			count = 0;
+			create().hide();
+		}
+	}
+}
+
 App.Dialog = function(options) {
 	var inc = (App.Dialog.increment || 0) + 1;
 	var dialog;
+	var mask;
 
 	var init = function(options) {
+		mask   = options.mask? true: false;
 		dialog = $([ 
 			'<div id="app-dialog-' + inc + '" class="app-dialog">',
 				'<div' + (options.id? ' id="' + options.id + '"': '') + ' class="app-dialog-container">',
@@ -451,6 +480,7 @@ App.Dialog = function(options) {
 			dialog.removeClass('open');
 			$(document).off('keydown.adkp');
 		}
+		mask && App.Mask.hide();
 	}
 	var open = function() {
 		dialog.css('display', 'block').css('opacity');
@@ -460,6 +490,7 @@ App.Dialog = function(options) {
 				dialog.find('a.app-dialog-close').trigger('click');
 			}
 		});
+		mask && App.Mask.show();
 	}
 
 	this.title   = title;
@@ -497,6 +528,7 @@ App.Alert = new function() {
 	}
 	var open = function(title, msg, callback) {
 		var dialog = getDialog({
+			mask: true,
 			close: callback
 		});
 		dialog.title(title);

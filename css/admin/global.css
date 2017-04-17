@@ -95,6 +95,13 @@ Responsive Utils
 	border-radius: 4px;
 }
 
+#app-mask {
+	position: fixed; z-index: 9;
+	top: 0; right: 0; bottom: 0; left: 0;
+	background-color: rgba(200, 200, 200, .2);
+	display: none;
+}
+
 #app-notify {
 	position: fixed;
 	top: 60px;
