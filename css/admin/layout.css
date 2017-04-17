@@ -9,7 +9,7 @@ body {
 
 #main-header {
     position: fixed; top: 0; right: 0; left: 0;
-    z-index: 10;
+    z-index: 10012;
     background-color: #fff;
     box-shadow: 0 1px 5px #ddd;
     margin-bottom: 10px;
@@ -43,7 +43,7 @@ body {
 }
 
 #main-aside {
-    position: fixed; z-index: 9;
+    position: fixed; z-index: 10011;
     top: 80px; left: 10px; 
     width: 210px;
     background-color: #fff;
@@ -158,4 +158,17 @@ body {
     #main-aside>nav>a:first-child>span {
         display: none;
     }
+}
+
+#to-top {
+    position: fixed; bottom: 60px; right: 20px;
+    width: 44px; height: 44px; line-height: 44px;
+    text-align: center;
+    background-color: rgba(100, 100, 100, .2);
+    color: #485a6a; cursor: pointer;
+    border-radius: 4px;
+    display: none;
+}
+#to-top:hover {
+    background-color: rgba(100, 100, 100, .5);
 }

@@ -1,48 +1,66 @@
 <div id="trader-container">
     <ol class="breadcrumb">
         <li><a href="admin/"><i class="fa fa-home"></i> 首页</a></li>
-        <li><a href="admin/trader/">Agent</a></li>
+        <li><a href="admin/trader/">代理商</a></li>
         <li class="active">列表</li>
     </ol>
-    <div class="portlet hs-table">
-        <header>
-            <h1>Agent</h1>
+    <div id="trader-content" class="portlet hs-table">
+        <header class="portlet_header">
+            <h1>代理商</h1>
             <nav>
                 <a href="admin/trader/#form" type="button" class="btn btn-default">新建</a>
             </nav>
         </header>
-        {{data.items|dump}}
-        <table>
-            <thead>
-                <tr>
-                    <th width="40"><input type="checkbox" hs-check="all" /></th>
-                    <th>游戏ID</th>
-                    <th width="100">手机号</th>
-                    <th width="100">微信号</th>
-                    <th width="120">代理等级</th>
-                    <th width="120">上级代理</th>
-                </tr>
-            </thead> 
-            <tbody>
-                {% for item in data.items %}
-                <tr>
-                    <td><input type="checkbox" hs-check="item" /></td>
-                    <td>A</td>
-                    <td>B</td>
-                    <td>C</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="6" id="table1-foot">^_^</td>
-                </tr>
-            </tfoot>		
-        </table>
+        <main class="portlet_main">
+            <table>
+                <colgroup>
+                    <col width="40" />
+                    <col width="60" />
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="90" />
+                    <col width="120" />
+                    <col width="90" />
+                    <col />
+                    <col width="40" />
+                    <col width="120" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" hs-check="all" /></th>
+                        <th>游戏ID</th>
+                        <th>手机号</th>
+                        <th class="hidden-480">微信号</th>
+                        <th class="hidden-480">代理等级</th>
+                        <th class="hidden-1024">上级代理</th>
+                        <th>充值金额</th>
+                        <th>可提余额</th>
+                        <th>状态</th>
+                        <th class="hidden-1024">注册时间</th>
+                    </tr>
+                </thead> 
+                <tbody>
+                    {% for i in 0..20 %}
+                    {% for item in data.items %}
+                    <tr>
+                        <td><input type="checkbox" hs-check="item" /></td>
+                        <td>{{item.Gameid}}</td>
+                        <td>{{item.Phone}}</td>
+                        <td class="hidden-480">{{item.Wechat}}</td>
+                        <td class="hidden-480">{{item.Lv}}</td>
+                        <td class="hidden-1024">{{item.Parent}}</td>
+                        <td>{{item.Charge}}</td>
+                        <td>{{item.Balance}}</td>
+                        <td>{{item.Status}}</td>
+                        <td class="hidden-1024">{{item.CTime}}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </main>
     </div>
     <script>
-        $('#trader-container>div.hs-table').hsTable();
+        // $('#trader-content').hsTable();
     </script>
 </div>

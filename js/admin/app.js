@@ -537,7 +537,8 @@ App.Alert = new function() {
 			msg,
 			'</div>'
 		].join(''));
-		dialog.element().css('z-index', 99);
+		dialog.element().addClass('app-dialog-alert');
+		// dialog.element().css('z-index', 99);
 		dialog.open();
 
 		return dialog;

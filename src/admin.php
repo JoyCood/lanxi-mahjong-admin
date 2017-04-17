@@ -66,7 +66,7 @@ class Admin {
 		return $privileges;
 		}
 
-		static public function getPermissionByMod($mod) {
+	static public function getPermissionByMod($mod) {
 		$privileges = self::getPermission();
 		if($privileges && isset($privileges[$mod])) {
 			return $privileges[$mod];
