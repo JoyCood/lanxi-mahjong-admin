@@ -1,4 +1,6 @@
 $(document).on('ready', function() {
+	var win = $(window);
+	var doc = $(document);
 	$('#main-user-icon').on('click', function() {
 		App.confirm('确定要出退登录吗？', function(state) {
 			if(state) {
@@ -31,7 +33,7 @@ $(document).on('ready', function() {
 		}
 	});
 
-	$(window).on('hashchange', function() {
+	win.on('hashchange', function() {
 		var hash    = (location.hash || '').substr(1).split('/');
 		var action  = (hash[0] || 'index') + 'Action';
 		var params  = hash.slice(1);
@@ -52,5 +54,59 @@ $(document).on('ready', function() {
 			location.href = url;
 		}
 	}
+
+	App.Loading.hide();
+    win.on('scroll', function() {
+        var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if(scrollTop > 60) {
+            $('#to-top').show();
+        } else {
+            $('#to-top').hide();
+        }
+    });
+    $('#to-top').on('click', function() {
+        $(window).scrollTop(0);
+    });
+
+	doc.on('click', '[app-check]', function(e) {
+		var radio = $(this);
+		switch(radio.attr('app-check')) {
+			case 'on':
+				radio.closest('tr').find('input[app-check]').trigger('click');
+				break;
+			case 'off':
+				e.preventDefault();
+				break;
+			case 'all':
+				var table = radio.closest('table');
+				var items = table.find('input[app-check="item"]');
+				items.prop('checked', this.checked);
+				break;
+			case 'item':
+				var table      = radio.closest('table');
+				var items      = table.find('input[app-check="item"]');
+				var target     = table.find('input[app-check="all"]');
+				var itemsNum   = items.length;
+				var checkedNum = items.filter(':checked').length;
+				var rel        = table.attr('app-check-rel');
+				if(checkedNum && checkedNum == itemsNum) {
+					target.prop('checked', true);
+				} else {
+					target.prop('checked', false);
+				}
+				if(rel) {
+					var btns = $(rel).find('button.btn, a.btn').not('[app-check-rel="off"]');
+					if(checkedNum == 0) {
+						btns.prop('disabled', true).addClass('disabled');
+					} else {
+						btns.prop('disabled', false).removeClass('disabled');
+					}
+				}
+				break;
+		}
+		e.stopPropagation();
+	}).on('click', '.disabled', function() {
+		return false;
+	});
 });
 

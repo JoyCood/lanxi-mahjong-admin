@@ -7,27 +7,28 @@
     <div id="trader-content" class="portlet hs-table">
         <header class="portlet_header">
             <h1>代理商</h1>
-            <nav>
-                <a href="admin/trader/#form" type="button" class="btn btn-default">新建</a>
+            <nav id="trader-bar">
+                <button type="button" href="admin/trader/#form" class="btn btn-default" app-check-rel="off">新建</button>
+                <a href="admin/trader/#form" class="btn btn-default disabled">新建</a>
             </nav>
         </header>
         <main class="portlet_main">
-            <table>
+            <table app-check-rel="#trader-bar">
                 <colgroup>
-                    <col width="40" />
+                    <col width="40" align="center" />
                     <col width="60" />
                     <col width="100" />
                     <col width="100" />
                     <col width="90" />
                     <col width="120" />
-                    <col width="90" />
-                    <col />
-                    <col width="40" />
+                    <col width="90" align="right" />
+                    <col align="right" />
+                    <col width="40" align="center" />
                     <col width="120" />
                 </colgroup>
                 <thead>
                     <tr>
-                        <th><input type="checkbox" hs-check="all" /></th>
+                        <th><input type="checkbox" app-check="all" /></th>
                         <th>游戏ID</th>
                         <th>手机号</th>
                         <th class="hidden-480">微信号</th>
@@ -41,10 +42,10 @@
                 </thead> 
                 <tbody>
                     {% for i in 0..20 %}
-                    {% for item in data.items %}
-                    <tr>
-                        <td><input type="checkbox" hs-check="item" /></td>
-                        <td>{{item.Gameid}}</td>
+                    {#% for item in data.items %#}
+                    <tr app-check="on">
+                        <td><input type="checkbox" app-check="item" /></td>
+                        <td app-check="off">{{item.Gameid}}</td>
                         <td>{{item.Phone}}</td>
                         <td class="hidden-480">{{item.Wechat}}</td>
                         <td class="hidden-480">{{item.Lv}}</td>
@@ -54,10 +55,11 @@
                         <td>{{item.Status}}</td>
                         <td class="hidden-1024">{{item.CTime}}</td>
                     </tr>
-                    {% endfor %}
+                    {#% endfor %#}
                     {% endfor %}
                 </tbody>
             </table>
+            {% include '_pagination.html' with {'__url': 'admin/trader/#Trader/list/'} %}
         </main>
     </div>
     <script>

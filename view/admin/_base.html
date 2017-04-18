@@ -17,22 +17,6 @@
 <script src="js/admin/app.js?v={{CONFIG.resVersion}}"></script>
 <script src="js/admin/admin.js?v={{CONFIG.resVersion}}"></script>
 {% block javascript %}{% endblock %}
-<script>
-$(document).ready(function() {
-    App.Loading.hide();
-    $(window).on('scroll', function() {
-        var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-        if(scrollTop > 60) {
-            $('#to-top').show();
-        } else {
-            $('#to-top').hide();
-        }
-    });
-    $('#to-top').on('click', function() {
-        $(window).scrollTop(0);
-    });
-});
-</script>
 </head>
 <body>
 {% block header %}
