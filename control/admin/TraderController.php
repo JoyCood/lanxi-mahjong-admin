@@ -2,6 +2,7 @@
 require(DOC_ROOT. '/control/BaseController.php');
 
 class TraderController extends BaseController{
+    protected $under = false;
     public function init() {
         $this->addViewData('MENU_ITEM', 'trader');
     }
@@ -14,8 +15,12 @@ class TraderController extends BaseController{
         $Trader  = Admin::model('trader.main');
         $query   = $this->request->get('query');
         $keyword = $this->request->get('keyword');
+        $parent  = $this->request->get('parent');
 
         $params = array();
+        if($parent || $this->under) {
+            $params['Parent'] = $parent? $parent: '*';
+        }
         if($query && $keyword) {
             $params[$query] = $keyword;
         }
@@ -52,7 +57,7 @@ class TraderController extends BaseController{
                         // 'Phone'  => trim($this->request->post('Phone')),
                         // 'Wechat' => trim($this->request->post('Wechat')),
                         'Status' => intval($this->request->post('Status')),
-                        // 'Parent' => intval($this->request->post('Parent')),
+                        // 'Parent' => trim($this->request->post('Parent')),
                     );
         if(empty($id)) {
             if(empty($password)) {

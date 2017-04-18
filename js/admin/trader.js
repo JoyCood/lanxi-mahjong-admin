@@ -13,8 +13,9 @@ Trader.listAction = function(pn, query) {
     if(query) {
         params.push(query);
     }
+    var url = location.pathname;
     App.ajax({
-        url: 'admin/trader/list' + (params.length? '?' + params.join('&'): ''),
+        url: url + 'list' + (params.length? '?' + params.join('&'): ''),
         target: '#main-body',
         success: function(response) {
             $(window).scrollTop(0);

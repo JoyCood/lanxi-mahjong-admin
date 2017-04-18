@@ -42,25 +42,25 @@
                     </tr>
                 </thead> 
                 <tbody>
-                    {% set formUrl = 'admin/trader/#form/' %}
+                    {% set formUrl = url_path() ~ '/#form/' %}
                     {% for item in data.items %}
                     <tr app-check="on">
                         <!--<td align="center"><input type="checkbox" app-check="item" /></td>-->
                         <td app-check="off">{{item.Gameid}}</td>
-                        <td><a href="{{formUrl}}{{item._id}}">{{item.Phone}}</a></td>
+                        <td><a href="{{formUrl}}{{item.id}}">{{item.Phone}}</a></td>
                         <td class="hidden-480">{{item.Wechat}}</td>
                         <td class="hidden-480" align="right">{{item.Lv}}</td>
-                        <td class="hidden-1024">{{item.Parent}}</td>
+                        <td class="hidden-1024"><a href="{{formUrl}}{{item.Parent}}">{{item.ParentData.Phone}}</a></td>
                         <td align="right">{{item.Charge}}</td>
                         <td align="right">{{item.Balance}}</td>
                         <td align="center">{{item.Status|trader_status}}</td>
                         <td class="hidden-1024">{{item.CTime|datetime}}</td>
-                        <td align="center" class="hidden-480"><a href="{{formUrl}}{{item._id}}" class="fa fa-edit"></a></td>
+                        <td align="center" class="hidden-480"><a href="{{formUrl}}{{item.id}}" class="fa fa-edit"></a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            {% include '_pagination.html' with {'url': 'admin/trader/#list'} %}
+            {% include '_pagination.html' with {'url': url_path() ~ '/#list'} %}
         </main>
     </div>
     <script>

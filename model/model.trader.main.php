@@ -36,7 +36,24 @@ class ModelTraderMain
 	}
 
 	public function findOne($filter, $projection=array()) {
-	    return $this->collection()->findOne($filter, $projection);
+	    $data = $this->collection()->findOne($filter, $projection);
+		if($data) {
+			$id                 = (string)$data['_id'];
+			$data['id']         = $id;
+			$data['ParentData'] = array();
+			unset($data['_id']);
+			if($data['Parent']) {
+				$item = $this->collection()->findOne(array(
+							'_id' => new MongoId($data['Parent'])
+						));
+				if($item) {
+					$id                 = (string)$item['_id'];
+					$item['id']         = $id;
+					$data['ParentData'] = $item;
+				}
+			}
+		}
+		return $data;
 	}
 
 	//插入数据
@@ -72,6 +89,15 @@ class ModelTraderMain
 		if($gameId) {
 		    $filters['Gameid'] = $gameId;
 		}
+		//上级代理
+		$parent = Helper::popValue($params, 'Parent');
+		if($parent) {
+			if($parent == '*') {
+				$filters['Parent'] = array('$ne' => null);
+			} else {
+			    $filters['Parent'] = $parent;
+			}
+		}
 
 		$data = Admin::pagination(
 			$this->collection(),
@@ -79,6 +105,38 @@ class ModelTraderMain
 			$filters,
 			array($sort => intval($order) > 0? 1: -1)
 	    );
+
+		$items   = array();
+		$parents = array();
+		$pids    = array();
+		if($data && $data['items']) {
+			foreach($data['items'] as $item) {
+				$id = (string)$item['_id'];
+				unset($item['_id']);
+
+				$item['id'] = $id;
+				$items[]    = $item;
+				$pids[]     = new MongoId($item['Parent']);
+			}
+		}
+		if($pids) {
+			$cursor = $this->collection()->find(array('_id' => array('$in' => $pids)));
+			foreach($cursor as $item) {
+				$id = (string)$item['_id'];
+				unset($item['_id']);
+
+				$parents[$id] = $item;
+			}
+			foreach($items as & $item) {
+				$pid = $item['Parent'];
+				if(isset($parents[$pid])) {
+					$item['ParentData'] = & $parents[$pid];
+				} else {
+					$item['ParentData'] = array();
+				}
+			}
+		}
+		$data['items'] = $items;
         
 		return $data;
 	}

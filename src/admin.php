@@ -115,7 +115,7 @@ class Admin {
 		$cursor  = $collection->find($filters);
 		$count   = $cursor->count();
 		$pn      = intval($pn);
-		$pn      = $pn < 0? 1: $pn;
+		$pn      = $pn < 1? 1: $pn;
 		$sort    = empty($sort)? array('create_time' => -1): $sort;
 		$limit   = $limit? $limit: Config::get('settings', 'listRowsNum');
 		$skip    = ($pn - 1) * $limit;

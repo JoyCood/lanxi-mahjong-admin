@@ -52,11 +52,13 @@ class Config
 				'/admin/notice/form-save' => 'POST::NoticeController::formSaveAction',
 				'/admin/notice/delete'    => 'POST::NoticeController::deleteAction',
 				// 代理商
-				'/admin/trader/'          => 'GET::TraderController::indexAction',
-				'/admin/trader/list'      => 'GET::TraderController::listAction',
-				'/admin/trader/form'      => 'GET::TraderController::formAction',
-				'/admin/trader/save'      => 'POST::TraderController::formSaveAction',
-				'/admin/trader/delete'    => 'POST::TraderController::deleteAction',
+				'/admin/trader/'           => 'GET::TraderController::indexAction',
+				'/admin/trader/list'       => 'GET::TraderController::listAction',
+				'/admin/trader/form'       => 'GET::TraderController::formAction',
+				'/admin/trader/save'       => 'POST::TraderController::formSaveAction',
+				'/admin/trader/delete'     => 'POST::TraderController::deleteAction',
+				'/admin/trader/under/'     => 'GET::TraderUnderController::indexAction',
+				'/admin/trader/under/list' => 'GET::TraderUnderController::listAction',
 			)
 		);
 	}

@@ -58,9 +58,9 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="trader-parent" class="col-sm-3 control-label">父代理ID:</label>
+                                <label for="trader-parent" class="col-sm-3 control-label">父级代理:</label>
                                 <div class="col-sm-9">
-                                    <input id="trader-parent" name="Parent" type="number" class="form-control" value="{{data.Parent}}" placeholder="父代理ID" autocomplete="off" readonly />
+                                    <input id="trader-parent" type="number" class="form-control" value="{{data.ParentData.Phone}}" placeholder="父代理ID" autocomplete="off" readonly />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -78,7 +78,7 @@
                             <div class="form-group">
                                 <label for="trader-ctime" class="col-sm-3 control-label">注册时间:</label>
                                 <div class="col-sm-9">
-                                    <input id="trader-ctime" name="CTime" type="number" class="form-control" value="{{data.CTime}}" placeholder="注册时间" readonly />
+                                    <input id="trader-ctime" name="CTime" type="number" class="form-control" value="{{data.CTime|datetime}}" placeholder="注册时间" readonly />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -108,6 +108,7 @@
                 </div>
                 <footer class="app-dialog-footer">
                     <input id="trader-id" type="hidden" name="Id" value="{{id}}" />
+                    <input type="hidden" name="Parent" value="{{data.Parent}}" />
                     <button type="submit" class="btn btn-primary">确定</button>
                     <button type="reset" class="btn">重置</button>
                 </footer>

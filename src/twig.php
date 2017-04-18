@@ -112,13 +112,14 @@ class SwimTwigExtension extends \Twig_Extension {
 			'image_src'      => new \Twig_Function_Method($this, 'fn_imageSrc'),
 			'check_perm'     => new \Twig_Function_Method($this, 'fn_checkPermission'),
 			'session'        => new \Twig_Function_Method($this, 'fn_session'),
-			'pagination_url' => new \Twig_Function_Method($this, 'ft_pagination_url'),
+			'pagination_url' => new \Twig_Function_Method($this, 'fn_pagination_url'),
+			'url_path'       => new \Twig_Function_Method($this, 'fn_url_path'),
 
 		);
 	}
 
 	public function ft_datetime($val) {
-		return $val? date('Y-m-d H:i:s', $val): date('Y-m-d H:i:s');
+		return $val? date('Y-m-d H:i:s', $val): '';
 	}
 
 	public function ft_status($value) {
@@ -183,17 +184,26 @@ class SwimTwigExtension extends \Twig_Extension {
 		var_dump($var);
 	}
 
-	public function ft_pagination_url($url, $pn) {
+	public function fn_url_path() {
+		$dir = dirname($_SERVER['REQUEST_URI']);
+		return $dir;
+		return substr($dir, strlen(DOC_DIR));
+	}
+	public function fn_pagination_url($url, $pn) {
 		$pn    = intval($pn);
 		$tmp   = explode('?', $_SERVER['REQUEST_URI']);
-		parse_str(array_pop($tmp), $query);
-		unset($query['pn']);
+		$query = array();
+		if(count($tmp) == 2) {
+			parse_str(array_pop($tmp), $query);
+			unset($query['pn']);
+		}
 		$parts = array(
 			$url,
 			$pn < 1? 1: $pn,
 			http_build_query($query)
 		);
-		return trim(join('/', $parts), '/');
+		$url = rtrim(join('/', $parts), '/');
+		return $url;
 	}
 
 	public function fn_checkPermission($mod, $val) {
