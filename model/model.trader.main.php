@@ -51,33 +51,29 @@ class ModelTraderMain
 	    return $this->collection()->update($filter, array('$set' => $data));
 	}
 
-	public function pagination($url = '', $pnValue=null) {
-        $params = Helper::parseQueryString($url? $url: $_SERVER['REQUEST_URI']);	
+	public function pagination($params, $pnValue=null) {
 		$pn     = Helper::popValue($params, 'pn', 1); 
 		$sort   = Helper::popValue($params, 'sort', 'CTime');
 		$order  = Helper::popValue($params, 'order', -1);
 		$filters = array();
 
 		//微信号搜索
-		$wechat = Helper::popValue($params, 'wechat');
+		$wechat = Helper::popValue($params, 'Wechat');
 		if($wechat) {
-		    $filters['Wechat'] = $wechat;
+		    $filters['Wechat'] = ['$regex' => $wechat];
 		}
-        
 		//电话搜索
-		$phone = Helper::popValue($params, 'phone');
+		$phone = Helper::popValue($params, 'Phone');
 		if($phone) {
-		    $filters['Phone'] = $phone;
+		    $filters['Phone'] = ['$regex' => $phone];
 		}
-        
-		//下级代理
-		$gameId = Helper::popValue($params, 'gameId');
+		//游戏ID
+		$gameId = Helper::popValue($params, 'Gameid');
 		if($gameId) {
-		    $filters['Parent'] = $gameId;
+		    $filters['Gameid'] = $gameId;
 		}
 
 		$data = Admin::pagination(
-		    $url,
 			$this->collection(),
 			is_null($pnValue)? $pn: $pnValue,
 			$filters,

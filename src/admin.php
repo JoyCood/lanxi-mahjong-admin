@@ -111,7 +111,7 @@ class Admin {
 	 * @param  $sort		array   排序
 	 * @return array
 	 */
-	static public function pagination($url, $collection, $pn = 1, $filters = array(), $sort = array(), $limit = null) { 
+	static public function pagination($collection, $pn = 1, $filters = array(), $sort = array(), $limit = null) { 
 		$cursor  = $collection->find($filters);
 		$count   = $cursor->count();
 		$pn      = intval($pn);
@@ -120,7 +120,6 @@ class Admin {
 		$limit   = $limit? $limit: Config::get('settings', 'listRowsNum');
 		$skip    = ($pn - 1) * $limit;
 		$result  = $cursor->sort($sort)->limit($limit)->skip($skip);
-		$url 	 = self::setURIPageNumber($url? $url: $_SERVER['REQUEST_URI'], '');
 
 		return array(
 			'total' => $count,
@@ -128,7 +127,6 @@ class Admin {
 			'pages' => ceil($count / $limit),
 			'rows'  => count($result),
 			'items' => $result,
-			'url'	=> $url
 		);
 	}
 

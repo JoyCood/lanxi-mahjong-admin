@@ -1,9 +1,8 @@
 html, body { height: 100%; }
 a { color: #485a6a; }
 a:hover { color: #5C9ACF; text-decoration: none; cursor: pointer; }
-.form-control {
-	height: 38px;
-}
+th { text-align: center; }
+.hs-table th, .hs-table td { padding: 11px 6px!important; }
 
 input.required { border-color: #5C9ACF; }
 input.invalid { border-color: #d54e21; }

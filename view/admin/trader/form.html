@@ -7,14 +7,14 @@
         <li class="active">{{action}}</li>
     </ol>
     <div class="portlet">
-        <header>
+        <header class="portlet_header">
             <h1>{{action}}{{caption}} {#% if id %}#{{id}}{% endif %#}</h1>
             <nav>
-                {% if data %}<a href="admin/trader/#form" type="button" class="btn btn-default">新建</a>{% endif %}
+                {#% if data %}<a href="admin/trader/#form" type="button" class="btn btn-default">新建</a>{% endif %#}
                 <a href="javascript:history.back();" type="button" class="btn btn-default"><i class="fa fa-angle-left"></i> 返回</a>
             </nav>
         </header>
-        <main>
+        <main class="portlet_main">
             <form id="trader-form" method="POST" action="admin/trader/save" class="form-horizontal">
                 <div class="app-dialog-content">
                     <div class="row">
@@ -22,13 +22,13 @@
                             <div class="form-group">
                                 <label for="trader-game-id" class="col-sm-3 control-label">*游戏ID:</label>
                                 <div class="col-sm-9">
-                                    <input id="trader-game-id" name="Gameid" type="number" class="form-control" value="{{data.Gameid}}" placeholder="请输入游戏ID" autocomplete="off" app-required="on" />
+                                    <input id="trader-game-id" name="Gameid" type="number" class="form-control" value="{{data.Gameid}}" placeholder="请输入游戏ID" autocomplete="off" app-required="on" readonly />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="trader-phone" class="col-sm-3 control-label">*手机号:</label>
                                 <div class="col-sm-9">
-                                    <input id="trader-phone" name="Phone" type="text" class="form-control" value="{{data.Phone}}" placeholder="请输入手机号" autocomplete="off" app-required="on" />
+                                    <input id="trader-phone" name="Phone" type="text" class="form-control" value="{{data.Phone}}" placeholder="请输入手机号" autocomplete="off" app-required="on" readonly />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -46,13 +46,13 @@
                             <div class="form-group">
                                 <label for="trader-wechat" class="col-sm-3 control-label">微信号:</label>
                                 <div class="col-sm-9">
-                                    <input id="trader-wechat" name="Wechat" type="text" class="form-control" value="{{data.Wechat}}" placeholder="微信号" autocomplete="off" />
+                                    <input id="trader-wechat" name="Wechat" type="text" class="form-control" value="{{data.Wechat}}" placeholder="微信号" autocomplete="off" readonly />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="trader-level" class="col-sm-3 control-label">代理等级:</label>
                                 <div class="col-sm-9">
-                                    <input id="trader-level" name="Lv" type="number" class="form-control" value="{{data.Lv}}" placeholder="代理等级" autocomplete="off" />
+                                    <input id="trader-level" name="Lv" type="number" class="form-control" value="{{data.Lv}}" placeholder="代理等级" autocomplete="off" readonly />
                                 </div>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                             <div class="form-group">
                                 <label for="trader-parent" class="col-sm-3 control-label">父代理ID:</label>
                                 <div class="col-sm-9">
-                                    <input id="trader-parent" name="Parent" type="number" class="form-control" value="{{data.Parent}}" placeholder="父代理ID" autocomplete="off" />
+                                    <input id="trader-parent" name="Parent" type="number" class="form-control" value="{{data.Parent}}" placeholder="父代理ID" autocomplete="off" readonly />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -84,7 +84,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">状态:</label>
                                 <div class="col-sm-9">
-                                    {% set traderStatus = data and data.status? data.status: 0 %}
+                                    {% set traderStatus = data and data.Status? data.Status: null %}
                                     <span>
                                         <input id="trader-status-normal" name="Status" type="radio" value="0"{{traderStatus == 0? ' checked': ''}} />
                                         <label for="trader-status-normal">正常</label>
@@ -139,7 +139,8 @@
                     return rs;
                 },
                 success: function() {
-                    App.hash('form/' + $('#trader-id').val());
+                    App.Notific.info('代理商资料已保存');
+                    // App.hash('form/' + $('#trader-id').val());
                 }
             });
             return false;

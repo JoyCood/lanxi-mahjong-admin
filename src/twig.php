@@ -98,21 +98,27 @@ class SwimTwigExtension extends \Twig_Extension {
 			'status'               => new \Twig_Filter_Method($this, 'ft_status', array('is_safe' => array('html'))),
 			'order_process_status' => new \Twig_Filter_Method($this, 'ft_order_process_status', array('is_safe' => array('html'))),
 			'restype'              => new \Twig_Filter_Method($this, 'ft_res_type', array('is_safe' => array('html'))),
-			'fb_status'            => new \Twig_Filter_Method($this, 'ft_fb_status', array('is_safe' => array('html'))),
+			'trader_status'        => new \Twig_Filter_Method($this, 'ft_trader_status', array('is_safe' => array('html'))),
 			'zerofill'             => new \Twig_Filter_Method($this, 'ft_zerofill'),
-			'dump'                 => new \Twig_Filter_Method($this, 'ft_dump', array('is_safe' => array('html')))
+			'dump'                 => new \Twig_Filter_Method($this, 'ft_dump', array('is_safe' => array('html'))),
+			'datetime'             => new \Twig_Filter_Method($this, 'ft_datetime'),
 		);
 	}
 
 	public function getFunctions() {
 		return array(
 			// 'json'  => new Twig_Function_Method($this, 'json_encode')
-			'is_video' 	 => new \Twig_Function_Method($this, 'fn_isVideo'),
-			'image_src'  => new \Twig_Function_Method($this, 'fn_imageSrc'),
-			'check_perm' => new \Twig_Function_Method($this,  'fn_checkPermission'),
-			'session'    => new \Twig_Function_Method($this,  'fn_session')
+			'is_video' 	     => new \Twig_Function_Method($this, 'fn_isVideo'),
+			'image_src'      => new \Twig_Function_Method($this, 'fn_imageSrc'),
+			'check_perm'     => new \Twig_Function_Method($this, 'fn_checkPermission'),
+			'session'        => new \Twig_Function_Method($this, 'fn_session'),
+			'pagination_url' => new \Twig_Function_Method($this, 'ft_pagination_url'),
 
 		);
+	}
+
+	public function ft_datetime($val) {
+		return $val? date('Y-m-d H:i:s', $val): date('Y-m-d H:i:s');
 	}
 
 	public function ft_status($value) {
@@ -150,15 +156,15 @@ class SwimTwigExtension extends \Twig_Extension {
 		return $rs;
 	}
 
-	public function ft_fb_status($value) {
-		switch($value) {
-			case '0':
-				$value = '-';
-				break;
-			default:
-				break;
-		}
-		return $value;
+	public function ft_trader_status($value) {
+		$status = array(
+			'0'   => '<span class="text-success">正常</span>',
+			'1'   => '<span class="text-warning">锁定</span>',
+			'2'   => '<span class="text-danger">黑名单</span>',
+			'3'   => '<span class="text-muted">待审核</span>',
+			'N/A' => '<span style="color: #999;">N/A</span>',
+		);
+		return isset($status[$value])? $status[$value]: $status['N/A'];
 	}
 
 	public function fn_isVideo($src) {
@@ -175,6 +181,19 @@ class SwimTwigExtension extends \Twig_Extension {
 	
 	public function ft_dump($var) {
 		var_dump($var);
+	}
+
+	public function ft_pagination_url($url, $pn) {
+		$pn    = intval($pn);
+		$tmp   = explode('?', $_SERVER['REQUEST_URI']);
+		parse_str(array_pop($tmp), $query);
+		unset($query['pn']);
+		$parts = array(
+			$url,
+			$pn < 1? 1: $pn,
+			http_build_query($query)
+		);
+		return trim(join('/', $parts), '/');
 	}
 
 	public function fn_checkPermission($mod, $val) {

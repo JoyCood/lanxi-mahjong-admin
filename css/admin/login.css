@@ -1,6 +1,9 @@
 body { 
 	background-color: #465568; 
 }
+.form-control {
+    height: 38px;
+}
 #main-body { padding: 0; }
 
 #login-box {

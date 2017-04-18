@@ -11,10 +11,19 @@ class TraderController extends BaseController{
     }
 
     public function listAction() {
-        $Trader = Admin::model('trader.main');
-        $data   = $Trader->pagination($this->request->get('_url', ''));
+        $Trader  = Admin::model('trader.main');
+        $query   = $this->request->get('query');
+        $keyword = $this->request->get('keyword');
+
+        $params = array();
+        if($query && $keyword) {
+            $params[$query] = $keyword;
+        }
+        $data = $Trader->pagination($params, intval($this->request->get('pn')));
         $this->render('trader/list.html', array(
-            'data' => $data,
+            'data'    => $data,
+            'query'   => $query,
+            'keyword' => $keyword
         ));
     }
 
@@ -39,11 +48,11 @@ class TraderController extends BaseController{
         $password = trim($this->request->post('Pwd'));
         $confirm  = trim($this->request->post('Cfm'));
         $doc      = array(
-                        'Gameid' => trim($this->request->post('Gameid')),
-                        'Phone'  => trim($this->request->post('Phone')),
-                        'Wechat' => trim($this->request->post('Wechat')),
+                        // 'Gameid' => trim($this->request->post('Gameid')),
+                        // 'Phone'  => trim($this->request->post('Phone')),
+                        // 'Wechat' => trim($this->request->post('Wechat')),
                         'Status' => intval($this->request->post('Status')),
-                        'Parent' => intval($this->request->post('Parent')),
+                        // 'Parent' => intval($this->request->post('Parent')),
                     );
         if(empty($id)) {
             if(empty($password)) {

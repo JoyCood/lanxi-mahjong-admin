@@ -39,9 +39,9 @@ $(document).on('ready', function() {
 		var params  = hash.slice(1);
 		if(window.Controller) {
 			if(action in window.Controller) {
-				window.Controller[action].call(window.Controller, params);
+				window.Controller[action].apply(window.Controller, params);
 			} else {
-				(window.Controller.index || $.noop).call(window.Controller, params);
+				(window.Controller.indexAction || $.noop).call(window.Controller, params);
 			}
 		}
 	}).trigger('hashchange');
