@@ -4,11 +4,16 @@ class ModelTraderMain
 {
 	const PASSWORD_SALT = 'TANG_FENG';
 
+    const STATUS_NORMAL    = 0; //正常
+	const STATUS_LOCKED    = 1; //锁定
+	const STATUS_BLACKLIST = 2; //黑名单
+	const STATUS_WAITING   = 3; //待审核
+	
 	public $status = array(
-	    0, //正常
-		1, //锁定
-		2, //黑名单
-		3  //待审核
+	    self::STATUS_NORMAL,    //正常
+		self::STATUS_LOCKED,    //锁定
+		self::STATUS_BLACKLIST, //黑名单
+		self::STATUS_WAITING    //待审核
     );
 
 	private $fields = array(
@@ -36,24 +41,7 @@ class ModelTraderMain
 	}
 
 	public function findOne($filter, $projection=array()) {
-	    $data = $this->collection()->findOne($filter, $projection);
-		if($data) {
-			$id                 = (string)$data['_id'];
-			$data['id']         = $id;
-			$data['ParentData'] = array();
-			unset($data['_id']);
-			if($data['Parent']) {
-				$item = $this->collection()->findOne(array(
-							'_id' => new MongoId($data['Parent'])
-						));
-				if($item) {
-					$id                 = (string)$item['_id'];
-					$item['id']         = $id;
-					$data['ParentData'] = $item;
-				}
-			}
-		}
-		return $data;
+	    return $this->collection()->findOne($filter, $projection);
 	}
 
 	//插入数据

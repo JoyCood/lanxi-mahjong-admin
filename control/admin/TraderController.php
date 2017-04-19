@@ -39,6 +39,22 @@ class TraderController extends BaseController{
         if($id) {
             $filters = array('_id' => new MongoId($id));
             $data    = Admin::model('trader.main')->findOne($filters);
+			if($data) {
+				$id                 = (string)$data['_id'];
+				$data['id']         = $id;
+				$data['ParentData'] = array();
+				unset($data['_id']);
+				if($data['Parent']) {
+					$item = $this->collection()->findOne(array(
+						    '_id' => new MongoId($data['Parent'])
+					    ));
+					if($item) {
+						$id                 = (string)$item['_id'];
+						$item['id']         = $id;
+						$data['ParentData'] = $item;
+					}
+				}
+			}
         }
         $this->render('trader/form.html', array(
             'id'   => $id,
