@@ -33,4 +33,23 @@ Notice.formAction = function(id) {
     });
 }
 
+Notice.remove = function(id) {
+    App.confirm('确定要删除此公告吗？', function(state) {
+        if(state) {
+            App.ajax({
+                url: 'admin/notice/delete',
+                data: {Id: id},
+                type: 'post',
+                dataType: 'json',
+                success: function(resp) {
+                    if(resp.result) {
+                        App.Notific.info('公告删除成功');
+                        App.hash((location.hash || '#list/1').replace(/^#/, ''));
+                    }
+                }
+            });
+        }
+    });
+}
+
 })();

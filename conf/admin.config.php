@@ -50,7 +50,7 @@ class Config
 				'/admin/notice/'          => 'GET::NoticeController::indexAction',
 				'/admin/notice/list'      => 'GET::NoticeController::listAction',
 				'/admin/notice/form'      => 'GET::NoticeController::formAction',
-				'/admin/notice/form-save' => 'POST::NoticeController::formSaveAction',
+				'/admin/notice/save'      => 'POST::NoticeController::formSaveAction',
 				'/admin/notice/delete'    => 'POST::NoticeController::deleteAction',
 				// 代理商
 				'/admin/trader/'           => 'GET::TraderController::indexAction',

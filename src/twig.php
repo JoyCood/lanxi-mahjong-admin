@@ -102,6 +102,7 @@ class SwimTwigExtension extends \Twig_Extension {
 			'zerofill'             => new \Twig_Filter_Method($this, 'ft_zerofill'),
 			'dump'                 => new \Twig_Filter_Method($this, 'ft_dump', array('is_safe' => array('html'))),
 			'datetime'             => new \Twig_Filter_Method($this, 'ft_datetime'),
+			'truncate'             => new \Twig_Filter_Method($this, 'ft_truncate'),
 		);
 	}
 
@@ -141,6 +142,14 @@ class SwimTwigExtension extends \Twig_Extension {
 			$value = '<span style="color: #3a87ad;">退款处理中</span>';
 		}
 		return $value;
+	}
+
+	public function ft_truncate($value, $len = 100) {
+		$output = mb_substr($value, 0, $len, 'UTF-8');
+		if(strlen($value) > $len) {
+			$output .= '...';
+		}
+		return $output;
 	}
 
 	public function ft_zerofill($value, $padLength = 2) {

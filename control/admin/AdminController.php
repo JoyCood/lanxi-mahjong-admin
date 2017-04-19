@@ -25,6 +25,7 @@ class AdminController extends BaseController {
         if($user) {
             if($user['Status'] && $Admin->password($password) == $user['Password']) {
                 // 登录成功
+                $_SESSION[Config::SESSION_UID]   = $user['id'];
                 $_SESSION[Config::SESSION_USER]  = $user['Username'];
                 $_SESSION[Config::SESSION_GROUP] = $user['Group'];
                 $Admin->update(array(
