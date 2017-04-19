@@ -48,6 +48,7 @@ class Config
 				'/admin/money/withdraw/form' => 'GET::MoneyController::withdrawFormAction',
 				// 公告
 				'/admin/notice/'          => 'GET::NoticeController::indexAction',
+				'/admin/notice/list'      => 'GET::NoticeController::listAction',
 				'/admin/notice/form'      => 'GET::NoticeController::formAction',
 				'/admin/notice/form-save' => 'POST::NoticeController::formSaveAction',
 				'/admin/notice/delete'    => 'POST::NoticeController::deleteAction',
