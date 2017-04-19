@@ -62,15 +62,13 @@ class ModelNoticeMain
 	}
 
 	//分页
-    public function pagination($url='', $pnValue=null) {
-        $params = Helper::parseQueryString($url? $url: $_SERVER['REQUEST_URI']);
+    public function pagination($params = array(), $pnValue=null) {
 	    $pn     = Helper::popValue($params, 'pn', 1);	
 		$sort   = Helper::popValue($params, 'sort', 'Time');
 		$order  = Helper::popValue($params, 'order', -1);
         
 	    $filters = array();	
 		$data = Admin::pagination(
-			$url, 
 			$this->collection(),
 	        is_null($pnValue)? $pn : $pnValue,
 	        $filters,

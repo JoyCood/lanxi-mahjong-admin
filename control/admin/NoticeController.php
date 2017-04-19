@@ -2,11 +2,20 @@
 require(DOC_ROOT. '/control/BaseController.php');
 
 class NoticeController extends BaseController{
-    public function inpourAction() {
+    public function init() {
+        $this->addViewData('MENU_ITEM', 'notice');
+    }
+
+    public function indexAction() {
+        $this->render('notice/index.html', array(
+        ));
+    }
+
+    public function listAction() {
         $notice = Admin::model('notice.main');
         $data = $notice->pagination();
 
-        $this->render('notice/index.html', array(
+        $this->render('notice/list.html', array(
             'data' => $data
         ));
     }

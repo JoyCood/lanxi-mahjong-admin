@@ -1,0 +1,61 @@
+<div id="notice-container">
+    <ol class="breadcrumb">
+        <li><a href="admin/"><i class="fa fa-home"></i> 首页</a></li>
+        <li><a href="admin/notice/">公告</a></li>
+        <li class="active">列表</li>
+    </ol>
+    <div id="notice-content" class="portlet hs-table">
+        <header class="portlet_header">
+            <h1>公告</h1>
+            <nav id="notice-bar">
+                <a href="admin/notice/#form" class="btn btn-default" app-check-rel="off">新建</a>
+                {#<form id="notice-search-form" class="input-group" role="search">
+                    <select name="query" class="form-control">
+                        <option value="Phone"{{query=='Phone'? ' selected': ''}}>手机号</option>
+                        <option value="Wechat"{{query=='Wechat'? ' selected': ''}}>微信号</option>
+                        <option value="Gameid"{{query=='Gameid'? ' selected': ''}}>游戏ID</option>
+                    </select>
+                    <div class="input-group-btn">
+                    </div>
+                    <input type="search" name="keyword" value="{{keyword}}" class="form-control" aria-label="...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                    </span>
+                </form>#}
+            </nav>
+        </header>
+        <main class="portlet_main">
+            <table app-check-rel="#notice-bar">
+                <thead>
+                    <tr>
+                        <th width="40" align="center"><input type="checkbox" app-check="all" /></th>
+                        <th width="60">标题</th>
+                        <th>摘要</th>
+                        <th width="100" class="hidden-480">过期时间</th>
+                        <th width="40" align="center" class="hidden-480"></th>
+                    </tr>
+                </thead> 
+                <tbody>
+                    {% set formUrl = url_path() ~ '/#form/' %}
+                    {% for item in data.items %}
+                    <tr app-check="on">
+                        <td align="center"><input type="checkbox" app-check="item" /></td>
+                        <td app-check="off">{{item.Gameid}}</td>
+                        <td></td>
+                        <td class="hidden-480"></td>
+                        <td align="center" class="hidden-480"><a href="{{formUrl}}{{item.id}}" class="fa fa-edit"></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% include '_pagination.html' with {'url': url_path() ~ '/#list'} %}
+        </main>
+    </div>
+    <script>
+        $('#notice-search-form').on('submit', function() {
+            var form = $(this);
+            App.hash('list/1/' + form.serialize());
+            return false;
+        });
+    </script>
+</div>
