@@ -41,7 +41,7 @@ class NoticeController extends BaseController{
             'Title'   => trim($this->request->post('Title')),
             'Content' => trim($this->request->post('Content')),
             'Expire'  => strtotime($this->request->post('Expire')),
-            'AdminId' => $_SESSION[Config::SESSION_USER]
+            'AdminId' => $_SESSION[Config::SESSION_UID]
         );
 
         if(!$doc['Title']) {
