@@ -2,52 +2,54 @@
 define('DEBUG', true);
 class Config
 {
-	static private $Options;
+    static private $Options;
 
-	const SESSION_UID   = 'lanxi-region-user-id';
-	const SESSION_USER  = 'lanxi-region-user';
-	const SESSION_GROUP = 'lanxi-region-group';
+    const SESSION_UID   = 'lanxi-region-user-id';
+    const SESSION_USER  = 'lanxi-region-user';
+    const SESSION_GROUP = 'lanxi-region-group';
 
-	static public function & get($key, $field) {
-		return self::$Options[$key][$field];
-	}
+    static public function & get($key, $field) {
+        return self::$Options[$key][$field];
+    }
 
-	static public function & getOptions($key) {
-		return self::$Options[$key];
-	}
+    static public function & getOptions($key) {
+        return self::$Options[$key];
+    }
 
-	static public function init() {
-		self::$Options = array(
-			// 数据库
-			'db' => require('db.config.php'),
-			// 网站设置
-			'settings' => array(
-				'title'         => '区域管理',
-				'listRowsNum'   => 30,
-				'slim'          => array(
-										'templates.path' => DOC_ROOT. '/view/region'
-								),
-				'sessionSecret' => 'a0e0eba2c41369c5797dbb3ab158b9e6',
-				'resVersion'    => 1,
-				'res3rdVersion' => 1
-			),
-			// 日志
-			'log' => array(
-				'dir'  => DOC_ROOT. '/logs/region',
-				'file' => 'log-'. date('Y-m-d'). '.log',
-			),
-			// 免登录
-			'notauth' => array(
-				'/region/login',
-				'/region/logout',
-			),
-			// 路径设置
-			'routes' => array(
-				'/region/'           => 'GET::AdminController::indexAction',
-				'/region/login'      => 'GET::AdminController::loginAction',
-				'/region/login-auth' => 'POST::AdminController::loginAuthAction',
-				'/region/logout'     => 'POST::AdminController::logoutAction',
-			)
-		);
-	}
+    static public function init() {
+        self::$Options = array(
+                // 数据库
+                'db' => require('db.config.php'),
+                // 网站设置
+                'settings' => array(
+                        'title'         => '区域管理',
+                        'listRowsNum'   => 30,
+                        'slim'          => array(
+                            'templates.path' => DOC_ROOT. '/view/region'
+                         ),
+                        'sessionSecret' => 'a0e0eba2c41369c5797dbb3ab158b9e6',
+                        'resVersion'    => 1,
+                        'res3rdVersion' => 1
+                ),
+                // 日志
+                'log' => array(
+                        'dir'  => DOC_ROOT. '/logs/region',
+                        'file' => 'log-'. date('Y-m-d'). '.log',
+                ),
+                // 免登录
+                'notauth' => array(
+                        '/region/login',
+                        '/region/logout',
+                        '/region/register'
+                ),
+                // 路径设置
+                'routes' => array(
+                        '/region/'           => 'GET::TraderController::indexAction',
+                        '/region/login'      => 'GET::TraderController::loginAction',
+                        '/region/login-auth' => 'POST::TraderController::loginAuthAction',
+                        '/region/logout'     => 'POST::TraderController::logoutAction',
+                        '/region/register'   => 'GET::TraderController::registerAction'
+                )
+        );
+    }
 }
