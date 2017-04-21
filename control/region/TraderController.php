@@ -12,6 +12,7 @@ class TraderController extends BaseController {
         ));
     }
 
+    //登录
     public function loginAuthAction() {
         $Trader = Admin::model('Trader.main');    
         $phone  = trim($this->request->post('phone'));
@@ -43,24 +44,22 @@ class TraderController extends BaseController {
         $result = $Trader->update($filters, $doc);
         $this->renderJSON(array('result' => true));
     }
+    
+    //注册表单页面
+    public function regAction() {
+        $this->render('reg.html');     
+    }
 
+    //注册
     public function registerAction() {
         $Trader   = Admin::model('Trader.main');
         $nick     = trim($this->request->post('nick'));
         $gameId   = trim($this->request->post('gameId'));
         $wechat   = trim($this->request->post('wechat'));
         $phone    = trim($this->request->post('phone'));
-        $authCode = trim($this->request->post('authCode')); 
+        $code     = trim($this->request->post('code')); 
         $password = trim($this->request->post('password'));
         $password2= trim($this->request->post('password2'));
-
-        $nick = 'joy';
-        $gameId = '1234';
-        $wechat = '13533332421';
-        $phone  = '13533332421';
-        $authCode = '32145';
-        $password = '123456';
-        $password2 = '123456';
 
         if(!$nick) {
             $this->error('请填写昵称');
@@ -74,7 +73,7 @@ class TraderController extends BaseController {
         if(!$phone) {
             $this->error('请填写手机号');
         }
-        if(!$authCode) {
+        if(!$code) {
             $this->error('请填写验证码');
         }
         if(!$password) {
@@ -90,15 +89,13 @@ class TraderController extends BaseController {
         if(!Phone::validation($phone)) {
             $this->error('请填写正确的手机号码');
         }
-
         $filters = array('_id' => $gameId);
         $player = Admin::model('User.main')->findOne($filters);
         if(!$player) {
             $this->error('游戏ID不存在');
         }
-
         $AuthCode = Admin::model('authcode.main');
-        $filters = array('Phone'=>$phone, 'Code'=>$authcode);
+        $filters = array('Phone'=>$phone, 'Code'=>$code);
         $auth = $AuthCode->findOne($filters);
         if(!$auth) {
             $this->error('验证码无效，请重新获取验证码');
@@ -106,12 +103,21 @@ class TraderController extends BaseController {
         if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
             $this->error('验证码已过期，请重新获取验证码');
         }
+        $filters = array( 
+            '$or' => array( 
+                array('Gameid' => $gameId), 
+                array('Phone' => $phone)
+        ));
+        $trader = $Trader->findOne($filters);
+        if($trader) {
+            $this->error('你已经是代理商，请直接登录');
+        }
 
         $doc = array(
             'Gameid'   => $gameId,
             'Phone'    => $phone,
             'Nickname' => $nick,
-            'Wechat'   => $wechatId,
+            'Wechat'   => $wechat,
             'Pwd'      => md5($password),
             'CIP'      => Admin::getRemoteIP(),
             'CTime'    => time(),
@@ -119,16 +125,23 @@ class TraderController extends BaseController {
             'LIP'      => Admin::getRemoteIP(),
             'LTime'    => time(),
             'Lv'       => 0,
-            'Parent'   => 0,
+            'Parent'   => "",
             'Charge'   => 0,
             'Status'   => 0,
             'Balance'  => 0,
             'Addr'     => ''
         );
-        $Trader->insert($doc);
-        $this->renderJSON();
+        $result = $Trader->insert($doc);
+        if($result['ok']==1) {
+            Admin::model('trader.relate')->update(
+                array('GameId' => $gameId),
+                array('Agent'  => 1)
+            ); 
+        }
+        $this->renderJSON((boolean)$result);
     }
 
+    //获取验证码
     public function getAuthcodeAction() {
         $phone = trim($this->request->post('phone'));
         if(!Phone::validation($phone)) {
@@ -138,27 +151,30 @@ class TraderController extends BaseController {
         $filters = array('phone' => $phone);
         $auth = $AuthCode->findOne($filters);
         if(!$auth) {
-            $authCode = substr(mt_rand(), -6);
+            $code = substr(mt_rand(), -6);
             
             $doc = array(
                 'Phone' => $phone,
-                'Code'  => $authCode,
+                'Code'  => $code,
                 'CTime' => time()
             );
             $AuthCode->insert($doc);
-            Admin::send($authCode);
+            $msg = "您的验证码是:{$code}【趣游泳】";
+            $result = Phone::send($phone, $msg);
             return;
         }
 
         if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
-            $authCode      = substr(mt_rand(), -6);
-            $auth['Code']  = $authCode;
+            $code = substr(mt_rand(), -6);
+            $auth['Code']  = $code;
             $auth['CTime'] = time();
             $AuthCode->update($filters, $auth);
-            Phone::send($authCode);
+            $msg = "您的验证码是:{$code}【趣游泳】";
+            Phone::send($phone, $msg);
             return;
         }
 
-        Phone::send($auth['code']);
+        $msg = "您的验证码是:{$auth['code']}【趣游泳】";
+        Phone::send($phone, $msg);
     }
 }

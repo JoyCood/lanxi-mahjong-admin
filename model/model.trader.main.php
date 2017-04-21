@@ -31,7 +31,7 @@ class ModelTraderMain
         'LTime',    #uint32  最后登录时间
         'Lv',       #uint32  代理等级
         'Parent',   #string  上级代理id
-        'Charge',   #uint32  充值金额（单位/分）
+        'Charge',   #uint32  充值金额（单位:分）
         'Status',   #uint32  状态  正常0  锁定1  黑名单2 待审核3
         'Balance'   #uint32  可提现余额(单位/分)
     );

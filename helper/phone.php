@@ -7,7 +7,7 @@ class Phone {
     static private $phonenumber; 
     static private $yunpian;
 
-    const API_KEY = '';
+    const API_KEY = '13da877eed1a8c03add633f98268e993';
 
     static public function init() {
         self::$phonenumber = \libphonenumber\PhoneNumberUtil::getInstance(); 
@@ -44,6 +44,7 @@ class Phone {
         $key = self::API_KEY;
         $msg = urlencode("{$msg}");
         $msg = "apikey={$key}&text={$msg}&mobile={$phone}";
+
         return self::$yunpian->send($msg); 
     }
 }

@@ -11,5 +11,7 @@ return array(
         'col_trade_record',     //交易记录
         'admin_log',
         'user', //玩家
+        'authcode', //验证码
+        'user_relate', //绑定关系
     )
 );
