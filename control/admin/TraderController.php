@@ -34,18 +34,19 @@ class TraderController extends BaseController{
 
     // 代理商详情
     public function formAction() {
-        $id = $this->request->get('id', '');
-        $data = array();
+        $Trader = Admin::model('trader.main');
+        $id     = $this->request->get('id', '');
+        $data   = array();
         if($id) {
             $filters = array('_id' => new MongoId($id));
-            $data    = Admin::model('trader.main')->findOne($filters);
+            $data    = $Trader->findOne($filters);
 			if($data) {
 				$id                 = (string)$data['_id'];
 				$data['id']         = $id;
 				$data['ParentData'] = array();
 				unset($data['_id']);
 				if($data['Parent']) {
-					$item = $this->collection()->findOne(array(
+					$item = $Trader->collection()->findOne(array(
 						    '_id' => new MongoId($data['Parent'])
 					    ));
 					if($item) {
