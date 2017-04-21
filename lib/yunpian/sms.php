@@ -2,8 +2,8 @@
 
 class YunPianSms
 {
-    const API = 'http://yunpian.com/v1/sms/send.json"';
-
+    const API = "http://yunpian.com/v1/sms/send.json";
+    
     public function send($msg)
     {
         $data = "";

@@ -40,15 +40,17 @@ class Config
                 'notauth' => array(
                         '/region/login',
                         '/region/logout',
-                        '/region/register'
+                        '/region/reg'
                 ),
                 // 路径设置
                 'routes' => array(
                         '/region/'           => 'GET::TraderController::indexAction',
                         '/region/login'      => 'GET::TraderController::loginAction',
+                        '/region/reg'        => 'GET::TraderController::regAction',    
                         '/region/login-auth' => 'POST::TraderController::loginAuthAction',
                         '/region/logout'     => 'POST::TraderController::logoutAction',
-                        '/region/register'   => 'GET::TraderController::registerAction'
+                        '/region/register'   => 'POST::TraderController::registerAction',
+                        '/region/getcode'    => 'POST::TraderController::getAuthcodeAction'
                 )
         );
     }
