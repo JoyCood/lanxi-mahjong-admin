@@ -53,7 +53,6 @@ class TraderController extends BaseController {
     //注册
     public function registerAction() {
         $Trader   = Admin::model('Trader.main');
-        $nick     = trim($this->request->post('nick'));
         $gameId   = trim($this->request->post('gameId'));
         $wechat   = trim($this->request->post('wechat'));
         $phone    = trim($this->request->post('phone'));
@@ -61,9 +60,6 @@ class TraderController extends BaseController {
         $password = trim($this->request->post('password'));
         $password2= trim($this->request->post('password2'));
 
-        if(!$nick) {
-            $this->error('请填写昵称');
-        }
         if(!$gameId) {
             $this->error('请填写游戏ID');
         }
@@ -116,7 +112,7 @@ class TraderController extends BaseController {
         $doc = array(
             'Gameid'   => $gameId,
             'Phone'    => $phone,
-            'Nickname' => $nick,
+            'Nickname' => $player['Nickname'],
             'Wechat'   => $wechat,
             'Pwd'      => md5($password),
             'CIP'      => Admin::getRemoteIP(),
@@ -177,4 +173,18 @@ class TraderController extends BaseController {
         $msg = "您的验证码是:{$auth['code']}【趣游泳】";
         Phone::send($phone, $msg);
     }
+
+	//我的下级代理列表
+	public function listAction() {
+        $Relate = Admin::model('Trader.Relate');	
+		$pn     = $this->request->get('pn');
+
+		$params['filters'] = array(
+		    'Parent' => $_SESSION[Config::SESSION_UID],
+			'Agent'  => $Relate::TRADER 
+		);
+
+		$traders = $Relate->pagination($params, $pn);
+        $this->render('/trader/list.html', $traders);
+	}
 }
