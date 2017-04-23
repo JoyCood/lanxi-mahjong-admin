@@ -13,5 +13,6 @@ return array(
         'user', //玩家
         'authcode', //验证码
         'user_relate', //绑定关系
+		'agent_rebate_record', //提现记录
     )
 );

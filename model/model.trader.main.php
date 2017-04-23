@@ -3,6 +3,7 @@
 class ModelTraderMain 
 {
     const PASSWORD_SALT = 'TANG_FENG';
+	const WITHDRAWTIME  = 5*24*3600; //五天提现一次
 
     const STATUS_NORMAL    = 0; //正常
     const STATUS_LOCKED    = 1; //锁定
@@ -33,7 +34,8 @@ class ModelTraderMain
         'Parent',   #string  上级代理id
         'Charge',   #uint32  充值金额（单位:分）
         'Status',   #uint32  状态  正常0  锁定1  黑名单2 待审核3
-        'Balance'   #uint32  可提现余额(单位/分)
+        'Balance',  #uint32  可提现余额(单位/分)
+		'WithdrawTime' #uint32 最后提现时间
     );
 
     public function collection() {
