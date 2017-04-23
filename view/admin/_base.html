@@ -67,19 +67,21 @@
             <i class="fa fa-adn"></i>
             <span>代理商</span>
         </a>
+        {#
         <a href="admin/trader/under/"{{MENU_ITEM=="trader_under"? ' class="active"': ''}} title="下级代理">
             <i class="fa fa-stumbleupon-circle"></i>
             <span>下级代理</span>
         </a>
-        <a href="admin/money/Withdraw/" title="返现申请">
-            <i class="fa fa-yen"></i>
-            <span>返现申请</span>
-        </a>
-        <a href="admin/money/" title="付费流水">
+        #}
+        <a href="admin/money/inpour/" title="付费流水">
             <i class="fa fa-list-ol"></i>
             <span>付费流水</span>
         </a>
-        <a href="admin/" title="返现汇总">
+        <a href="admin/money/withdraw/" title="返现申请">
+            <i class="fa fa-yen"></i>
+            <span>返现申请</span>
+        </a>
+        <a href="admin/money/withdraw/#summary" title="返现汇总">
             <i class="fa fa-list-alt"></i>
             <span>返现汇总</span>
         </a>

@@ -62,6 +62,10 @@ var App = function() {
 			}
 		}
 		opts.error = function(jqXHR, textStatus, errorThrown) {
+			if(opts.target) {
+				$(opts.target).html(jqXHR.responseText);
+				return;
+			}
 			var rs = error(jqXHR, textStatus, errorThrown);
 			if(rs == undefined || rs) {
 				// textStatus: "timeout", "error", "abort", and "parsererror", 'custom', 'except'

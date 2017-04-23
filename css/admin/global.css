@@ -4,16 +4,16 @@ a:hover { color: #5C9ACF; text-decoration: none; cursor: pointer; }
 a.link {
 	display: inline-block;
 	font-size: 1.2em;
-	width: 44px; height: 44px; line-height: 44px;
+	min-width: 44px; height: 44px; line-height: 44px;
 	text-align: center;
 }
 th { text-align: center; }
 .hs-table th, .hs-table td { padding: 11px 6px!important; }
-.glyphicon-arrow-right:before {
+.glyphicon-arrow-right:before, .icon-arrow-right:before {
 	font-family: FontAwesome;
 	content: "\f054";
 }
-.glyphicon-arrow-left:before {
+.glyphicon-arrow-left:before, .icon-arrow-left:before {
 	font-family: FontAwesome;
 	content: "\f053";
 }
@@ -52,6 +52,11 @@ Responsive Utils
 ***/
 @media (max-width: 1280px) {
   .hidden-1280 {
+    display: none;
+  }
+}
+@media (max-width: 800px) {
+  .hidden-800 {
     display: none;
   }
 }

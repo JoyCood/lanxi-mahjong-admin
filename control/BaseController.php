@@ -45,11 +45,12 @@ class BaseController {
 
         header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
         header('APP-ERROR:'. json_encode($error));
-        if($this->request->isAjax()) {
-            $this->renderJSON($error);
-        } else {
-            $this->render('error.html', $error);
-        }
+        $this->render('error.html', $error);
+        // if($this->request->isAjax()) {
+        //     $this->renderJSON($error);
+        // } else {
+        //     $this->render('error.html', $error);
+        // }
         exit();
     }
 }

@@ -46,11 +46,11 @@ class Config
                 'routes' => array(
                         '/region/'            => 'GET::TraderController::indexAction',
                         '/region/login'       => 'GET::TraderController::loginAction',
-                        '/region/reg'         => 'GET::TraderController::regAction',        //注册页面 
+                        // '/region/reg'         => 'GET::TraderController::regAction',        //注册页面 
                         '/region/code'        => 'POST::TraderController::getCodeAction',   //获取验证码
                         '/region/login-auth'  => 'POST::TraderController::loginAuthAction', //登录验证
                         '/region/logout'      => 'POST::TraderController::logoutAction',    //登出
-                        '/region/register'    => 'POST::TraderController::registerAction',  //提交注册信息
+                        '/region/register'    => '::TraderController::registerAction',  //提交注册信息
 						'/region/trader/list' => 'GET::TraderController::listAction'        //我的下级代理列表
                 )
         );

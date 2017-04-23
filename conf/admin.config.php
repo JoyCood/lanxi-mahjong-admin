@@ -42,10 +42,13 @@ class Config
 				'/admin/logout'     => 'POST::AdminController::logoutAction',
 				'/admin/log'        => 'GET::AdminController::logAction',
 				// 订单
-				'/admin/money/inpour'        => 'GET::MoneyController::inpourAction',
-				'/admin/money/inpour/form'   => 'GET::MoneyController::inpourFormAction',
-				'/admin/money/withdraw'      => 'GET::MoneyController::withdrawAction',
-				'/admin/money/withdraw/form' => 'GET::MoneyController::withdrawFormAction',
+				'/admin/money/inpour/'          => 'GET::MoneyController::inpourAction',
+				'/admin/money/inpour/form'      => 'GET::MoneyController::inpourFormAction',
+				'/admin/money/inpour/list'      => 'GET::MoneyController::inpourListAction',
+				'/admin/money/withdraw/'        => 'GET::MoneyController::withdrawAction',
+				'/admin/money/withdraw/form'    => 'GET::MoneyController::withdrawFormAction',
+				'/admin/money/withdraw/list'    => 'GET::MoneyController::withdrawListAction',
+				'/admin/money/withdraw/summary' => 'GET::MoneyController::withdrawSummaryAction',
 				// 公告
 				'/admin/notice/'          => 'GET::NoticeController::indexAction',
 				'/admin/notice/list'      => 'GET::NoticeController::listAction',
@@ -58,8 +61,6 @@ class Config
 				'/admin/trader/form'       => 'GET::TraderController::formAction',
 				'/admin/trader/save'       => 'POST::TraderController::formSaveAction',
 				'/admin/trader/delete'     => 'POST::TraderController::deleteAction',
-				'/admin/trader/under/'     => 'GET::TraderUnderController::indexAction',
-				'/admin/trader/under/list' => 'GET::TraderUnderController::listAction',
 			)
 		);
 	}

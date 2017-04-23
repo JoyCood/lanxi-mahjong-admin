@@ -168,11 +168,11 @@ class SwimTwigExtension extends \Twig_Extension {
 
 	public function ft_trader_status($value) {
 		$status = array(
-			'0'   => '<span class="text-success">正常</span>',
-			'1'   => '<span class="text-warning">锁定</span>',
-			'2'   => '<span class="text-danger">黑名单</span>',
-			'3'   => '<span class="text-muted">待审核</span>',
-			'N/A' => '<span style="color: #999;">N/A</span>',
+			\ModelTraderMain::STATUS_NORMAL    => '<span class = "text-success">正常</span>',
+			\ModelTraderMain::STATUS_LOCKED    => '<span class = "text-warning">锁定</span>',
+			\ModelTraderMain::STATUS_BLACKLIST => '<span class = "text-danger">黑名单</span>',
+			\ModelTraderMain::STATUS_WAITING   => '<span class = "text-muted">待审核</span>',
+			'N/A'                             => '<span style =" color: #999;">N/A</span>',
 		);
 		return isset($status[$value])? $status[$value]: $status['N/A'];
 	}

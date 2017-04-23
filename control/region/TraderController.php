@@ -46,12 +46,16 @@ class TraderController extends BaseController {
     }
     
     //注册表单页面
-    public function regAction() {
-        $this->render('reg.html');     
+    public function registerAction() {
+        if($this->request->isGet()) {
+            $this->render('reg.html');
+        } else if($this->request->isPost()) {
+            $this->register();
+        }
     }
 
     //注册
-    public function registerAction() {
+    protected function register() {
         $Trader   = Admin::model('Trader.main');
         $gameId   = trim($this->request->post('gameId'));
         $wechat   = trim($this->request->post('wechat'));

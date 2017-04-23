@@ -24,30 +24,26 @@ class ModelMoneyWithdraw
 	    return $this->collection()->find($filter, $projection);
 	}
 
-    public function pagination($url='', $pnValue=null) {
-        $params = Helper::parseQueryString($url? $url: $_SERVER['REQUEST_URI']);
-	    $pn     = Helper::popValue($params, 'pn', 1);
-	    $sort   = Helper::popValue($params, 'sort', 'Time');
-	    $order  = Helper::popValue($params, 'order', -1);	
+    public function pagination($params = array(), $pnValue=null) {
+	    $pn      = Helper::popValue($params, 'pn', 1);
+	    $sort    = Helper::popValue($params, 'sort', 'Time');
+	    $order   = Helper::popValue($params, 'order', -1);	
+		$start   = Helper::popValue($params, 'start');
+		$end     = Helper::popValue($params, 'end');
+		$gameId  = Helper::popValue($params, 'gameId');
+		$filters = array();
 
-		$filter = array();
-		$start = Helper::popValue($params, 'start');
 		if($start) {
 		    $filters['$and'][] = array('Time' => array('$gte'=>$start));
 		}
-
-		$end = Helper::popValue($params, 'end');
 		if($end) {
 		    $filters['$and'][] = array('Time' => array('$lte'=>$end));
 		}
-
-		$gameId = Helper::popValue($params, 'gameId');
 		if($gameId) {
 		    $filters['Gameid'] = $gameId;
 		}
 
 		return Admin::pagination(
-		    $url,
 			$this->collection(),
 			is_null($pnValue)? $pn: $pnValue,
 			$filters,

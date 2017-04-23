@@ -4,9 +4,12 @@
         <li><a href="admin/trader/">代理商</a></li>
         <li class="active">列表</li>
     </ol>
+    {% set url = url_path() %}
+    {% set formUrl = url ~ '/#form/' %}
+    {% set listUrl = url ~ '/#list' %}
     <div id="trader-content" class="portlet hs-table">
         <header class="portlet_header">
-            <h1>代理商</h1>
+            <h1>代理商{% if parentData %} @ {{parentData.Phone}}{% endif %}</h1>
             <nav id="trader-bar">
                 {#<a href="admin/trader/#form" class="btn btn-default" app-check-rel="off">新建</a>#}
                 <form id="trader-search-form" class="input-group" role="search">
@@ -17,9 +20,10 @@
                     </select>
                     <div class="input-group-btn">
                     </div>
-                    <input type="search" name="keyword" value="{{keyword}}" class="form-control" aria-label="...">
+                    <input type="search" name="keyword" value="{{keyword}}" class="form-control" placeholder="搜索" />
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                        <input type="hidden" id="trader-search-parent-id" name="parent" value="{{parent}}" />
+                        <button id="trader-search-submit" class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
                     </span>
                 </form>
             </nav>
@@ -31,39 +35,43 @@
                         <!--<th width="40" align="center"><input type="checkbox" app-check="all" /></th>-->
                         <th width="60">游戏ID</th>
                         <th>手机号</th>
-                        <th width="100" class="hidden-480">微信号</th>
+                        <th width="100" class="hidden-800">微信号</th>
                         <th width="70" class="hidden-480" align="right">代理等级</th>
                         <th width="100" class="hidden-1024">上级代理</th>
                         <th width="80" align="right">充值金额</th>
                         <th width="80" align="right">可提余额</th>
                         <th width="60" align="center">状态</th>
-                        <th width="150" class="hidden-1024">注册时间</th>
+                        <th width="90" class="hidden-1024">注册时间</th>
                         <th width="40" align="center" class="hidden-480"></th>
                     </tr>
                 </thead> 
                 <tbody>
-                    {% set formUrl = url_path() ~ '/#form/' %}
                     {% for item in data.items %}
                     <tr app-check="on">
                         <!--<td align="center"><input type="checkbox" app-check="item" /></td>-->
                         <td app-check="off">{{item.Gameid}}</td>
-                        <td><a href="{{formUrl}}{{item.id}}">{{item.Phone}}</a></td>
-                        <td class="hidden-480">{{item.Wechat}}</td>
+                        <td><a href="{{listUrl}}/1/parent={{item.id}}" class="fa fa-arrow-circle-o-down">{{item.Phone}}</a></td>
+                        <td class="hidden-800">{{item.Wechat}}</td>
                         <td class="hidden-480" align="right">{{item.Lv}}</td>
-                        <td class="hidden-1024"><a href="{{formUrl}}{{item.Parent}}">{{item.ParentData.Phone}}</a></td>
+                        <td class="hidden-1024"><a href="{{formUrl}}{{item.ParentData.id}}">{{item.ParentData.Phone}}</a></td>
                         <td align="right">{{item.Charge}}</td>
                         <td align="right">{{item.Balance}}</td>
                         <td align="center">{{item.Status|trader_status}}</td>
                         <td class="hidden-1024">{{item.CTime|datetime}}</td>
-                        <td align="center" class="hidden-480"><a href="{{formUrl}}{{item.id}}" class="fa fa-edit"></a></td>
+                        <td align="center" class="hidden-480"><a href="{{formUrl}}{{item.id}}" class="link fa fa-edit"></a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            {% include '_pagination.html' with {'url': url_path() ~ '/#list'} %}
+            {% include '_pagination.html' with {'url': listUrl} %}
         </main>
     </div>
     <script>
+        $('#trader-container').on('click', 'a[app-action]', function() {
+            var val = this.getAttribute('app-val');
+            switch(this.getAttribute('app-action')) {
+            }
+        });
         $('#trader-search-form').on('submit', function() {
             var form = $(this);
             App.hash('list/1/' + form.serialize());

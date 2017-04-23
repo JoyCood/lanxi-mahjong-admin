@@ -28,7 +28,7 @@
                     <tr app-check="on" data-id="{{item._id}}">
                         <!--<td align="center"><input type="checkbox" app-check="item" /></td>-->
                         <td>
-                            <h2 class="notice-title">{{item.Title}}</h2>
+                            <h2 class="notice-title"><a href="{{formUrl}}{{item._id}}">{{item.Title}}</a></h2>
                             <p class="notice-content">{{item.Content|truncate(80)}}</p>
                         </td>
                         <td class="hidden-480">{{item.Expire|datetime}}</td>

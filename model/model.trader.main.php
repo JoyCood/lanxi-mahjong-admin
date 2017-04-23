@@ -44,6 +44,12 @@ class ModelTraderMain
         return $this->collection()->findOne($filter, $projection);
     }
 
+    public function getOneById($id) {
+        return $this->collection()->findOne(array(
+            '_id' => new MongoId($id)
+        ));
+    }
+
     //插入数据
     public function insert($data) {
         $data = Helper::allowed($data, $this->fields);
@@ -111,6 +117,7 @@ class ModelTraderMain
             $cursor = $this->collection()->find(array('_id' => array('$in' => $pids)));
             foreach($cursor as $item) {
                 $id = (string)$item['_id'];
+                $item['id'] = $id;
                 unset($item['_id']);
 
                 $parents[$id] = $item;

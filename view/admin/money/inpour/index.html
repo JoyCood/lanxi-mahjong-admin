@@ -1,0 +1,15 @@
+{% set TITLE="付费" %}
+{% extends "_base.html" %}
+{% block css %}
+<link rel="stylesheet" href="css/admin/money.css?v={{CONFIG.resVersion}}" />
+<link rel="stylesheet" href="css/3rd/plugins/datepicker/datepicker.css?v={{CONFIG.res3rdVersion}}" />
+{% endblock %}
+
+{% block js %}
+<script src="js/admin/money.js?v={{CONFIG.resVersion}}"></script>
+<script src="js/3rd/plugins/datepicker/bootstrap-datepicker.js?v={{CONFIG.res3rdVersion}}"></script>
+<script src="js/3rd/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js?v={{CONFIG.res3rdVersion}}" charset="UTF-8"></script>
+<script>
+window.Controller = Money;
+</script>
+{% endblock %}

@@ -53,7 +53,11 @@ $app->hook('slim.before.router', function() use($app){
             require($controlFile);
             $controller = new $control($app);
             if(method_exists($controller, $action)) {
-                $app->map($path, array($controller, $action))->via($method);
+                if($method) {
+                    $app->map($path, array($controller, $action))->via($method);
+                } else {
+                    $app->map($path, array($controller, $action))->via('GET', 'POST');
+                }
             }
         }
     }

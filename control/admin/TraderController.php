@@ -12,23 +12,29 @@ class TraderController extends BaseController{
     }
 
     public function listAction() {
-        $Trader  = Admin::model('trader.main');
-        $query   = $this->request->get('query');
-        $keyword = $this->request->get('keyword');
-        $parent  = $this->request->get('parent');
+        $Trader     = Admin::model('trader.main');
+        $query      = $this->request->get('query');
+        $keyword    = $this->request->get('keyword');
+        $parent     = $this->request->get('parent');
+        $parentData = array();
 
         $params = array();
         if($parent || $this->under) {
             $params['Parent'] = $parent? $parent: '*';
+            if($params['Parent'] && $params['Parent'] != '*') {
+                $parentData = $Trader->getOneById($params['Parent']);
+            }
         }
         if($query && $keyword) {
             $params[$query] = $keyword;
         }
         $data = $Trader->pagination($params, intval($this->request->get('pn')));
         $this->render('trader/list.html', array(
-            'data'    => $data,
-            'query'   => $query,
-            'keyword' => $keyword
+            'data'       => $data,
+            'query'      => $query,
+            'keyword'    => $keyword,
+            'parent'     => $parent,
+            'parentData' => $parentData,
         ));
     }
 

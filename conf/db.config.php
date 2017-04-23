@@ -9,6 +9,7 @@ return array(
         'agent_agent_notice',   //公告
         'agent_user',           //代理商
         'col_trade_record',     //交易记录
+        'agent_rebate_record',
         'admin_log',
         'user', //玩家
         'authcode', //验证码
