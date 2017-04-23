@@ -34,7 +34,7 @@ class TraderController extends BaseController {
             case $Trader::STATUS_WAITING:
                 $this->error('对不起，您的帐号还在等待审核，请稍后再试');
         }
-        $_SESSION[Config::SESSION_UID]  = $user['_id'];
+        $_SESSION[Config::SESSION_UID]  = $user['Gameid'];
         $_SESSION[Config::SESSION_USER] = $user['Nickname'];
         $filters = array('_id' => $user['_id']);
         $doc = array(
@@ -138,6 +138,8 @@ class TraderController extends BaseController {
                 array('Agent'  => 1)
             ); 
         }
+		$_SESSION[Config::SESSION_UID]  = $gameId;
+		$_SESSION[Config::SESSION_USER] = $doc['Nickname'];
         $this->renderJSON((boolean)$result);
     }
 
