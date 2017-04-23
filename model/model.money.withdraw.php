@@ -33,7 +33,7 @@ class ModelMoneyWithdraw
 	    return $this->collection()->find($filter, $projection);
 	}
 
-    public function pagination($params, $pnValue=null) {
+    public function pagination($params = array(), $pnValue=null) {
 	    $pn     = Helper::popValue($params, 'pn', 1);
 	    $sort   = Helper::popValue($params, 'sort', 'Time');
 	    $order  = Helper::popValue($params, 'order', -1);	

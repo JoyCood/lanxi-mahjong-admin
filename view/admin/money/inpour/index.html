@@ -5,6 +5,16 @@
 <link rel="stylesheet" href="css/3rd/plugins/datepicker/datepicker.css?v={{CONFIG.res3rdVersion}}" />
 {% endblock %}
 
+{% block main %}
+<div>
+    <ol class="breadcrumb">
+        <li><a href="admin/"><i class="fa fa-home"></i> 首页</a></li>
+        <li><a href="admin/money/">代理商</a></li>
+        <li class="active">付费流水</li>
+    </ol>
+</div>
+{% endblock %}
+
 {% block js %}
 <script src="js/admin/money.js?v={{CONFIG.resVersion}}"></script>
 <script src="js/3rd/plugins/datepicker/bootstrap-datepicker.js?v={{CONFIG.res3rdVersion}}"></script>
