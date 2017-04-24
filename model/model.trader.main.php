@@ -1,9 +1,11 @@
 <?php !defined('TANG_FENG') AND exit('Access Denied!');
 
+define('TRADER_WITHDRAW_TIME', 5 * 24 * 3600);
+
 class ModelTraderMain 
 {
     const PASSWORD_SALT = 'TANG_FENG';
-	const WITHDRAWTIME  = 5*24*3600; //五天提现一次
+	const WITHDRAWTIME  = TRADER_WITHDRAW_TIME; //五天提现一次
 
     const STATUS_NORMAL    = 0; //正常
     const STATUS_LOCKED    = 1; //锁定
