@@ -138,8 +138,9 @@ class TraderController extends BaseController {
                 array('Agent'  => 1)
             ); 
         }
-		$_SESSION[Config::SESSION_UID]  = $gameId;
-		$_SESSION[Config::SESSION_USER] = $doc['Nickname'];
+        $_SESSION[Config::SESSION_UID]  = $gameId;
+        $_SESSION[Config::SESSION_USER] = $doc['Nickname'];
+
         $this->renderJSON((boolean)$result);
     }
 
@@ -180,17 +181,17 @@ class TraderController extends BaseController {
         Phone::send($phone, $msg);
     }
 
-	//我的下级代理列表
-	public function listAction() {
+    //我的下级代理列表
+    public function listAction() {
         $Relate = Admin::model('Trader.Relate');	
-		$pn     = $this->request->get('pn');
+        $pn     = $this->request->get('pn');
 
-		$params['filters'] = array(
-		    'Parent' => $_SESSION[Config::SESSION_UID],
-			'Agent'  => $Relate::TRADER 
-		);
+        $params['filters'] = array(
+            'Parent' => $_SESSION[Config::SESSION_UID],
+            'Agent'  => $Relate::TRADER 
+        );
 
-		$traders = $Relate->pagination($params, $pn);
+        $traders = $Relate->pagination($params, $pn);
         $this->render('/trader/list.html', $traders);
-	}
+    }
 }
