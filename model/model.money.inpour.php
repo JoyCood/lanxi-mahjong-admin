@@ -23,6 +23,16 @@ class ModelMoneyInpour
 	    return Admin::db('col_trade_record');
 	}
 
+    public function insert($data) {
+        $data = $this->allowed($data, $this->fields);
+        return $this->collection()->insert($data); 
+    }
+
+    public function update($filter, $data) {
+        $data = $this->allowed($data, $this->allowed);
+        return $this->collection()->update($filter, array('$set'=>$data)); 
+    }
+
 	public function find($filter=array(), $projection=array()) {
         return $this->collection()->find($filter, $projection);	
 	}

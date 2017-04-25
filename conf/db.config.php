@@ -1,9 +1,9 @@
 <?php
 return array(
-    'host' => 'localhost',
+    'host' => '120.77.175.1',
     'port' => 27017,
     'connect' => true,
-    'name' => 'lanxi',
+    'name' => 'lanxi_db',
     'collections' => array(
         'admin',
         'agent_agent_notice',   //公告
@@ -14,6 +14,6 @@ return array(
         'user', //玩家
         'authcode', //验证码
         'user_relate', //绑定关系
-		'agent_rebate_record', //提现记录
+	    'agent_rebate_record', //提现记录
     )
 );

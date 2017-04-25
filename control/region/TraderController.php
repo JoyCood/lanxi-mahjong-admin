@@ -133,9 +133,9 @@ class TraderController extends BaseController {
         );
         $result = $Trader->insert($doc);
         if($result['ok']==1) {
-            Admin::model('trader.relate')->update(
-                array('GameId' => $gameId),
-                array('Agent'  => 1)
+            Admin::model('user')->update(
+                array('_id' => $gameId),
+                array('IsTrader' => $Trader::TRADER)
             ); 
         }
         $_SESSION[Config::SESSION_UID]  = $gameId;
@@ -183,15 +183,15 @@ class TraderController extends BaseController {
 
     //我的下级代理列表
     public function listAction() {
-        $Relate = Admin::model('Trader.Relate');	
-        $pn     = $this->request->get('pn');
+        $User = Admin::model('user.main');	
+        $pn   = $this->request->get('pn');
 
         $params['filters'] = array(
-            'Parent' => $_SESSION[Config::SESSION_UID],
-            'Agent'  => $Relate::TRADER 
+            'Build'    => $_SESSION[Config::SESSION_UID],
+            'IsTrader' => $User::TRADER 
         );
 
-        $traders = $Relate->pagination($params, $pn);
+        $traders = $User->pagination($params, $pn);
         $this->render('/trader/list.html', $traders);
     }
 }
