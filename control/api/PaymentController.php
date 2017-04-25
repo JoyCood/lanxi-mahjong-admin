@@ -1,15 +1,72 @@
 <?php
 require(DOC_ROOT. '/control/BaseController.php');
 
-require('lib/wxpay/WxPay.Api.php');
-require('lib/wxpay/WxPay.Data.php');
-require('lib/wxpay/WxPay.Exception.php');
-require('lib/wxpay/WxPay.Notify.php');
+require_once('lib/wxpay/WxPay.Api.php');
+require_once('lib/wxpay/WxPay.Data.php');
+require_once('lib/wxpay/WxPay.Exception.php');
+require_once('lib/wxpay/WxPay.Notify.php');
 
 class PaymentController extends BaseController {
     //下单
     public function placeOrderAction() {
-    
+        $userId  = '11006';//$this->request->post('userId');         
+        $goodsId = '1';//$this->request->post('goodsId');
+        $secret  = '';//$this->request->post('secret');
+        $goods   = Config::get('goods', $goodsId);
+        $filter  = array('_id' => $userId);
+        $user = Admin::model('user.main')->findOne($filter);
+        $transId = date('YmdHis'). Helper::mkrand();
+        $doc = array(
+            'Transid'   => $transId,
+            'Userid'    => $userId,
+            'Amount'    => 1,
+            'Quantity'  => $goods['quantity'],
+            'Money'     => $goods['price'] * 100,
+            'Transtime' => time(),
+            'Result'    => 1,
+            'Currency'  => 'CNY',
+            'Paytype'   => 1,
+            'Clientip'  => Admin::getRemoteIP(),
+            'Parent'    => '0',//$user['Parent'],
+            'Ctime'     => time(),
+            'Lv'        => 0,
+            'Rebate'    => 0,
+        ); 
+        Admin::model('money.inpour')->insert($doc);
+
+        $nonceStr = md5(Helper::mkrand());
+        $input = new WxPayUnifiedOrder();
+        $input->SetBody($goods['title']);
+        $input->SetNonce_str($nonceStr);
+        $input->SetOut_trade_no($transId);
+        $input->SetTotal_fee($goods['price'] * 100);
+        $input->SetTrade_type('APP');
+        $prepay = WxPayApi::unifiedOrder($input);
+
+        if(!isset($prepay['prepay_id'])) {
+            $this->renderJSON(array('code'=>10000, 'msg'=>'支付出错，请稍后重试'));
+            exit();
+        }
+
+        $paramters = array(
+            'appid'     => Config::get('payment', 'wx.app.id'),
+            'noncestr'  => $nonceStr,
+            'package'   => 'Sign=WXPay',
+            'partnerid' => Config::get('payment', 'wx.mch.id'),
+            'prepayid'  => $prepay['prepay_id'],
+            'timestamp' => time(),
+        );
+
+        $wxPayDataBase = new WxPayResults();
+        $wxPayDataBase->FromArray($paramters);
+        $wxPayDataBase->SetSign();
+        $result = $wxPayDataBase->getValues();
+        $result['out_trade_no'] = $tradeNo;
+        $data = array(
+            'code' => 0,
+            'data' => $result
+        );
+        $this->renderJSON($data);
     }
 
     //支付回调

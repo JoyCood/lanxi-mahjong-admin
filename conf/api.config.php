@@ -43,7 +43,7 @@ class Config {
             'routes' => array(
                 '/api/login'  => 'POST::PlayerController::loginAction',
                 '/api/goods'  => 'GET::GoodsController::listAction',
-                '/api/place-order' => 'POST::PaymentController::placeOrderAction'
+                '/api/place-order' => 'GET::PaymentController::placeOrderAction'
             )
         ); 
     }
