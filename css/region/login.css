@@ -1,0 +1,47 @@
+body { 
+	background-color: #465568; 
+}
+.btn, .form-control {
+    height: 44px;
+}
+a.btn {
+    line-height: 44px;
+}
+#main-body { padding: 0; }
+
+#login-box{
+    max-width: 420px; min-width: 300px;
+    margin: 0 auto;
+    padding-top: 80px;
+}
+#login-form {
+    padding: 10px 32px 30px;
+    background-color: #323d4b;
+    border-radius: 5px;
+}
+#login-form>div.form-actions {
+    padding-top: 10px;
+}
+#login-form>div.form-actions>p {
+    padding-top: 16px; padding-bottom: 0; margin-bottom: 0;
+}
+#login-form>div.form-actions>p>a {
+    color: #fff;
+}
+#login-caption {
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 22px;
+    font-weight: 400;
+    color: #4db3a5;
+}
+#login-body {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 5px;
+}
+#login-body>input {
+    margin-bottom: 2px;
+    border: none;
+}

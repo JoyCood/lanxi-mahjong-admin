@@ -48,7 +48,7 @@ class TraderController extends BaseController {
     //注册表单页面
     public function registerAction() {
         if($this->request->isGet()) {
-            $this->render('reg.html');
+            $this->render('register.html');
         } else if($this->request->isPost()) {
             $this->register();
         }

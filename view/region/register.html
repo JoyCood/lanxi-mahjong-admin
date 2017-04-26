@@ -1,0 +1,60 @@
+{% set TITLE="注册" %}
+{% extends "_base.html" %}
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="app nofooter">
+    <header class="app-header">
+        <a class="app-back" app-action="back"></a>
+        <h1>区域注册</h1>
+        <nav>
+            <a href="region/login">登录</a>
+        </nav>
+    </header>
+    <main class="app-main">
+        <div>
+            <form id="register-form" class="w">
+                <div class="form-row">
+                    <label class="form-label">昵称:</label>
+                    <input class="form-control" type="text" placeholder="微信号" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">游戏ID:</label>
+                    <input class="form-control" type="text" placeholder="游戏ID" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">微信号:</label>
+                    <input class="form-control" type="text" placeholder="微信号" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">手机号:</label>
+                    <input class="form-control" type="tel" placeholder="请输入手机号" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">验证码:</label>
+                    <input class="form-control" type="tel" placeholder="请再次输入验证码" />
+                    <button type="button" class="btn btn-info">获取验证码</button>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">密码:</label>
+                    <input class="form-control" type="password" placeholder="请输入密码" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">确认密码:</label>
+                    <input class="form-control" type="password" placeholder="请再次输入密码" />
+                </div>
+                <div class="form-row">
+                    <input id="register-agree" type="checkbox" />
+                    <label for="register-agree">同意《<a href="javascript:;">合作协议</a>》</label>
+                </div>
+                <div class="form-action">
+                    <button type="submit" class="btn btn-success form-control">注册</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block js %}{% endblock %}

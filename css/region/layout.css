@@ -1,0 +1,54 @@
+.app {
+    position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+    background-color: rgba(255, 255, 255, .75);
+}
+.app.nofooter .app-main { bottom: 0; }
+a.app-back {
+    display: inline-block; 
+    width: 44px; height: 44px; line-height: 44px; text-align: center;
+    font-family: FontAwesome; font-size: 21px;
+}
+a.app-back:before {
+    content: "\f104";
+}
+.app-header {
+    position: absolute; top: 0; right: 0; left: 0;
+    margin: 0; padding: 0;
+    height: 60px; line-height: 60px;
+    background-color: #323d4b;
+    color: #fff;
+}
+.app-header a {
+    color: #fff;
+}
+.app-header>a.app-back {
+    position: absolute; top: 0; left: 0; bottom: 0;
+    line-height: inherit; height: 100%;
+}
+.app-header>h1 {
+    padding: 0; margin: 0;
+    text-align: center; font-size: 21px; font-weight: normal; line-height: inherit;
+    color: #4db3a5;
+}
+.app-header>nav {
+    position: absolute; top: 0; right: 10px; bottom: 0;
+}
+
+.app-main {
+    position: absolute; top: 60px; right: 0; bottom: 50px; left: 0;
+}
+.app-main>div {
+    padding: 16px;
+}
+
+.app-footer {
+    position: absolute; right: 0; bottom: 0; left: 0;
+    box-sizing: border-box;
+    padding: 3px 0;
+    background-color: #323d4b;
+    height: 50px;
+    text-align: center;
+}
+.app-footer a {
+    line-height: inherit;
+}
