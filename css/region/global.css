@@ -1,6 +1,7 @@
 html, body { 
-	height: 100%; overflow: hidden; background-color: #465568; 
+	height: 100%; overflow: hidden; background-color: #D1D4D9; 
 	font-size: 14px;
+	-webkit-tap-highlight-color: transparent;
 }
 a { color: #485a6a; text-decoration: none; outline: none; }
 a:hover { color: #5C9ACF; text-decoration: none; cursor: pointer; }
@@ -12,12 +13,12 @@ input[type="checkbox"] ~ label {
 	padding: 0 10px;
 }
 input[type="checkbox"] ~ label:before {
-	display: inline-block; padding-right: 7px;
-	font-family: FontAwesome;
+	float:left; padding: 0 8px 0 5px;
+	font-family: FontAwesome; font-size: 21px;
 	content: "\f096";
 }
 input[type="checkbox"]:checked ~ label {
-	color: #449d44;
+	color: #2e6da4;
 }
 input[type="checkbox"]:checked ~ label:before {
 	content: "\f046"; padding-right: 5px;
@@ -46,11 +47,11 @@ input[type="checkbox"]:checked ~ label:before {
 }
 .form-label {
 	flex: initial;
-	min-width: 60px; line-height: inherit; text-align: left;
+	min-width: 70px; line-height: inherit; text-align: left;
 	padding: 0 10px;
 }
 .form-label.xl {
-	min-width: 90px;
+	min-width: 100px;
 }
 .form-row button { flex: initial; height: 38px; line-height: 38px; }
 .form-action {
@@ -67,20 +68,115 @@ input[type="checkbox"]:checked ~ label:before {
 	min-width: 60px;
 	outline: none;
 }
+.btn-disabled {
+	border-color: #999!important; background-color: #ccc!important; color: #666!important;
+}
 .btn-success {
 	border-color: #4cae4c; background-color: #449d44; color: #fff;
 }
+.text-success { color: #449d44; }
 .btn-primary {
 	border-color: #2e6da4; background-color: #337ab7; color: #fff;
 }
+.text-primary { color: #2e6da4; }
 .btn-info {
 	border-color: #46b8da; background-color: #5bc0de; color: #fff;
 }
+.text-info { color: #46b8da; }
 .btn-warning {
 	border-color: #eea236; background-color: #eea236; color: #fff;
 }
+.text-warning { color: #eea236; }
 .btn-danger {
 	border-color: #d43f3a; background-color: #d9534f; color: #fff;
 }
+.text-danger {
+	color: #d43f3a;
+}
 
+.app-dialog {
+	position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+	transition: transform .2s ease-in;
+	transform: translate3d(0, -100%, 0);
+	display: none;
+}
+.app-dialog.open {
+	transform: translate3d(0, 0, 0);
+}
+.app-dialog-container {
+	position: absolute;
+	top: 40%; left: 50%;
+	transform: translate3d(-50%, -50%, 0);
+	border-radius: 4px;
+	background-color: #fff;
+	box-shadow: 0 0 6px #999;
+}
+.app-dialog-header {
+	position: relative;
+	height: 44px; line-height: 44px;
+	border-bottom: 1px solid #e5e5e5;
+}
+.app-dialog-title {
+	display: block; padding: 0 16px;
+	user-select: none; -webkit-user-select: none;
+}
+.app-dialog-close {
+	position: absolute; top: 0; right: 0; bottom: 0;
+	width: 44px; font-size: 14px;
+	text-align: center;
+	user-select: none; -webkit-user-select: none;
+}
+.app-dialog-body {
+	min-width: 280px; 
+	padding: 10px;
+}
+.app-dialog-content {
+	min-height: 40px; margin: 0 6px;
+	padding-bottom: 16px;
+}
+.app-dialog-footer {
+	text-align: center; padding: 5px 10px 10px;
+}
+.app-dialog-footer button.btn {
+	margin: 0 4px;
+}
 
+#app-loading {
+	opacity: .75;
+	position: fixed;
+	top: 90px; left: 50%; margin-left: -25px; text-align: center;
+	padding-top: 11px; width: 50px; height: 50px;
+	color: #485a6a; background-color: rgba(99, 99, 99, .5);
+	border-radius: 4px;
+}
+
+#app-mask {
+	position: fixed;
+	top: 0; right: 0; bottom: 0; left: 0;
+	background-color: rgba(200, 200, 200, .2);
+	display: none;
+}
+
+#app-notify {
+	position: fixed;
+	top: 60px;
+	left: 50%;
+}
+#app-notify>div:first-child, #app-notify>div:hover { opacity: 1; }
+#app-notify>div {
+	opacity: .75;
+	transform: translate3d(-50%, -100%, 0);
+	transition-property: transform;
+    transition-timing-function: ease-in-out;
+    transition-duration: 80ms;
+	margin-bottom: 6px;
+}
+#app-notify>div.app-notify-item {
+	transform: translate3d(-50%, 0, 0);
+}
+
+#app-loading { z-index: 10600; }
+#app-notify { z-index: 10600; }
+.app-dialog { z-index: 100300; }
+.app-dialog-alert { z-index: 10390; }
+#app-mask { z-index: 10200; }

@@ -1,8 +1,7 @@
 .app {
-    position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-    background-color: rgba(255, 255, 255, .75);
+    /*position: absolute; top: 0; right: 0; bottom: 0; left: 0;*/
+    min-height: 100%;
 }
-.app.nofooter .app-main { bottom: 0; }
 a.app-back {
     display: inline-block; 
     width: 44px; height: 44px; line-height: 44px; text-align: center;
@@ -12,7 +11,7 @@ a.app-back:before {
     content: "\f104";
 }
 .app-header {
-    position: absolute; top: 0; right: 0; left: 0;
+    position: fixed; top: 0; right: 0; left: 0; z-index: 30;
     margin: 0; padding: 0;
     height: 60px; line-height: 60px;
     background-color: #323d4b;
@@ -33,22 +32,30 @@ a.app-back:before {
 .app-header>nav {
     position: absolute; top: 0; right: 10px; bottom: 0;
 }
+.app-header>nav>a {
+    display: inline-block; height: 100%; min-width: 44px;
+    text-align: center;
+}
 
 .app-main {
-    position: absolute; top: 60px; right: 0; bottom: 50px; left: 0;
+    /*position: absolute; top: 60px; right: 0; bottom: 50px; left: 0;*/
+    margin: 60px 0 50px;
 }
 .app-main>div {
     padding: 16px;
 }
 
 .app-footer {
-    position: absolute; right: 0; bottom: 0; left: 0;
+    position: fixed; right: 0; bottom: 0; left: 0; z-index: 20;
     box-sizing: border-box;
     padding: 3px 0;
-    background-color: #323d4b;
+    background-color: rgba(50, 61, 75, .75);
     height: 50px;
     text-align: center;
 }
 .app-footer a {
     line-height: inherit;
 }
+
+.app.nofooter .app-main { margin-bottom: 0; }
+.app.nofooter .app-footer { display: none; }

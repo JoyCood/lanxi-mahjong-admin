@@ -24,8 +24,8 @@ class BaseController {
     }
 
     protected function renderJSON($data) {
-        if(is_bool($data)) {
-            $data = array('result' => $data);
+        if(!is_array($data)) {
+            $data = array('result' => (boolean)$data);
         }
         $this->app->view->renderJSON(array_merge(
             $this->viewData,

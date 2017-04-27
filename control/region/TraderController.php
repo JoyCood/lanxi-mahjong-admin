@@ -148,7 +148,7 @@ class TraderController extends BaseController {
     public function getAuthcodeAction() {
         $phone = trim($this->request->post('phone'));
         if(!Phone::validation($phone)) {
-            $this->error('请填写正确的手机号码');
+            $this->error('请填写有效的手机号码');
         }
         $AuthCode = Admin::model('authcode.main');
         $filters = array('phone' => $phone);
@@ -164,7 +164,7 @@ class TraderController extends BaseController {
             $AuthCode->insert($doc);
             $msg = "您的验证码是:{$code}【趣游泳】";
             $result = Phone::send($phone, $msg);
-            return;
+            $this->renderJSON($result);
         }
 
         if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
@@ -173,12 +173,13 @@ class TraderController extends BaseController {
             $auth['CTime'] = time();
             $AuthCode->update($filters, $auth);
             $msg = "您的验证码是:{$code}【趣游泳】";
-            Phone::send($phone, $msg);
-            return;
+            $result = Phone::send($phone, $msg);
+            $this->renderJSON($result);
         }
 
         $msg = "您的验证码是:{$auth['code']}【趣游泳】";
-        Phone::send($phone, $msg);
+        $result = Phone::send($phone, $msg);
+        $this->renderJSON($result);
     }
 
     //我的下级代理列表
