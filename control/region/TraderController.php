@@ -148,7 +148,7 @@ class TraderController extends BaseController {
     public function getAuthcodeAction() {
         $phone = trim($this->request->post('phone'));
         if(!Phone::validation($phone)) {
-            $this->error('请填写有效的手机号码');
+            $this->error('请填写正确的手机号码');
         }
         $AuthCode = Admin::model('authcode.main');
         $filters = array('phone' => $phone);
@@ -162,9 +162,9 @@ class TraderController extends BaseController {
                 'CTime' => time()
             );
             $AuthCode->insert($doc);
-            $msg = "您的验证码是:{$code}【趣游泳】";
+            $msg = "【兰溪雀神】您的验证码是{$code}";
             $result = Phone::send($phone, $msg);
-            $this->renderJSON($result);
+            return;
         }
 
         if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
@@ -172,14 +172,13 @@ class TraderController extends BaseController {
             $auth['Code']  = $code;
             $auth['CTime'] = time();
             $AuthCode->update($filters, $auth);
-            $msg = "您的验证码是:{$code}【趣游泳】";
-            $result = Phone::send($phone, $msg);
-            $this->renderJSON($result);
+            $msg = "【兰溪雀神】您的验证码是{$code}";
+            Phone::send($phone, $msg);
+            return;
         }
 
-        $msg = "您的验证码是:{$auth['code']}【趣游泳】";
-        $result = Phone::send($phone, $msg);
-        $this->renderJSON($result);
+        $msg = "【兰溪雀神】您的验证码是{$auth['code']}";
+        Phone::send($phone, $msg);
     }
 
     //我的下级代理列表

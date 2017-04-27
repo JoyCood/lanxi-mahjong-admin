@@ -38,7 +38,7 @@ class Config
             ),
             // 路径设置
             'routes' => array(
-                    '/admin/'           => 'GET::AdminController::indexAction',
+                    '/admin'           => 'GET::AdminController::indexAction',
                     '/admin/login'      => 'GET::AdminController::loginAction',
                     '/admin/login-auth' => 'POST::AdminController::loginAuthAction',
                     '/admin/logout'     => 'POST::AdminController::logoutAction',

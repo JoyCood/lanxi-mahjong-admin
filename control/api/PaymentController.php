@@ -9,12 +9,22 @@ require_once('lib/wxpay/WxPay.Notify.php');
 class PaymentController extends BaseController {
     //下单
     public function placeOrderAction() {
-        $userId  = '11006';//$this->request->post('userId');         
-        $goodsId = '1';//$this->request->post('goodsId');
-        $secret  = '';//$this->request->post('secret');
-        $goods   = Config::get('goods', $goodsId);
-        $filter  = array('_id' => $userId);
+        $userId    = '11006';//$this->request->post('userId');         
+        $goodsId   = '1';//$this->request->post('goodsId');
+        $secret    = '';//$this->request->post('secret');
+        $timestamp = $this->request->post('timestamp');
+        $goods     = Config::get('goods', $goodsId);
+
+        $filter    = array('_id' => $userId);
         $user = Admin::model('user.main')->findOne($filter);
+        if(!$user) {
+            $this->renderJSON(array(
+                'code' => 10000, 
+                'msg'  => '用户不存在'
+            ));
+            exit();
+        }
+
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(
             'Transid'   => $transId,
@@ -27,7 +37,7 @@ class PaymentController extends BaseController {
             'Currency'  => 'CNY',
             'Paytype'   => 1,
             'Clientip'  => Admin::getRemoteIP(),
-            'Parent'    => '0',//$user['Parent'],
+            'Parent'    => $user['Build'],
             'Ctime'     => time(),
             'Lv'        => 0,
             'Rebate'    => 0,
@@ -44,7 +54,10 @@ class PaymentController extends BaseController {
         $prepay = WxPayApi::unifiedOrder($input);
 
         if(!isset($prepay['prepay_id'])) {
-            $this->renderJSON(array('code'=>10000, 'msg'=>'支付出错，请稍后重试'));
+            $this->renderJSON(array(
+                'code' => 10001, 
+                'msg'  => '支付出错，请稍后重试'
+            ));
             exit();
         }
 
@@ -61,7 +74,7 @@ class PaymentController extends BaseController {
         $wxPayDataBase->FromArray($paramters);
         $wxPayDataBase->SetSign();
         $result = $wxPayDataBase->getValues();
-        $result['out_trade_no'] = $tradeNo;
+        $result['out_trade_no'] = $transId;
         $data = array(
             'code' => 0,
             'data' => $result

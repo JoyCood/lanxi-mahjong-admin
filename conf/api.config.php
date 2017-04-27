@@ -4,8 +4,6 @@ define('DEBUG', true);
 class Config {
     static private $Options;
     
-    const GAME_KEY = '!@123';
-
     const SESSION_UID = 'lanxi-api-user-id';
     const SESSION_USER = 'lanxi-api-user';
     const SESSION_GROUP = 'lanxi-api-group';
