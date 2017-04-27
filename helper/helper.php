@@ -91,7 +91,7 @@ class Helper
         $ivLenth = openssl_cipher_iv_length(self::ENCRYPT_METHOD);
         $iv = substr(self::ENCRYPT_IV, 0, $ivLenth);
         $data = openssl_decrypt($data, self::ENCRYPT_METHOD, self::ENCRYPT_KEY, 0, $iv);
-       return base64_decode($data); 
+        return base64_decode($data); 
     }
     
     /**
