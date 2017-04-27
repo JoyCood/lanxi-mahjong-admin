@@ -44,7 +44,7 @@ class Config
                 ),
                 // 路径设置
                 'routes' => array(
-                        '/region/'               => 'GET::TraderController::indexAction',
+                        '/region'                => 'GET::TraderController::indexAction',
                         '/region/login'          => 'GET::TraderController::loginAction',
                         '/region/code'           => 'POST::TraderController::getCodeAction',    //获取验证码
                         '/region/login-auth'     => 'POST::TraderController::loginAuthAction',  //登录验证
