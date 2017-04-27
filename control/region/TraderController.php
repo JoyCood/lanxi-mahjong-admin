@@ -162,7 +162,7 @@ class TraderController extends BaseController {
                 'CTime' => time()
             );
             $AuthCode->insert($doc);
-            $msg = "您的验证码是:{$code}【趣游泳】";
+            $msg = "【兰溪雀神】您的验证码是{$code}";
             $result = Phone::send($phone, $msg);
             return;
         }
@@ -172,12 +172,12 @@ class TraderController extends BaseController {
             $auth['Code']  = $code;
             $auth['CTime'] = time();
             $AuthCode->update($filters, $auth);
-            $msg = "您的验证码是:{$code}【趣游泳】";
+            $msg = "【兰溪雀神】您的验证码是{$code}";
             Phone::send($phone, $msg);
             return;
         }
 
-        $msg = "您的验证码是:{$auth['code']}【趣游泳】";
+        $msg = "【兰溪雀神】您的验证码是{$auth['code']}";
         Phone::send($phone, $msg);
     }
 
