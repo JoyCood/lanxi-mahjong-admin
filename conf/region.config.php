@@ -46,15 +46,16 @@ class Config
                 ),
                 // 路径设置
                 'routes' => array(
-                        '/region/'               => 'GET::TraderController::indexAction',
-                        '/region/login'          => '::TraderController::loginAction',
-                        '/region/agreement'      => 'GET::TraderController::agreementAction',
-                        '/region/logout'         => 'POST::TraderController::logoutAction',       //登出
-                        '/region/code'           => 'POST::TraderController::getAuthcodeAction',  //获取验证码
-                        '/region/register'       => '::TraderController::registerAction',         //注册
-			            '/region/trader/list'    => 'GET::TraderController::listAction',          //我的下级代理列表
-                        '/region/money/withdraw' => 'GET::MoneyController::withdrawAction',       //提现
-			            '/region/money/log'      => 'POST::MoneyController::withdrawLogAction'    //提现记录表列
+                        '/region/'                    => 'GET::TraderController::indexAction',
+                        '/region/login'               => '::TraderController::loginAction',
+                        '/region/agreement'           => 'GET::TraderController::agreementAction',
+                        '/region/logout'              => 'POST::TraderController::logoutAction',       //登出
+                        '/region/code'                => 'POST::TraderController::getAuthcodeAction',  //获取验证码
+                        '/region/register'            => '::TraderController::registerAction',         //注册
+			            '/region/trader/list'         => 'GET::TraderController::listAction',          //我的下级代理列表
+                        '/region/money/withdraw/form' => 'GET::MoneyController::withdrawFormAction',       //提现
+                        '/region/money/withdraw'      => 'POST::MoneyController::withdrawAction',       //提现
+			            '/region/money/log'           => 'GET::MoneyController::withdrawLogAction'    //提现记录表列
                 )
         );
     }

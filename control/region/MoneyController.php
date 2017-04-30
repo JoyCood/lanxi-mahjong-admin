@@ -12,7 +12,7 @@ class MoneyController extends BaseController {
             )
         );
 
-        $this->render('/money/withdraw.html', $trader);
+        $this->render('/money/withdraw-form.html', $trader);
     }
 
     //申请提现
@@ -77,6 +77,8 @@ class MoneyController extends BaseController {
         );
 
         $data = Admin::model('money.withdraw')->pagination($params, $pn);
-        $this->renderJSON($data);
+        $this->render('money/withdraw-log.html', array(
+            'data' => $data
+        ));
     }
 }
