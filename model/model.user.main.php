@@ -4,6 +4,10 @@ class ModelUserMain
 {
     const PLAYER = 0;
     const TRADER = 1;
+    
+    const STATUS_NORMAL    = 1;
+    const STATUS_LOCKED    = 2;
+    const STATUS_BLACKLIST = 3;
 
     private $fields = array(
         '_id',           #string 用户id

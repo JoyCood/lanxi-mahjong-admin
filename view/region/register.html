@@ -1,6 +1,10 @@
 {% set TITLE="注册" %}
 {% extends "_base.html" %}
+
 {% block head %}
+{% endblock %}
+
+{% block menu %}
 {% endblock %}
 
 {% block body %}
@@ -16,20 +20,16 @@
         <div>
             <form id="register-form" class="w">
                 <div class="form-row">
-                    <label class="form-label">昵称:*</label>
-                    <input class="form-control" type="text" name="Nickname" placeholder="请输入昵称" autocomplete="off" app-required="on" />
-                </div>
-                <div class="form-row">
                     <label class="form-label">游戏ID:*</label>
-                    <input class="form-control" type="text" name="Gameid" placeholder="请输入游戏ID" autocomplete="off" app-required="on" />
+                    <input class="form-control" type="text" name="GameId" value="9527" placeholder="请输入游戏ID" autocomplete="off" app-required="on" />
                 </div>
                 <div class="form-row">
                     <label class="form-label">微信号:*</label>
-                    <input class="form-control" type="text" name="Wechat" name="Nickname" placeholder="微信号" autocomplete="off" app-required="on" />
+                    <input class="form-control" type="text" name="Wechat" value="bofutang" name="Nickname" placeholder="请输入微信号" autocomplete="off" app-required="on" />
                 </div>
                 <div class="form-row">
                     <label class="form-label">手机号:*</label>
-                    <input id="register-phone" class="form-control" type="tel" name="Phone" placeholder="请输入手机号" autocomplete="off" app-required="on" />
+                    <input id="register-phone" class="form-control" type="tel" value="1591591599" name="Phone" placeholder="请输入手机号" autocomplete="off" app-required="on" />
                 </div>
                 <div class="form-row">
                     <label class="form-label">验证码:*</label>
@@ -38,18 +38,18 @@
                 </div>
                 <div class="form-row">
                     <label class="form-label">密码:*</label>
-                    <input id="register-password"  class="form-control" type="password" name="Password" placeholder="请输入密码" app-required="on" />
+                    <input id="register-password"  class="form-control" type="password" value="123456" name="Password" placeholder="请输入密码" app-required="on" />
                 </div>
                 <div class="form-row">
                     <label class="form-label">确认密码:*</label>
-                    <input id="register-confirm" class="form-control" type="password" name="Confirm" placeholder="请再次输入密码" app-required="on" />
+                    <input id="register-confirm" class="form-control" type="password" value="123456" name="Confirm" placeholder="请再次输入密码" app-required="on" />
                 </div>
                 <div class="form-row">
-                    <input id="register-agree" type="checkbox" name="Agree" />
-                    <label for="register-agree">同意《<a href="javascript:;">合作协议</a>》</label>
+                    <input id="register-agree" type="checkbox" name="Agree" value="1" checked />
+                    <label for="register-agree">同意《<a href="region/agreement">合作协议</a>》</label>
                 </div>
                 <div class="form-action">
-                    <button type="submit" class="btn btn-success form-control">注册</button>
+                    <button id="register-submit-btn" type="submit" class="btn btn-success form-control">注册</button>
                 </div>
             </form>
         </div>
@@ -80,14 +80,19 @@ $(document).ready(function() {
             success: function() {
                 btn.data('interval') || btn.data('interval', setInterval(function() {
                     btn.text('验证码(' + ++sec + 's)');
-                    if(sec == 30) {
+                    if(sec == "{{constant('ModelAuthCodeMain::AUTHCODE_EXPIRE')}}" * 1) {
                         clearInterval(btn.data('interval'));
                         btn.removeData('interval');
                         btn.prop('disabled', false).removeClass('btn-disabled').text(txt);
                     }
                 }, 1000));
             },
-            error: function() {
+            error: function(jqXHR) {
+                if(jqXHR.getResponseHeader('APP-CODE') == 10086) {
+                    clearInterval(btn.data('interval'));
+                    btn.removeData('interval');
+                    btn.prop('disabled', false).removeClass('btn-disabled').text(txt);
+                }
                 btn.prop('disabled', false).removeClass('btn-disabled').text(txt);
             }
         });
@@ -104,6 +109,13 @@ $(document).ready(function() {
                     rs = true;
                 }
                 return rs;
+            },
+            success: function() {
+                App.Notific.success('注册成功，正转到登录页面……');
+                $('#register-submit-btn, #register-captcha-btn').prop('disabled', true);
+                setTimeout(function() {
+                    location.href = 'region/login';
+                }, 3 * 1000);
             }
         });
         return false;

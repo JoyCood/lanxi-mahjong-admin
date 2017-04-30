@@ -42,18 +42,19 @@ class Config
                         '/region/logout',
                         '/region/code',
                         '/region/register',
+                        '/region/agreement',
                 ),
                 // 路径设置
                 'routes' => array(
-                        '/region'                => 'GET::TraderController::indexAction',
-                        '/region/login'          => 'GET::TraderController::loginAction',
-                        '/region/code'           => 'POST::TraderController::getAuthcodeAction',    //获取验证码
-                        '/region/login-auth'     => 'POST::TraderController::loginAuthAction',  //登录验证
-                        '/region/logout'         => 'POST::TraderController::logoutAction',     //登出
-                        '/region/register'       => '::TraderController::registerAction',       //注册
-			            '/region/trader/list'    => 'GET::TraderController::listAction',        //我的下级代理列表
-                        '/region/money/withdraw' => 'GET::MoneyController::withdrawAction',     //提现
-			            '/region/money/log'      => 'POST::MoneyController::withdrawLogAction'  //提现记录表列
+                        '/region/'               => 'GET::TraderController::indexAction',
+                        '/region/login'          => '::TraderController::loginAction',
+                        '/region/agreement'      => 'GET::TraderController::agreementAction',
+                        '/region/logout'         => 'POST::TraderController::logoutAction',       //登出
+                        '/region/code'           => 'POST::TraderController::getAuthcodeAction',  //获取验证码
+                        '/region/register'       => '::TraderController::registerAction',         //注册
+			            '/region/trader/list'    => 'GET::TraderController::listAction',          //我的下级代理列表
+                        '/region/money/withdraw' => 'GET::MoneyController::withdrawAction',       //提现
+			            '/region/money/log'      => 'POST::MoneyController::withdrawLogAction'    //提现记录表列
                 )
         );
     }

@@ -1,0 +1,21 @@
+<table class="data-list">
+    <thead>
+        <tr>
+            <th align="left">昵称</th>
+            <th width="100" align="left">手机</th>
+            <th width="60">状态</th>
+            <th width="130" class="hidden-480">绑定时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data.items %}
+        <tr>
+            <td align="left">{{item.Nickname}}</td>
+            <td align="left">{{item.Phone}}</td>
+            <td>{{item.Status|user_status}}</td>
+            <td class="hidden-480">{{1493565885|datetime}}</td>
+            <!--<td class="hidden-480">{{item.BuildTime|datetime}}</td>-->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -38,26 +38,13 @@ var App = function() {
 			if(jqXHR.getResponseHeader('APP-STATE') !== 'APP') {
 				opts.error(jqXHR, 'except');
 			} else {
-				var err = JSON.parse(jqXHR.getResponseHeader('APP-ERROR') || '{}');
-				if(err.message) {
-					jqXHR.error = err.message;
-					jqXHR.errorCode = err.code;
-					opts.error(jqXHR, 'custom');
-				} else {
-					try {
-						if(opts.target) {
-							$(opts.target).html(data);
-						}
-						success(data, textStatus, jqXHR);
-					} catch(e) {
-						if(e.exType) {
-							jqXHR.error = e.exMessage;
-							jqXHR.errorCode = '';
-							opts.error(jqXHR, 'custom');
-						} else {
-							throw e;
-						}
+				try {
+					if(opts.target) {
+						$(opts.target).html(data);
 					}
+					success(data, textStatus, jqXHR);
+				} catch(e) {
+					opts.error(jqXHR, 'custom', e);
 				}
 			}
 		}
@@ -72,8 +59,8 @@ var App = function() {
 				switch(textStatus) {
 					case 'custom':
 						app.Notific.alert(
-							(jqXHR.errorCode? ('[' + jqXHR.errorCode + ']: '): '') + 
-							(jqXHR.error || '请求错误。')
+							// (jqXHR.errorCode? ('[' + jqXHR.errorCode + ']: '): '') + 
+							(errorThrown || '请求错误。')
 						);
 						break;
 					case 'except':
@@ -85,7 +72,10 @@ var App = function() {
 					case 'abort':
 						break;
 					default:
-						var err = JSON.parse(jqXHR.getResponseHeader('APP-ERROR') || '{}');
+						var err = {
+							'code': jqXHR.getResponseHeader('APP-CODE'),
+							'message': JSON.parse(jqXHR.getResponseHeader('APP-ERROR') || '')
+						}
 						if(err.message) {
 							app.Notific.alert(err.message);
 						} else {

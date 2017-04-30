@@ -99,6 +99,7 @@ class SwimTwigExtension extends \Twig_Extension {
 			'order_process_status' => new \Twig_Filter_Method($this, 'ft_order_process_status', array('is_safe' => array('html'))),
 			'restype'              => new \Twig_Filter_Method($this, 'ft_res_type', array('is_safe' => array('html'))),
 			'trader_status'        => new \Twig_Filter_Method($this, 'ft_trader_status', array('is_safe' => array('html'))),
+			'user_status'          => new \Twig_Filter_Method($this, 'ft_user_status', array('is_safe' => array('html'))),
 			'zerofill'             => new \Twig_Filter_Method($this, 'ft_zerofill'),
 			'dump'                 => new \Twig_Filter_Method($this, 'ft_dump', array('is_safe' => array('html'))),
 			'datetime'             => new \Twig_Filter_Method($this, 'ft_datetime'),
@@ -167,6 +168,16 @@ class SwimTwigExtension extends \Twig_Extension {
 	}
 
 	public function ft_trader_status($value) {
+		$status = array(
+			\ModelUserMain::STATUS_NORMAL    => '<span class = "text-success">正常</span>',
+			\ModelUserMain::STATUS_LOCKED    => '<span class = "text-warning">锁定</span>',
+			\ModelUserMain::STATUS_BLACKLIST => '<span class = "text-danger">黑名单</span>',
+			'N/A'                             => '<span style =" color: #999;">N/A</span>',
+		);
+		return isset($status[$value])? $status[$value]: $status['N/A'];
+	}
+
+	public function ft_user_status($value) {
 		$status = array(
 			\ModelTraderMain::STATUS_NORMAL    => '<span class = "text-success">正常</span>',
 			\ModelTraderMain::STATUS_LOCKED    => '<span class = "text-warning">锁定</span>',

@@ -3,27 +3,31 @@ require(DOC_ROOT. '/control/BaseController.php');
 
 class TraderController extends BaseController {
     public function indexAction() {
-        $this->render('index.html');
+        $this->listAction();
     }
 
     public function loginAction() {
-        $this->render('login.html', array(
-            'from' => $this->request->get('from', '')	
-        ));
+        if($this->request->isGet()) {
+            $this->render('login.html', array(
+                'from' => $this->request->get('from', '')	
+            ));
+        } else {
+            $this->loginAuthAction();
+        }
     }
 
     //登录
-    public function loginAuthAction() {
+    protected function loginAuthAction() {
         $Trader = Admin::model('Trader.main');    
         $phone  = trim($this->request->post('phone'));
         $pwd    = trim($this->request->post('password'));
             
         $filters = array(
             'Phone' => $phone, 
-            'Pwd'   => md5($pwd)
+            // 'Pwd'   => md5($pwd)
         );
         $user = $Trader->findOne($filters);
-        if(!$user) {
+        if(!$user || $user['Pwd'] != $Trader->password($pwd)) {
             $this->error('手机号或密码不正确');
         }
         switch($user['Status']) {
@@ -48,7 +52,9 @@ class TraderController extends BaseController {
     //注册表单页面
     public function registerAction() {
         if($this->request->isGet()) {
-            $this->render('register.html');
+            $this->render('register.html', array(
+                'AuthCode' => Admin::model('authcode.main')
+            ));
         } else if($this->request->isPost()) {
             $this->register();
         }
@@ -56,13 +62,13 @@ class TraderController extends BaseController {
 
     //注册
     protected function register() {
-        $Trader   = Admin::model('Trader.main');
-        $gameId   = trim($this->request->post('gameId'));
-        $wechat   = trim($this->request->post('wechat'));
-        $phone    = trim($this->request->post('phone'));
-        $code     = trim($this->request->post('code')); 
-        $password = trim($this->request->post('password'));
-        $password2= trim($this->request->post('password2'));
+        $Trader    = Admin::model('Trader.main');
+        $gameId    = trim($this->request->post('GameId'));
+        $wechat    = trim($this->request->post('Wechat'));
+        $phone     = trim($this->request->post('Phone'));
+        $code      = trim($this->request->post('Captcha')); 
+        $password  = trim($this->request->post('Password'));
+        $password2 = trim($this->request->post('Confirm'));
 
         if(!$gameId) {
             $this->error('请填写游戏ID');
@@ -90,18 +96,18 @@ class TraderController extends BaseController {
             $this->error('请填写正确的手机号码');
         }
         $filters = array('_id' => $gameId);
-        $player = Admin::model('User.main')->findOne($filters);
+        $player  = Admin::model('user.main')->findOne($filters);
         if(!$player) {
             $this->error('游戏ID不存在');
         }
         $AuthCode = Admin::model('authcode.main');
-        $filters = array('Phone'=>$phone, 'Code'=>$code);
+        $filters  = array('Phone'=>$phone, 'Code'=>$code);
         $auth = $AuthCode->findOne($filters);
         if(!$auth) {
-            $this->error('验证码无效，请重新获取验证码');
+            $this->error('验证码无效，请重新获取验证码', 10086);
         }
         if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
-            $this->error('验证码已过期，请重新获取验证码');
+            $this->error('验证码已过期，请重新获取验证码', 10086);
         }
         $filters = array( 
             '$or' => array( 
@@ -110,7 +116,7 @@ class TraderController extends BaseController {
         ));
         $trader = $Trader->findOne($filters);
         if($trader) {
-            $this->error('你已经是代理商，请直接登录');
+            $this->error('你已经是代理商，请直接登录', 10086);
         }
 
         $doc = array(
@@ -118,7 +124,7 @@ class TraderController extends BaseController {
             'Phone'    => $phone,
             'Nickname' => $player['Nickname'],
             'Wechat'   => $wechat,
-            'Pwd'      => md5($password),
+            'Pwd'      => $Trader->password($password),
             'CIP'      => Admin::getRemoteIP(),
             'CTime'    => time(),
             'JTime'    => time(),
@@ -133,9 +139,9 @@ class TraderController extends BaseController {
         );
         $result = $Trader->insert($doc);
         if($result['ok']==1) {
-            Admin::model('user')->update(
+            Admin::model('user.main')->update(
                 array('_id' => $gameId),
-                array('IsTrader' => $Trader::TRADER)
+                array('IsTrader' => ModelUserMain::TRADER)
             ); 
         }
         $_SESSION[Config::SESSION_UID]  = $gameId;
@@ -164,7 +170,7 @@ class TraderController extends BaseController {
             $AuthCode->insert($doc);
             $msg = "【兰溪雀神】您的验证码是{$code}";
             $result = Phone::send($phone, $msg);
-            return;
+            $this->renderJSON($result);
         }
 
         if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
@@ -173,18 +179,20 @@ class TraderController extends BaseController {
             $auth['CTime'] = time();
             $AuthCode->update($filters, $auth);
             $msg = "【兰溪雀神】您的验证码是{$code}";
-            Phone::send($phone, $msg);
-            return;
+            $result = Phone::send($phone, $msg);
+            $this->renderJSON($result);
         }
 
         $msg = "【兰溪雀神】您的验证码是{$auth['code']}";
-        Phone::send($phone, $msg);
+        $result = Phone::send($phone, $msg);
+        $this->renderJSON($result);
     }
 
     //我的下级代理列表
     public function listAction() {
-        $User = Admin::model('user.main');	
-        $pn   = $this->request->get('pn');
+        $Trader = Admin::model('trader.main');	
+        $User   = Admin::model('user.main');	
+        $pn     = $this->request->get('pn');
 
         $params['filters'] = array(
             'Build'    => $_SESSION[Config::SESSION_UID],
@@ -192,6 +200,12 @@ class TraderController extends BaseController {
         );
 
         $traders = $User->pagination($params, $pn);
-        $this->render('/trader/list.html', $traders);
+        $this->render('/trader/list.html', array(
+            'data' => $traders
+        ));
+    }
+
+    public function agreementAction() {
+        $this->render('agreement.html');
     }
 }

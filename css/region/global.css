@@ -5,7 +5,7 @@ html, body {
 }
 a { color: #485a6a; text-decoration: none; outline: none; }
 a:hover { color: #5C9ACF; text-decoration: none; cursor: pointer; }
-input{ outline: none; text-indent: 6px; }
+input, button { outline: none; text-indent: 6px; }
 
 input[type="checkbox"] { display: none; }
 input[type="checkbox"] ~ label {
@@ -74,6 +74,9 @@ input[type="checkbox"]:checked ~ label:before {
 .btn-success {
 	border-color: #4cae4c; background-color: #449d44; color: #fff;
 }
+.alert-success {
+    color: #3c763d; background-color: #dff0d8; border-color: #d6e9c6;
+}
 .text-success { color: #449d44; }
 .btn-primary {
 	border-color: #2e6da4; background-color: #337ab7; color: #fff;
@@ -82,13 +85,22 @@ input[type="checkbox"]:checked ~ label:before {
 .btn-info {
 	border-color: #46b8da; background-color: #5bc0de; color: #fff;
 }
+.alert-info {
+    color: #31708f; background-color: #d9edf7; border-color: #bce8f1;
+}
 .text-info { color: #46b8da; }
 .btn-warning {
 	border-color: #eea236; background-color: #eea236; color: #fff;
 }
+.alert-warning {
+    color: #8a6d3b; background-color: #fcf8e3; border-color: #faebcc;
+}
 .text-warning { color: #eea236; }
 .btn-danger {
 	border-color: #d43f3a; background-color: #d9534f; color: #fff;
+}
+.alert-danger {
+    color: #a94442; background-color: #f2dede; border-color: #ebccd1;
 }
 .text-danger {
 	color: #d43f3a;
@@ -141,6 +153,47 @@ input[type="checkbox"]:checked ~ label:before {
 	margin: 0 4px;
 }
 
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    /*border-radius: 4px;*/
+}
+.alert-dismissible {
+    padding-right: 35px;
+}
+.alert-dismissible .close {
+    position: relative;
+    top: -4px;
+    right: -21px;
+    color: inherit;
+}
+.close {
+    float: right; -webkit-appearance: none;
+    padding: 0; border: 0;
+    color: #000; background: 0 0;
+    cursor: pointer; opacity: .2;
+    font-size: 21px; font-weight: 700; line-height: 1;
+    text-shadow: 0 1px 0 #fff;
+}
+.close:hover {
+	opacity: 1;
+}
+
+table.data-list {
+	width: 100%; border-collapse: collapse; border: 1px solid #333;
+}
+table.data-list  th, table.data-list  td { 
+	border: 1px solid #969696; padding: 5px; color: #333; overflow: hidden; 
+	line-height: 32px;
+}
+table.data-list tbody tr {
+	background-color: #fff;
+} 
+table.data-list thead th { 
+	line-height: 32px; background-color: #ddd; color: #666; 
+}
+
 #app-loading {
 	opacity: .75;
 	position: fixed;
@@ -180,3 +233,33 @@ input[type="checkbox"]:checked ~ label:before {
 .app-dialog { z-index: 100300; }
 .app-dialog-alert { z-index: 10390; }
 #app-mask { z-index: 10200; }
+
+
+/***
+Responsive Utils
+***/
+@media (max-width: 1280px) {
+	.hidden-1280 {
+		display: none;
+	}
+}
+@media (max-width: 1024px) {
+	.hidden-1024 {
+		display: none;
+	}
+}
+@media (max-width: 800px) {
+	.hidden-800 {
+		display: none;
+	}
+}
+@media (max-width: 480px) {
+	.hidden-480 {
+		display: none;
+	}
+}
+@media (max-width: 320px) {
+	.hidden-320 {
+		display: none;
+	}
+}

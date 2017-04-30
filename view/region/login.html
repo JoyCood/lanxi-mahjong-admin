@@ -13,11 +13,11 @@
 </head>
 <body>
 <div id="login-box">
-    <form id="login-form" method="POST" action="admin/login-auth">
+    <form id="login-form" method="POST" action="region/login">
         <div id="login-caption">{{CONFIG.title}}</div>
         <div id="login-body" class="form-group">
-            <input name="username" type="text" class="form-control" value="admin" placeholder="请输入帐号" autocomplete="off" app-required="on" />
-            <input name="password" type="password" class="form-control" value="Lanxi123!" placeholder="请输入密码" app-required="on" />
+            <input name="phone" type="text" class="form-control" value="15900040930" placeholder="请输入手机号" autocomplete="off" app-required="on" />
+            <input name="password" type="password" class="form-control" value="123456" placeholder="请输入密码" app-required="on" />
             <input id="from" type="hidden" value="{{from}}" />
         </div>
         <div class="form-actions">
@@ -34,7 +34,7 @@
     $('#login-form').on('submit', function() {
         App.submitForm(this, {
             success: function() {
-                location.href = $('#from').val() || 'admin/';
+                location.href = $('#from').val() || 'region/';
             }
         });
         return false;

@@ -141,6 +141,7 @@ class ModelTraderMain
     }
 
     public function password($pass) {
+        // return md5($pass);
         return md5(self::PASSWORD_SALT. $pass);
     }
 
