@@ -1,6 +1,17 @@
 {% set TITLE="返现申请" %}
 {% extends "_base.html" %}
 {% block head %}
+<style>
+#withdraw-result {
+    display: none;
+}
+#withdraw-form-wrap.success #withdraw-result {
+    display: block;
+}
+#withdraw-form-wrap.success #withdraw-form {
+    display: none;
+}
+</style>
 {% endblock %}
 
 {% block body %}
@@ -13,11 +24,15 @@
         </nav>
     </header>
     <main class="app-main">
-        <div>
-            <form id="withdraw-form">
+        <div id="withdraw-form-wrap" class="w">
+            <form id="withdraw-form" method="POST" action="region/money/withdraw">
+                <div class="form-row">
+                    <label class="form-label text-right">状态:</label>
+                    {{data.Status|trader_status}}
+                </div>
                 <div class="form-row">
                     <label class="form-label text-right">可提现余额:</label>
-                    {{data.Balance|number_format}}
+                    {{data.Balance|number_format(2)}}
                 </div>
                 <div class="form-row">
                     <label class="form-label text-right">提现金额:</label>
@@ -27,7 +42,38 @@
                     <button type="submit" class="form-control btn btn-success">确定</button>
                 </div>
             </form>
+            <div id="withdraw-result">
+                <div id="widthraw-message">
+                    <div class="alert alert-success">
+                        <strong>提现成功</strong>
+                        <p id="widthraw-money"></p>
+                        <p>&nbsp;</p>
+                        <p>
+                            <a href="/region/money/log" class="btn btn-success">查看提现记录</a>
+                            &nbsp; 或 &nbsp;
+                            <a href="region/money/withdraw/form">继续提现</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    $('#withdraw-form').on('submit', function() {
+        var money = $.trim(this.money.value);
+        App.submitForm(this, {
+            success: function() {
+                $('#widthraw-money').text('本次提现￥' + money + '，已经提交处理。');
+                $('#withdraw-form-wrap').addClass('success');
+            }
+        });
+        return false;
+    });
+});
+</script>
 {% endblock %}

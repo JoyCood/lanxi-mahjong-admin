@@ -8,7 +8,7 @@ class ModelMoneyWithdraw
     const MAX_MONEY      = 2000; //每次最多能提现多少钱
    
     private $fields = array(
-	'MoneyTotal',  #uint32  可提现金额
+	    'MoneyTotal',  #uint32  可提现金额
         'Money',       #uint32  申请提现金额
         'Gameid',      #string  游戏id
         'Phone',       #string  手机号

@@ -45,12 +45,13 @@ class MoneyController extends BaseController {
         
         $filters   = array(
             'Gameid' => $trader['Gameid'],
-            'Time'   => array(
-                '$gt'=> strtotime("today")
-            )
         );
 
-        $count = $Widthdraw->find($filters)->count();
+        $count = $Widthdraw->find(array_merge($filters, array(
+                    'Time' => array(
+                        '$gt'=> strtotime("today")
+                    )
+                 )))->count();
         
         if($count>=$Widthdraw::MAX_WITHDRAW) {
             $MAX_WITHDRAW = $Widthdraw::MAX_WITHDRAW;
@@ -67,8 +68,9 @@ class MoneyController extends BaseController {
         );	
 
         $Widthdraw->insert($doc);
-        $trader['Balance'] -= $money;
-        $Trader->update($filters, $doc);
+        $Trader->update($filters, array(
+            'Balance' => $trader['Balance'] - $money
+        ));
         $this->renderJSON(array('resutl'=>true)); 
     }
 

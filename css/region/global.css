@@ -63,6 +63,7 @@ input[type="checkbox"]:checked ~ label:before {
 }
 
 .btn {
+	display: inline-block;
     margin: 0; padding: 0 18px; text-align: center;
 	height: 42px; line-height: 42px;
 	border: 1px solid #ccc; border-radius: 0px;
@@ -75,7 +76,7 @@ input[type="checkbox"]:checked ~ label:before {
 	border-color: #999!important; background-color: #ccc!important; color: #666!important;
 }
 .btn-success {
-	border-color: #4cae4c; background-color: #449d44; color: #fff;
+	border-color: #4cae4c; background-color: #449d44; color: #fff!important;
 }
 .alert-success {
     color: #3c763d; background-color: #dff0d8; border-color: #d6e9c6;

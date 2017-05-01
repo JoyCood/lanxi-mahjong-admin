@@ -17,7 +17,7 @@ class MoneyController extends BaseController{
         ));
     }
 
-    //订单祥情
+    //订单详情
     public function inpourFormAction() {
         $id   = $this->request->get('id', '');
         $data = array();

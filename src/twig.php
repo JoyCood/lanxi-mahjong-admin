@@ -100,6 +100,7 @@ class SwimTwigExtension extends \Twig_Extension {
 			'restype'              => new \Twig_Filter_Method($this, 'ft_res_type', array('is_safe' => array('html'))),
 			'trader_status'        => new \Twig_Filter_Method($this, 'ft_trader_status', array('is_safe' => array('html'))),
 			'user_status'          => new \Twig_Filter_Method($this, 'ft_user_status', array('is_safe' => array('html'))),
+			'money_status'         => new \Twig_Filter_Method($this, 'ft_money_status', array('is_safe' => array('html'))),
 			'zerofill'             => new \Twig_Filter_Method($this, 'ft_zerofill'),
 			'dump'                 => new \Twig_Filter_Method($this, 'ft_dump', array('is_safe' => array('html'))),
 			'datetime'             => new \Twig_Filter_Method($this, 'ft_datetime'),
@@ -167,7 +168,7 @@ class SwimTwigExtension extends \Twig_Extension {
 		return $rs;
 	}
 
-	public function ft_trader_status($value) {
+	public function ft_user_status($value) {
 		$status = array(
 			\ModelUserMain::STATUS_NORMAL    => '<span class = "text-success">正常</span>',
 			\ModelUserMain::STATUS_LOCKED    => '<span class = "text-warning">锁定</span>',
@@ -177,7 +178,16 @@ class SwimTwigExtension extends \Twig_Extension {
 		return isset($status[$value])? $status[$value]: $status['N/A'];
 	}
 
-	public function ft_user_status($value) {
+	public function ft_money_status($value) {
+		$status = array(
+			\ModelMoneyWithdraw::STATUS_WAITING    => '<span class = "text-info">待处理</span>',
+			\ModelMoneyWithdraw::STATUS_FINISH    => '<span class = "text-success">已返现</span>',
+			'N/A'                             => '<span style =" color: #999;">N/A</span>',
+		);
+		return isset($status[$value])? $status[$value]: $status['N/A'];
+	}
+
+	public function ft_trader_status($value) {
 		$status = array(
 			\ModelTraderMain::STATUS_NORMAL    => '<span class = "text-success">正常</span>',
 			\ModelTraderMain::STATUS_LOCKED    => '<span class = "text-warning">锁定</span>',
