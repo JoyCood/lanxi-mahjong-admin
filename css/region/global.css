@@ -45,6 +45,9 @@ input[type="checkbox"]:checked ~ label:before {
     background-color: #fff;
     border: 1px solid #ccc; border-radius: 0px;
 }
+.form-label.text-right {
+	text-align: right;
+}
 .form-label {
 	flex: initial;
 	min-width: 70px; line-height: inherit; text-align: left;

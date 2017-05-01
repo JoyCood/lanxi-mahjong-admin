@@ -13,7 +13,21 @@
         </nav>
     </header>
     <main class="app-main">
-        
+        <div>
+            <form id="withdraw-form">
+                <div class="form-row">
+                    <label class="form-label text-right">可提现余额:</label>
+                    {{data.Balance|number_format}}
+                </div>
+                <div class="form-row">
+                    <label class="form-label text-right">提现金额:</label>
+                    <input type="number" name="money" class="form-control" placeholder="请输入提现金额" app-required="on" autocomplete="off" />
+                </div>
+                <div class="form-action">
+                    <button type="submit" class="form-control btn btn-success">确定</button>
+                </div>
+            </form>
+        </div>
     </main>
 </div>
 {% endblock %}

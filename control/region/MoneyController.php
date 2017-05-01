@@ -7,12 +7,15 @@ class MoneyController extends BaseController {
         $trader  = Admin::model('trader.main')->findOne(
             $filters, 
             array(
-                'Status' => 1, 
-                'Balance'=> 1
+                'Nickname'     => 1, 
+                'Status'       => 1, 
+                'Balance'      => 1
             )
         );
 
-        $this->render('/money/withdraw-form.html', $trader);
+        $this->render('/money/withdraw-form.html', array(
+            'data' => $trader
+        ));
     }
 
     //申请提现
