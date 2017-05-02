@@ -3,7 +3,7 @@ return array(
     // 'host' => '120.77.175.1',
     // 'name' => 'lanxi_db',
     'host'        => '127.0.0.1',
-    'name'        => 'lanxi',
+    'name'        => 'lanxi_db',
     'port'        => 27017,
     'connect'     => true,
     'collections' => array(
