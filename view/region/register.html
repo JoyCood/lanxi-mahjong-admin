@@ -21,15 +21,15 @@
             <form id="register-form" class="w">
                 <div class="form-row">
                     <label class="form-label">游戏ID:*</label>
-                    <input class="form-control" type="text" name="GameId" value="9527" placeholder="请输入游戏ID" autocomplete="off" app-required="on" />
+                    <input class="form-control" type="text" name="GameId" value="" placeholder="请输入游戏ID" autocomplete="off" app-required="on" />
                 </div>
                 <div class="form-row">
                     <label class="form-label">微信号:*</label>
-                    <input class="form-control" type="text" name="Wechat" value="bofutang" name="Nickname" placeholder="请输入微信号" autocomplete="off" app-required="on" />
+                    <input class="form-control" type="text" name="Wechat" value="" name="Nickname" placeholder="请输入微信号" autocomplete="off" app-required="on" />
                 </div>
                 <div class="form-row">
                     <label class="form-label">手机号:*</label>
-                    <input id="register-phone" class="form-control" type="tel" value="1591591599" name="Phone" placeholder="请输入手机号" autocomplete="off" app-required="on" />
+                    <input id="register-phone" class="form-control" type="tel" value="" name="Phone" placeholder="请输入手机号" autocomplete="off" app-required="on" />
                 </div>
                 <div class="form-row">
                     <label class="form-label">验证码:*</label>
@@ -38,14 +38,14 @@
                 </div>
                 <div class="form-row">
                     <label class="form-label">密码:*</label>
-                    <input id="register-password"  class="form-control" type="password" value="123456" name="Password" placeholder="请输入密码" app-required="on" />
+                    <input id="register-password"  class="form-control" type="password" value="" name="Password" placeholder="请输入密码" app-required="on" />
                 </div>
                 <div class="form-row">
                     <label class="form-label">确认密码:*</label>
-                    <input id="register-confirm" class="form-control" type="password" value="123456" name="Confirm" placeholder="请再次输入密码" app-required="on" />
+                    <input id="register-confirm" class="form-control" type="password" value="" name="Confirm" placeholder="请再次输入密码" app-required="on" />
                 </div>
                 <div class="form-row">
-                    <input id="register-agree" type="checkbox" name="Agree" value="1" checked />
+                    <input id="register-agree" type="checkbox" name="Agree" value="1" />
                     <label for="register-agree">同意《<a href="region/agreement">合作协议</a>》</label>
                 </div>
                 <div class="form-action">
@@ -65,7 +65,7 @@ $(document).ready(function() {
     $('#register-captcha-btn').on('click', function() {
         var btn = $(this);
         var txt = btn.text();
-        var sec = 0;
+        var sec = "{{constant('ModelAuthCodeMain::AUTHCODE_EXPIRE')}}" * 1;
         var num = $.trim($('#register-phone').val());
         if(num == '') {
             App.alert('请输入有效的手机号码');
@@ -79,12 +79,13 @@ $(document).ready(function() {
             dataType: 'json',
             success: function() {
                 btn.data('interval') || btn.data('interval', setInterval(function() {
-                    btn.text('验证码(' + ++sec + 's)');
-                    if(sec == "{{constant('ModelAuthCodeMain::AUTHCODE_EXPIRE')}}" * 1) {
+                    btn.text('验证码(' + sec + 's)');
+                    if(sec == 0) {
                         clearInterval(btn.data('interval'));
                         btn.removeData('interval');
                         btn.prop('disabled', false).removeClass('btn-disabled').text(txt);
                     }
+                    sec--;
                 }, 1000));
             },
             error: function(jqXHR) {
@@ -111,10 +112,10 @@ $(document).ready(function() {
                 return rs;
             },
             success: function() {
-                App.Notific.success('注册成功，正转到登录页面……');
+                App.Notific.success('注册成功');
                 $('#register-submit-btn, #register-captcha-btn').prop('disabled', true);
                 setTimeout(function() {
-                    location.href = 'region/login';
+                    location.href = 'region/';
                 }, 3 * 1000);
             }
         });

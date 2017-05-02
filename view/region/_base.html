@@ -23,14 +23,7 @@
 {% endblock %}
 
 {% block menu %}
-<aside id="main-menu">
-    <ul>
-        <li><a href="region/trader/list"><i class="fa fa-adn"></i> 下级代理</a></li>
-        <li><a href="region/money/withdraw/form"><i class="fa fa-jpy"></i> 返现申请</a></li>
-        <li><a href="region/money/log"><i class="fa fa-list-ol"></i> 提现记录</a></li>
-    </ul>
-    <a id="main-menu-close" href="javascript:;">&times;</a>
-</aside>
+    {% include '_menu.html' %}
 {% endblock %}
 
 <div id="app-loading">

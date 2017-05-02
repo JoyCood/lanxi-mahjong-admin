@@ -38,8 +38,7 @@ class TraderController extends BaseController {
             case $Trader::STATUS_WAITING:
                 $this->error('对不起，您的帐号还在等待审核，请稍后再试');
         }
-        $_SESSION[Config::SESSION_UID]  = $user['Gameid'];
-        $_SESSION[Config::SESSION_USER] = $user['Nickname'];
+        $this->userLogin($user['Gameid'], $user['Nickname']);
         $filters = array('_id' => $user['_id']);
         $doc = array(
             'LIP' => Admin::getRemoteIP(), 
@@ -144,21 +143,30 @@ class TraderController extends BaseController {
                 array('IsTrader' => ModelUserMain::TRADER)
             ); 
         }
-        $_SESSION[Config::SESSION_UID]  = $gameId;
-        $_SESSION[Config::SESSION_USER] = $doc['Nickname'];
-
+        $this->userLogin($gameId, $doc['Nickname']);
         $this->renderJSON((boolean)$result);
+    }
+
+    protected function userLogin($gameId, $nickname) {
+        $_SESSION[Config::SESSION_UID]  = $gameId;
+        $_SESSION[Config::SESSION_USER] = $nickname;
+    }
+
+    protected function userLogout() {
+        session_destroy();
     }
 
 	//重置密码
     public function resetPwdAction() {
+        $AuthCode = Admin::model('authcode.main');
+
 		if($this->request->isGet()) {
 			$this->render('pwd.html');	
 		} else if($this->request->isPost()) {
-			$phone     = trim($this->request->post('phone')); 
+			$phone     = trim($this->request->post('Phone')); 
 		    $code      = trim($this->request->post('Captcha'));	
-			$password  = trim($this->request->post('password'));
-			$password2 = trim($this->request->post('password2'));
+			$password  = trim($this->request->post('Password'));
+			$password2 = trim($this->request->post('Confirm'));
 
 			if($phone=='') {
 			    $this->error('请填写手机号');
@@ -167,7 +175,6 @@ class TraderController extends BaseController {
 			    $this->error('请填写正确的手机号码'); 
 			}
 
-	        $AuthCode = Admin::model('authcode.main');	
 			$filters = array('Phone' => $phone, 'Code' => $code);
 			$auth = $AuthCode->findOne($filters);
 			if(!$auth) {
@@ -255,5 +262,10 @@ class TraderController extends BaseController {
 
     public function agreementAction() {
         $this->render('agreement.html');
+    }
+
+    public function logoutAction() {
+        $this->userLogout();
+        $this->renderJSON(true);
     }
 }

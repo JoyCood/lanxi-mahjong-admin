@@ -81,28 +81,6 @@ $(document).on('ready', function() {
 		}
 	});
 
-	win.on('hashchange', function() {
-		var hash    = (location.hash || '').substr(1).split('/');
-		var action  = (hash[0] || 'index') + 'Action';
-		var params  = hash.slice(1);
-		if(window.Controller) {
-			if(action in window.Controller) {
-				window.Controller[action].apply(window.Controller, params);
-			} else {
-				(window.Controller.indexAction || $.noop).call(window.Controller, params);
-			}
-		}
-	}).trigger('hashchange');
-	App.hash = function(hash) {
-		var loc = location.href;
-		var url = loc.split('#')[0] + '#' + hash;
-		if(loc == url) {
-			$(window).trigger('hashchange');
-		} else {
-			location.href = url;
-		}
-	}
-
 	App.Loading.hide();
     win.on('scroll', function() {
         var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
@@ -115,6 +93,31 @@ $(document).on('ready', function() {
     $('#to-top').on('click', function() {
         $(window).scrollTop(0);
     });
+
+	win.on('hashchange', function() {
+		var hash = location.hash;
+		if(hash.indexOf('/menu/') > -1) {
+			var menu = $('#main-menu');
+			if(!menu.attr('app-init')) {
+				menu.attr('app-init', 'on').on('click', function(e) {
+					var target = e.target;
+					if(target.id == 'main-menu' || target.id == 'main-menu-close') { //target.tagName == 'A') {
+						history.back();
+						return false;
+					}
+				}).on('webkitTransitionEnd', function() {
+					if(!$(this).is('.on')) {
+						$(this).css('display', 'none');
+					}
+				});
+			}
+			menu.css('display', 'block');
+			menu.css('opacity');
+			menu.addClass('on');
+		} else {
+			$('#main-menu').removeClass('on');
+		}
+	}).trigger('hashchange');
 
 	doc.on('click', '[app-check]', function(e) {
 		var radio = $(this);
@@ -167,23 +170,21 @@ $(document).on('ready', function() {
 				}
 				break;
 			case 'menu':
-				var menu = $('#main-menu');
-				if(!menu.attr('app-init')) {
-					menu.attr('app-init', 'on').on('click', function(e) {
-						var target = e.target;
-						if(target.id == 'main-menu' || target.id == 'main-menu-close') { //target.tagName == 'A') {
-							menu.removeClass('on');
-							return false;
-						}
-					}).on('webkitTransitionEnd', function() {
-						if(!$(this).is('.on')) {
-							$(this).css('display', 'none');
-						}
-					});
+				var hash = location.hash || '';
+				if(hash.indexOf('/menu/') == -1) {
+					hash = hash.replace(/\/$/, '') + '/menu/';
 				}
-				menu.css('display', 'block');
-				menu.css('opacity');
-				menu.addClass('on');
+				location.hash = hash;
+				break;
+			case 'logout':
+				App.ajax({
+					url: 'region/logout',
+					type: 'post',
+					dataType: 'json',
+					success: function() {
+						location.href = 'region/login';
+					}
+				});
 				break;
 		}
 	});

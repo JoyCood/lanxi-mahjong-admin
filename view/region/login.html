@@ -16,8 +16,8 @@
     <form id="login-form" method="POST" action="region/login">
         <div id="login-caption">{{CONFIG.title}}</div>
         <div id="login-body" class="form-group">
-            <input name="phone" type="text" class="form-control" value="15900040930" placeholder="请输入手机号" autocomplete="off" app-required="on" />
-            <input name="password" type="password" class="form-control" value="123456" placeholder="请输入密码" app-required="on" />
+            <input name="phone" type="text" class="form-control" value="" placeholder="请输入手机号" autocomplete="off" app-required="on" />
+            <input name="password" type="password" class="form-control" value="" placeholder="请输入密码" app-required="on" />
             <input id="from" type="hidden" value="{{from}}" />
         </div>
         <div class="form-actions">
@@ -25,7 +25,7 @@
             <p>
                 <a href="region/register" class="btn btn-info">注册</a>
                 &nbsp; &nbsp;
-                <a href="javascript:;">忘记密码？</a>
+                <a href="region/pwd">忘记密码？</a>
             </p>
         </div>
     </form>
