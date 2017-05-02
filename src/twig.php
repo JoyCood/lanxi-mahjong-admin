@@ -219,7 +219,7 @@ class SwimTwigExtension extends \Twig_Extension {
 		return $dir;
 		return substr($dir, strlen(DOC_DIR));
 	}
-	public function fn_pagination_url($url, $pn) {
+	public function fn_pagination_url($url = null, $pn = 1) {
 		$pn    = intval($pn);
 		$tmp   = explode('?', $_SERVER['REQUEST_URI']);
 		$query = array();
@@ -227,12 +227,17 @@ class SwimTwigExtension extends \Twig_Extension {
 			parse_str(array_pop($tmp), $query);
 			unset($query['pn']);
 		}
-		$parts = array(
-			$url,
-			$pn < 1? 1: $pn,
-			http_build_query($query)
-		);
-		$url = rtrim(join('/', $parts), '/');
+		if($url) {
+			$parts = array(
+				$url,
+				$pn < 1? 1: $pn,
+				http_build_query($query)
+			);
+			$url = rtrim(join('/', $parts), '/');
+		} else {
+			$query['pn'] = $pn;
+			$url = $tmp[0]. '?'. http_build_query($query);
+		}
 		return $url;
 	}
 

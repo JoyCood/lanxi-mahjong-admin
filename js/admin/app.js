@@ -96,6 +96,7 @@ var App = function() {
 					button.removeAttr('app-disabled');
 				});
 			}
+			complete(jqXHR, textStatus);
 		}
 
 		app.Loading.show();

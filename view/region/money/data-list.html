@@ -1,4 +1,4 @@
-<table class="data-list">
+<table class="data-list"{% if data.pn < data.pages %} data-src="{{pagination_url()}}"{% endif %}>
     <thead>
         <tr>
             <th width="130" align="left">申请时间</th>
@@ -10,7 +10,7 @@
     <tbody>
         {% for item in data.items %}
         <tr>
-            <td align="left">{{item.Time|datetime}}</td>
+            <td align="left">{{i}}.{{item.Time|datetime}}</td>
             <td align="right">{{item.Money|number_format(2)}}</td>
             <td align="right" class="hidden-480">{{item.MoneyTotal|number_format(2)}}</td>
             <td>{{item.Status|money_status}}</td>

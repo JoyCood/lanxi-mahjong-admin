@@ -1,9 +1,12 @@
 {% set TITLE="提现记录" %}
-{% extends "_base.html" %}
+{% extends AJAX? "_ajax.html": "_base.html" %}
 {% block head %}
 {% endblock %}
 
 {% block body %}
+    {% if AJAX %}
+        {% include 'money/data-list.html' %}
+    {% else %}
 <div class="app nofooter">
     <header class="app-header">
         <a class="app-back" app-action="back"></a>
@@ -18,4 +21,13 @@
         </div>
     </main>
 </div>
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    $('#money-list>table').scrollListPage();
+});
+</script>
 {% endblock %}
