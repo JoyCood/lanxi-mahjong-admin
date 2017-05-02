@@ -150,17 +150,26 @@ class TraderController extends BaseController {
         $this->renderJSON((boolean)$result);
     }
 
+	//重置密码
     public function resetPwdAction() {
 		if($this->request->isGet()) {
-	        $this->render('pwd.html');	
+			$this->render('pwd.html');	
 		} else if($this->request->isPost()) {
-	        $AuthCode = Admin::model('authcode.main');	
-			$Trader   = Admin::model('trader.main');
-			$filters = array('Gameid' => $_SESSION[Config::SESSION_UID]);
-		    $trader  = $Trader->findOne($filters);	
+			$phone     = trim($this->request->post('phone')); 
+		    $code      = trim($this->request->post('Captcha'));	
+			$password  = trim($this->request->post('password'));
+			$password2 = trim($this->request->post('password2'));
 
-			$filters = array('Phone' => $trader['Phone']);
-			$auth = $Authcode->findOne($filters);
+			if($phone=='') {
+			    $this->error('请填写手机号');
+	        }
+			if(!Phone::validation($phone)) {
+			    $this->error('请填写正确的手机号码'); 
+			}
+
+	        $AuthCode = Admin::model('authcode.main');	
+			$filters = array('Phone' => $phone, 'Code' => $code);
+			$auth = $AuthCode->findOne($filters);
 			if(!$auth) {
 				$this->error('验证码无效，请重新获取验证码', 10086);
 			}
@@ -168,9 +177,6 @@ class TraderController extends BaseController {
 				$this->error('验证码已过期，请重新获取验证码', 10086);
 			}
 		    
-			$password = trim($this->request->post('password'));
-			$password2 = trim($this->request->post('password2'));
-
 			if($password=='') {
 			    $this->error('请填写密码');
 			}
@@ -178,6 +184,12 @@ class TraderController extends BaseController {
 			    $this->error('密码不一致');
 			}
 
+			$Trader = Admin::model('trader.main');
+			$filters = array('Phone' => $phone);
+			$trader = $Trader->findOne($filters);
+			if(!$trader) {
+			    $this->error('帐号不存在,请先注册');
+			}
 		    $doc = array(
 			    'Pwd' => $Trader->password($password)
 			);

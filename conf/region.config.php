@@ -43,6 +43,7 @@ class Config
                         '/region/code',
                         '/region/register',
                         '/region/agreement',
+						'/region/pwd'
                 ),
                 // 路径设置
                 'routes' => array(
