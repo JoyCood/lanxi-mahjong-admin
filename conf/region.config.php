@@ -55,7 +55,8 @@ class Config
 			            '/region/trader/list'         => 'GET::TraderController::listAction',          //我的下级代理列表
                         '/region/money/withdraw/form' => 'GET::MoneyController::withdrawFormAction',       //提现
                         '/region/money/withdraw'      => 'POST::MoneyController::withdrawAction',       //提现
-			            '/region/money/log'           => 'GET::MoneyController::withdrawLogAction'    //提现记录表列
+			            '/region/money/log'           => 'GET::MoneyController::withdrawLogAction',    //提现记录表列
+						'/region/pwd'                 => '::TraderController::resetPwdAction'          //重置密码
                 )
         );
     }

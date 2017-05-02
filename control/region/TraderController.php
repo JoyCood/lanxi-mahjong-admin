@@ -18,7 +18,7 @@ class TraderController extends BaseController {
 
     //登录
     protected function loginAuthAction() {
-        $Trader = Admin::model('Trader.main');    
+        $Trader = Admin::model('trader.main');    
         $phone  = trim($this->request->post('phone'));
         $pwd    = trim($this->request->post('password'));
             
@@ -62,7 +62,7 @@ class TraderController extends BaseController {
 
     //注册
     protected function register() {
-        $Trader    = Admin::model('Trader.main');
+        $Trader    = Admin::model('trader.main');
         $gameId    = trim($this->request->post('GameId'));
         $wechat    = trim($this->request->post('Wechat'));
         $phone     = trim($this->request->post('Phone'));
@@ -149,6 +149,42 @@ class TraderController extends BaseController {
 
         $this->renderJSON((boolean)$result);
     }
+
+    public function resetPwdAction() {
+		if($this->request->isGet()) {
+	        $this->render('pwd.html');	
+		} else if($this->request->isPost()) {
+	        $AuthCode = Admin::model('authcode.main');	
+			$Trader   = Admin::model('trader.main');
+			$filters = array('Gameid' => $_SESSION[Config::SESSION_UID]);
+		    $trader  = $Trader->findOne($filters);	
+
+			$filters = array('Phone' => $trader['Phone']);
+			$auth = $Authcode->findOne($filters);
+			if(!$auth) {
+				$this->error('验证码无效，请重新获取验证码', 10086);
+			}
+			if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
+				$this->error('验证码已过期，请重新获取验证码', 10086);
+			}
+		    
+			$password = trim($this->request->post('password'));
+			$password2 = trim($this->request->post('password2'));
+
+			if($password=='') {
+			    $this->error('请填写密码');
+			}
+			if($password != $password2) {
+			    $this->error('密码不一致');
+			}
+
+		    $doc = array(
+			    'Pwd' => $Trader->password($password)
+			);
+		    $result = $Trader->update($filters, $doc);	
+			$this->renderJSON((bool)$result);
+		}	
+	}
 
     //获取验证码
     public function getAuthcodeAction() {
