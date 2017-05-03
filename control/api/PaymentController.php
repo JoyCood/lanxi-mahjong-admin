@@ -24,7 +24,7 @@ class PaymentController extends BaseController {
             ));
             exit();
         }
-
+        $MoneyInpour = Admin::model('money.inpour');
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(
             'Transid'   => $transId,
@@ -33,16 +33,16 @@ class PaymentController extends BaseController {
             'Quantity'  => $goods['quantity'],
             'Money'     => $goods['price'] * 100,
             'Transtime' => time(),
-            'Result'    => 1,
+            'Result'    => $MoneyInpour::PROCESSING,
             'Currency'  => 'CNY',
-            'Paytype'   => 1,
+            'Paytype'   => $MoneyInpour::WEIXIN,
             'Clientip'  => Admin::getRemoteIP(),
             'Parent'    => $user['Build'],
             'Ctime'     => time(),
             'Lv'        => 0,
             'Rebate'    => 0,
         ); 
-        Admin::model('money.inpour')->insert($doc);
+        $MoneyInpour->insert($doc);
 
         $nonceStr = md5(Helper::mkrand());
         $input = new WxPayUnifiedOrder();
@@ -93,16 +93,67 @@ class PaymentController extends BaseController {
 
         if($xmlarr['result_code'] == 'SUCCESS' OR $xmlarr['return _code'])
         {
-            echo '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
-            
             $wxPayDataBase = new WxPayResults();
             $wxPayDataBase->FromArray($xmlarr);
             $sign = $wxPayDataBase->SetSign();
 
             if($sign == $xmlarr['sign'])
             {
+                echo '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
                 unset($xmlarr['sign'], $xmlarr['mch_id'], $xmlarr['openid'], $xmlarr['appid']);
-                //Admin::model('course.order')->updateOrderStatu($xmlarr['out_trade_no'], 1, 'weixin', $xmlarr);
+                $filters = array(
+					'Transid' => $xmlarr['out_trade_no'],
+					'Result'  => $MoneyInpour::PROCESSING
+				);
+				$update = array(
+				    'Result' => $MoneyInpour::DELIVER,
+					'notify_data' => $xmlarr
+				);
+				$options = array('new' => true);
+				//状态更新为发货中，用于锁定
+				$order = Admin::model('money.inpour')->findAndModify($filters, $update, null, $options);
+				if(isset($order['Result']) && $order['Result']==$MoneyInpour::DELIVER) {
+					$filters = array('Gameid'=>$order['Userid']);
+					$update  = array('$inc' => array('Diamond' => $order['Quantity']));
+					$options = array('new' => true);
+					$user    = Admin::model('user.main')->findAndModify($filters, $update); //发货
+                    
+					$status = $user===NULL? $MoneyInpour::FAILURE : $MoneyInpour::SUCCESS; 
+					$update = array('Result' => $status);
+					$filters = array(
+						'Transid'=>$xmlarr['out_trade_no'], 
+						'Userid'=>$order['Userid'],
+						'Result'=>$MoneyInpour::DELIVER
+					);
+					$MoneyInpour->update($filters, $update); //更新交易结果
+
+					//通知游戏服务器发货结果
+					$sign     = Config::getOptions('game-server-sign');
+					$time     = time();
+					$userid   = (string)$order['Userid'];
+					$transid  = (string)$xmlarr['out_trade_no'];
+					$kind     = intval($MoneyInpour::GOODS_TYPE_ROOMCARD);
+					$count    = intval($order['Quantity']);
+					$curcount = intval($user['Diamond']);
+
+					$key = md5($sign.$time.$userid.$transid.$kind.$count.$curcount);
+					
+					$data = array(
+					    'transid'   => $transid,
+						'userid'    => $userid,
+						'kind'      => $kind,
+						'count'     => $count,
+						'curcount'  => $curcount,
+						'timestamp' => $time,
+						'key'       => $key
+					);
+					$ch = curl_init(Config::getOptions('game-server-host'));
+					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+					curl_setopt($ch, CURLOPT_TIMEOUT, 5); //5秒超时
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+					curl_exec($ch);
+					curl_close($ch);
+				}
             }
         }
         else
@@ -111,3 +162,17 @@ class PaymentController extends BaseController {
         }
     }
 }
+
+/*
+SIGN = "XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw"
+
+Key = Md5(SIGN+Timestamp+Useridz+Kind+Count)
+
+发货Post 过来的数据(json格式)：
+
+Key string `json:"key"` // 秘钥
+Userid string `json:"userid"` // 玩家id
+Kind uint32 `json:"kind"` // 商品类型1:房卡
+Count uint32 `json:"count"` // 商品数量
+Timestamp uint32 `json:"timestamp"` // 发货时间戳
+*/

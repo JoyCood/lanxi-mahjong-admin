@@ -2,6 +2,15 @@
 
 class ModelMoneyInpour
 {
+	const SUCCESS = 0;    //交易成功
+	const FAILURE = 1;    //交易失败
+	const PROCESSING = 2; //交易中
+	const DELIVER = 3;    //发货中
+
+	const WEXIN = 1;      //微信支付 
+
+	const GOODS_TYPE_ROOMCARD = 4; //商品类型：房卡
+
 	private $fields = array(
         'Transid',    #string  交易流水号
 	    'Userid',     #string  用户id
@@ -34,6 +43,11 @@ class ModelMoneyInpour
         $data = Helper::allowed($data, $this->allowed);
         return $this->collection()->update($filter, array('$set'=>$data)); 
     }
+
+	public function findAndModify($filter, $data, $projection, $options) {
+	    $data = Helper::allowed($data, $this->allowed);
+	    return $this->collection()->findAndModify($filter, $data, $projection, $options);
+	}
 
 	public function find($filter=array(), $projection=array()) {
         return $this->collection()->find($filter, $projection);	
