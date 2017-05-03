@@ -24,7 +24,7 @@ class PaymentController extends BaseController {
             ));
             exit();
         }
-
+        $MoneyInpour = Admin::model('money.inpour');
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(
             'Transid'   => $transId,
@@ -33,16 +33,16 @@ class PaymentController extends BaseController {
             'Quantity'  => $goods['quantity'],
             'Money'     => $goods['price'] * 100,
             'Transtime' => time(),
-            'Result'    => 1,
+            'Result'    => $MoneyInpour::PROCESSING,
             'Currency'  => 'CNY',
-            'Paytype'   => 1,
+            'Paytype'   => $MoneyInpour::WEIXIN,
             'Clientip'  => Admin::getRemoteIP(),
             'Parent'    => $user['Build'],
             'Ctime'     => time(),
             'Lv'        => 0,
             'Rebate'    => 0,
         ); 
-        Admin::model('money.inpour')->insert($doc);
+        $MoneyInpour->insert($doc);
 
         $nonceStr = md5(Helper::mkrand());
         $input = new WxPayUnifiedOrder();
@@ -93,16 +93,40 @@ class PaymentController extends BaseController {
 
         if($xmlarr['result_code'] == 'SUCCESS' OR $xmlarr['return _code'])
         {
-            echo '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
-            
             $wxPayDataBase = new WxPayResults();
             $wxPayDataBase->FromArray($xmlarr);
             $sign = $wxPayDataBase->SetSign();
 
             if($sign == $xmlarr['sign'])
             {
+                echo '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
                 unset($xmlarr['sign'], $xmlarr['mch_id'], $xmlarr['openid'], $xmlarr['appid']);
-                //Admin::model('course.order')->updateOrderStatu($xmlarr['out_trade_no'], 1, 'weixin', $xmlarr);
+                $filters = array(
+					'Transid' => $xmlarr['out_trade_no'],
+					'Result'  => $MoneyInpour::PROCESSING
+				);
+				$update = array(
+				    'Result' => $MoneyInpour::DELIVER,
+					'notify_data' => $xmlarr
+				);
+				$options = array('new' => true);
+				//状态更新为发货中，用于锁定
+				$order = Admin::model('money.inpour')->findAndModify($filters, $update, null, $options);
+				if(isset($order['Result']) && $order['Result']==$MoneyInpour::DELIVER) {
+					$filters = array('Gameid'=>$order['Userid']);
+					$update = array('$inc' => array('Diamond' => $order['Quantity']));
+					$options = array('new' => true);
+					$result = Admin::model('user.main')->findAndModify($filters, $update); //发货
+                    
+					$status = $result===NULL? $MoneyInpour::FAILURE : $MoneyInpour::SUCCESS; 
+					$update = array('Result' => $status);
+					$filters = array(
+						'Transid'=>$xmlarr['out_trade_no'], 
+						'Userid'=>$order['Userid'],
+						'Result'=>$MoneyInpour::DELIVER
+					);
+					$MoneyInpour->update($filters, $update); //更新交易结果
+				}
             }
         }
         else
