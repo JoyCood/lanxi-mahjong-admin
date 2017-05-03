@@ -28,8 +28,8 @@ class Config
                             'templates.path' => DOC_ROOT. '/view/region'
                          ),
                         'sessionSecret' => 'a0e0eba2c41369c5797dbb3ab158b9e6',
-                        'resVersion'    => 1,
-                        'res3rdVersion' => 1
+                        'resVersion'    => 3,
+                        'res3rdVersion' => 2
                 ),
                 // 日志
                 'log' => array(

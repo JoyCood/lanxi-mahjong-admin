@@ -10,7 +10,7 @@
     <tbody>
         {% for item in data.items %}
         <tr>
-            <td align="left">{{i}}.{{item.Time|datetime}}</td>
+            <td align="left">{{item.Time|datetime}}</td>
             <td align="right">{{item.Money|number_format(2)}}</td>
             <td align="right" class="hidden-480">{{item.MoneyTotal|number_format(2)}}</td>
             <td>{{item.Status|money_status}}</td>
