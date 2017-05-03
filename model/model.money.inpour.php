@@ -9,6 +9,8 @@ class ModelMoneyInpour
 
 	const WEXIN = 1;      //微信支付 
 
+	const GOODS_TYPE_ROOMCARD = 4; //商品类型：房卡
+
 	private $fields = array(
         'Transid',    #string  交易流水号
 	    'Userid',     #string  用户id

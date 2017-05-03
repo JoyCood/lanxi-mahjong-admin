@@ -16,6 +16,10 @@ class Config {
             'goods' => require('goods.config.php'),
             //支付
             'payment' => require('pay.config.php'), 
+			//游戏服务器地址
+			'game-server-host' => 'http://localhost:7229/roomcard',
+            //游戏服务器通讯密钥
+			'game-server-sign' => 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw"',
             //网站设置
             'settings' => array(
                 'slim' => array(

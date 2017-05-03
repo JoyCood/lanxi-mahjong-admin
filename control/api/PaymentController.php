@@ -114,11 +114,11 @@ class PaymentController extends BaseController {
 				$order = Admin::model('money.inpour')->findAndModify($filters, $update, null, $options);
 				if(isset($order['Result']) && $order['Result']==$MoneyInpour::DELIVER) {
 					$filters = array('Gameid'=>$order['Userid']);
-					$update = array('$inc' => array('Diamond' => $order['Quantity']));
+					$update  = array('$inc' => array('Diamond' => $order['Quantity']));
 					$options = array('new' => true);
-					$result = Admin::model('user.main')->findAndModify($filters, $update); //发货
+					$user    = Admin::model('user.main')->findAndModify($filters, $update); //发货
                     
-					$status = $result===NULL? $MoneyInpour::FAILURE : $MoneyInpour::SUCCESS; 
+					$status = $user===NULL? $MoneyInpour::FAILURE : $MoneyInpour::SUCCESS; 
 					$update = array('Result' => $status);
 					$filters = array(
 						'Transid'=>$xmlarr['out_trade_no'], 
@@ -126,6 +126,33 @@ class PaymentController extends BaseController {
 						'Result'=>$MoneyInpour::DELIVER
 					);
 					$MoneyInpour->update($filters, $update); //更新交易结果
+
+					//通知游戏服务器发货结果
+					$sign     = Config::getOptions('game-server-sign');
+					$time     = time();
+					$userid   = (string)$order['Userid'];
+					$transid  = (string)$xmlarr['out_trade_no'];
+					$kind     = intval($MoneyInpour::GOODS_TYPE_ROOMCARD);
+					$count    = intval($order['Quantity']);
+					$curcount = intval($user['Diamond']);
+
+					$key = md5($sign.$time.$userid.$transid.$kind.$count.$curcount);
+					
+					$data = array(
+					    'transid'   => $transid,
+						'userid'    => $userid,
+						'kind'      => $kind,
+						'count'     => $count,
+						'curcount'  => $curcount,
+						'timestamp' => $time,
+						'key'       => $key
+					);
+					$ch = curl_init(Config::getOptions('game-server-host'));
+					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+					curl_setopt($ch, CURLOPT_TIMEOUT, 5); //5秒超时
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+					curl_exec($ch);
+					curl_close($ch);
 				}
             }
         }
@@ -135,3 +162,17 @@ class PaymentController extends BaseController {
         }
     }
 }
+
+/*
+SIGN = "XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw"
+
+Key = Md5(SIGN+Timestamp+Useridz+Kind+Count)
+
+发货Post 过来的数据(json格式)：
+
+Key string `json:"key"` // 秘钥
+Userid string `json:"userid"` // 玩家id
+Kind uint32 `json:"kind"` // 商品类型1:房卡
+Count uint32 `json:"count"` // 商品数量
+Timestamp uint32 `json:"timestamp"` // 发货时间戳
+*/
