@@ -37,13 +37,13 @@ class Config {
             //免登录 
             'notauth' => array(
                 '/api/goods',
-                '/api/login',
+                '/api/wechat-login',
                 '/api/place-order'
             ),
 
             //路由设置
             'routes' => array(
-                '/api/login'  => 'POST::PlayerController::loginAction',
+                '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
                 '/api/goods'  => 'GET::GoodsController::listAction',
                 '/api/place-order' => 'GET::PaymentController::placeOrderAction'
             )
