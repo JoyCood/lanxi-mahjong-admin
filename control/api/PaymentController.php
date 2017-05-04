@@ -114,7 +114,7 @@ class PaymentController extends BaseController {
 				$order = Admin::model('money.inpour')->findAndModify($filters, $update, null, $options);
 				if(isset($order['Result']) && $order['Result']==$MoneyInpour::DELIVER) {
 					$filters = array('Gameid'=>$order['Userid']);
-					$update  = array('$inc' => array('Diamond' => $order['Quantity']));
+					$update  = array('$inc' => array('RoomCard' => $order['Quantity']));
 					$options = array('new' => true);
 					$user    = Admin::model('user.main')->findAndModify($filters, $update); //发货
                     
@@ -134,7 +134,7 @@ class PaymentController extends BaseController {
 					$transid  = (string)$xmlarr['out_trade_no'];
 					$kind     = intval($MoneyInpour::GOODS_TYPE_ROOMCARD);
 					$count    = intval($order['Quantity']);
-					$curcount = intval($user['Diamond']);
+					$curcount = intval($user['RoomCard']);
 
 					$key = md5($sign.$time.$userid.$transid.$kind.$count.$curcount);
 					

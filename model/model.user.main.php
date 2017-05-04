@@ -2,6 +2,8 @@
 
 class ModelUserMain
 {
+	const PLATFORM_WECHAT = 1;
+	const INIT_ROOM_CARD  = 4;
     const PLAYER = 0;
     const TRADER = 1;
     
@@ -32,7 +34,7 @@ class ModelUserMain
         'Photo',         #string 头像
         'Qq_uid',        #string QQ平台openid
         'Wechat_uid',    #string  微信平台openid
-        'Microblog-uid', #string 微博平台openid
+        'Microblog_uid', #string 微博平台openid
         'Vip',           #uint32 是否为vip
         'VipExpire',     #uint32 vip过期时间
         'Win',           #uint32 赢的局数
@@ -42,13 +44,15 @@ class ModelUserMain
         'ChenmiTime',    #uint32
         'Chenmi',        #uint32
         'Sound',         #boolean 是否开启声音
-        'Robot',         #boolean 房卡数量
-        'RoomCard',      #uint32
+        'Robot',         #boolean 是否机器人
+        'RoomCard',      #uint32 房卡数量
         'Build',         #string 绑定代理商id
         'BuildTime',     #uint32 绑定时间
         'FyAccountId',   #string
         'FyAccountPwd',  #string
-        'IsTrader'       #uint32 //是否为代理商(self::PLAYER普通玩家 self::TRADER代理商) 
+        'IsTrader',      #uint32 //是否为代理商(self::PLAYER普通玩家 self::TRADER代理商) 
+		'Last_login_time', #uint32 最后登录时间
+	    'Last_Login_ip', #string 最后登录IP	
     );  
 
     public function collection() {
