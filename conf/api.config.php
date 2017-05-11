@@ -6,7 +6,11 @@ class Config {
     
     const SESSION_UID = 'lanxi-api-user-id';
     const SESSION_USER = 'lanxi-api-user';
-    const SESSION_GROUP = 'lanxi-api-group';
+	const SESSION_GROUP = 'lanxi-api-group';
+	const GAME_SERVER_HOST = 'http://localhost:7229/roomcard';
+	const GAME_SERVER_SIGN = 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw';
+	const WEIXIN_APP_ID = 'wxa0f7643705d54733';
+	const WEIXIN_SECRET = 'da7746c6fb30e212066f306395a57f9a';
 
     static function init() {
         self::$Options = array(
@@ -36,13 +40,15 @@ class Config {
 
             //免登录 
             'notauth' => array(
+				'/api/app',
                 '/api/goods',
                 '/api/wechat-login',
                 '/api/place-order'
             ),
 
             //路由设置
-            'routes' => array(
+			'routes' => array(
+				'/api/app' => 'GET::ShareController::appAction',
                 '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
                 '/api/goods'  => 'GET::GoodsController::listAction',
                 '/api/place-order' => 'GET::PaymentController::placeOrderAction'

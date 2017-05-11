@@ -2,7 +2,13 @@
 require(DOC_ROOT. '/control/BaseController.php');
 
 class PlayerController extends BaseController {
-    
+    const WEIXIN_API = 'https://api.weixin.qq.com/';
+
+	protected function getUserInfoAction() {
+	
+	
+	}
+
     //登录游戏
     public function wechatLoginAction() {
 		$params = $this->request->post('data');
@@ -11,6 +17,17 @@ class PlayerController extends BaseController {
 			$response = Helper::encodeParams(array('code' => 20001));
 			$this->renderJSON(array('data'=>$response));
 			exit();
+		}
+		$appid = Config::WEIXIN_APP_ID;
+		$secret = Config::WEIXIN_SECRET;
+
+		if(isset($params['code'])) {
+			$token_url = self::WEIXIN_API."sns/oauth2/access_token?appid={$appid}&secret={$secret}&code={$code}&grant_type=authorization_code";
+		    $token_info = Helper::curl($token_url);
+			$userinfo = Helper::curl($userinfo_url);
+		} else if(isset($params['access_token'])) {
+            $userinfo_url = self::WEIXIN_API."sns/userinfo?access_token={$params['access_token']}&openid={$params['openid']}";		
+			$userinfo = Helper::curl($userinfo_url);
 		}
 
 		$User = Admin::model('user.main');

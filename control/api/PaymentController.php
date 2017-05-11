@@ -147,12 +147,7 @@ class PaymentController extends BaseController {
 						'timestamp' => $time,
 						'key'       => $key
 					);
-					$ch = curl_init(Config::getOptions('game-server-host'));
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-					curl_setopt($ch, CURLOPT_TIMEOUT, 5); //5秒超时
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-					curl_exec($ch);
-					curl_close($ch);
+					Helper::curl(Config::getOptions('game-server-host'), json_encode($data), 'POST');
 				}
             }
         }
