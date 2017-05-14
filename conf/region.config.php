@@ -43,7 +43,7 @@ class Config
                         '/region/code',
                         '/region/register',
                         '/region/agreement',
-						'/region/pwd'
+						'/region/pwd',
                 ),
                 // 路径设置
                 'routes' => array(
@@ -57,7 +57,8 @@ class Config
                         '/region/money/withdraw/form' => 'GET::MoneyController::withdrawFormAction',       //提现
                         '/region/money/withdraw'      => 'POST::MoneyController::withdrawAction',       //提现
 			            '/region/money/log'           => 'GET::MoneyController::withdrawLogAction',    //提现记录表列
-						'/region/pwd'                 => '::TraderController::resetPwdAction'          //重置密码
+						'/region/pwd'                 => '::TraderController::resetPwdAction',         //重置密码
+						'/region/recharge'            => 'POST::CardController::rechargeAction'         //代理商给玩家充房卡
                 )
         );
     }
