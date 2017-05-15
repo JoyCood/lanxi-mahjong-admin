@@ -4,7 +4,7 @@ require(DOC_ROOT. '/control/BaseController.php');
 class CardController extends BaseController {
 	//代理商给其它玩家充房卡
 	public function rechargeAction() {
-		$target   = $this->request->post('target');
+		$target   = trim($this->request->post('target'));
 	    $quantity = intval($this->request->post('quantity'));
 
 		$user = Admin::model('user.main');
@@ -12,6 +12,9 @@ class CardController extends BaseController {
 		$trader = $user->findOne($filters);
 		if(!$trader) {
 		    $this->error('请重新登录');
+		}
+		if(!$target) {
+		    $this->error('请输入玩家游戏ID');
 		}
 		if($quantity<0) {
 		    $this->error('请输入正整数');

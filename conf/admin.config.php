@@ -63,6 +63,9 @@ class Config
                     '/admin/trader/form'    => 'GET::TraderController::formAction',
                     '/admin/trader/save'    => 'POST::TraderController::formSaveAction',
                     '/admin/trader/delete'  => 'POST::TraderController::deleteAction',
+
+					//房卡
+					'/admin/card/recharge' => 'POST::CardController::rechargeAction'
             )
         );
     }
