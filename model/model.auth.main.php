@@ -13,6 +13,7 @@ class ModelAuthMain
         'Code',          #string
         'CTime',         #uint32
 		'Openid',        #string 
+		'Unionid',       #string
 		'Access_token',  #string
 		'Refresh_token', #string
     );
@@ -34,5 +35,11 @@ class ModelAuthMain
         $data = Helper::allowed($data, $this->fields);
         return $this->collection()->update($filter, array('$set' => $data));
     }
+
+	public function findAndModify($filter, $data, $projection=null, $options=array('new'=>true)) {
+	
+		$data = array('$set' => $data);
+		return $this->collection()->findAndModify($filter, $data, $projection, $options);
+	}
 
 }

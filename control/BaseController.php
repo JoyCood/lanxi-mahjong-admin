@@ -7,6 +7,7 @@ class BaseController {
     
     public function __construct($app) {
         $this->app      = & $app;
+		$this->log      = & $app->log;
         $this->request  = & $app->request;
         $this->response = & $app->response;
 
