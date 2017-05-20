@@ -41,28 +41,34 @@ class PlayerController extends BaseController {
 
     public function testAction() {
         $code = $this->request->get('code');	
-		if(empty($code) && !isset($_SESSION['unionid'])) {
+		if(empty($code)) {
 	        $this->getCodeAction();            	
 		}
-		if(!isset($_SESSION['access_token'])) {
-		    $token = $this->getAccessTokenAction($code);
-			$token = json_decode($token, true);
-			$_SESSION['access_token'] = $token;
-		} else {
-		    $token = $_SESSION['access_token'];
+		$userinfo = array();
+		if(isset($_SESSION['openid']) && isset($_SESSION['access_token'])) {
+		    $userinfo = $this->getUserInfoAction($_SESSION['openid'], $_SESSION['access_token']);
+			$userinfo = json_decode($userinfo, true);
 		}
-		
-		if(isset($token['errcode'])) { 
-			if($token['errcode']==40029) {
-			    $this->getCodeAction();
+		if(!$userinfo) {
+		    $token = json_decode($this->getAccessTokenAction($code), true);
+			if(!isset($token['errcode'])) {
+			    //$this->freshTokenAction($token['refresh_token']);
+			    $userinfo = $this->getUserInfoAction($token['openid'], $token['access_token']);
+				$userinfo = json_decode($userinfo, true);
+				$_SESSION['openid'] = $token['openid'];
+				$_SESSION['access_token'] = $token['access_token'];
 			}
-		    print_r($token);
-		    exit('error');	
 		}
-	    print_r($token);
-		$userinfo = $this->getUserInfoAction($token['openid'], $token['access_token']);
-		$userinfo = json_decode($userinfo, true);
-		$_SESSION['unionid'] = $userinfo['unionid'];
+		if(isset($userinfo['errcode'])) {
+		    if($userinfo['errcode']==40014) { //token超时
+				$token = json_decode($this->getAccessTokenAction($code), true);
+				
+				//$this->freshTokenAction($token['refresh_token']);
+				$userinfo = $this->getUserInfoAction($token['openid'], $token['access_token']);
+				$_SESSION['openid'] = $token['openid'];
+				$_SESSION['access_token'] = $token['access_token'];
+			}
+		}
 		print_r($userinfo);
 	}
 }

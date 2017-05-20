@@ -39,15 +39,16 @@ class Config {
 				'/web/app',
                 '/web/goods',
 				'/web/place-order',
-				'/web/wechat-test'
+				'/web/wechat-test',
+				'/web/goods',
             ),
 
             //路由设置
 			'routes' => array(
-				'/web/app' => 'GET::ShareController::appAction',
                 '/web/goods'  => 'GET::GoodsController::listAction',
-                '/web/place-order' => 'GET::PaymentController::placeOrderAction',
-				'/web/wechat-test' => 'GET::PlayerController::testAction'
+                '/web/place-order' => 'GET::GoodsController::placeOrderAction',
+				'/web/wechat-test' => 'GET::PlayerController::testAction',
+				'/web/goods' => 'GET::GoodsController::goodsAction'
             )
         ); 
     }
