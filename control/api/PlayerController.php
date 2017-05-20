@@ -67,7 +67,7 @@ class PlayerController extends BaseController {
 			$filters = array(
 				'Channel' => $auth::CHANNEL_WEIXIN,
 				'Openid'  => $freshToken['openid'],
-				'Unionid' = $freshToken['unionid'],
+				'Unionid' => $freshToken['unionid'],
 			);
 			$update  = array(
 				'Access_token'  => $freshToken['access_token'],
