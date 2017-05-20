@@ -60,7 +60,7 @@ class PlayerController extends BaseController {
 			}
 		}
 		if(isset($userinfo['errcode'])) {
-		    if($userinfo['errcode']==40014) { //token超时
+		    if(in_array($userinfo['errcode'],array(40014, 42001))) { //token超时
 				$token = json_decode($this->getAccessTokenAction($code), true);
 				
 				//$this->freshTokenAction($token['refresh_token']);
