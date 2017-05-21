@@ -55,33 +55,27 @@
         </a>
     </nav>
     <nav>
-        <a href="admin/trader/" title="代理商管理">
+        <a href="admin/trader" title="代理商管理">
             <i class="fa fa-adn"></i>
             <span>代理商管理</span>
         </a>
-        <a href="admin/notice/" title="公告">
+        <a href="admin/notice"{{MENU_ITEM=="notice"? ' class="active"': ''}} title="公告">
             <i class="fa fa-comment-o"></i>
             <span>公告</span>
         </a>
-        <a href="admin/trader/"{{MENU_ITEM=="trader"? ' class="active"': ''}} title="代理商">
+        <a href="admin/trader"{{MENU_ITEM=="trader"? ' class="active"': ''}} title="代理商">
             <i class="fa fa-adn"></i>
             <span>代理商</span>
         </a>
-        {#
-        <a href="admin/trader/under/"{{MENU_ITEM=="trader_under"? ' class="active"': ''}} title="下级代理">
-            <i class="fa fa-stumbleupon-circle"></i>
-            <span>下级代理</span>
-        </a>
-        #}
-        <a href="admin/money/inpour/" title="付费流水">
+        <a href="admin/money/inpour"{{MENU_ITEM=="inpour"? ' class="active"': ''}} title="付费流水">
             <i class="fa fa-list-ol"></i>
             <span>付费流水</span>
         </a>
-        <a href="admin/money/withdraw/" title="返现申请">
+        <a href="admin/money/withdraw"{{MENU_ITEM=="withdraw"? ' class="active"': ''}} title="返现申请">
             <i class="fa fa-yen"></i>
             <span>返现申请</span>
         </a>
-        <a href="admin/money/withdraw/#summary" title="返现汇总">
+        <a href="admin/money/withdraw/summary"{{MENU_ITEM=="summary"? ' class="active"': ''}} title="返现汇总">
             <i class="fa fa-list-alt"></i>
             <span>返现汇总</span>
         </a>

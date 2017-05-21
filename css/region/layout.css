@@ -63,7 +63,7 @@ a.app-back:before {
 
 #main-menu {
     position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 36;
-    transform: translate3d(0, -100%, 0);
+    transform: translate3d(100%, 0, 0);
     transition: transform .2s;
     overflow: hidden;
     display: none;

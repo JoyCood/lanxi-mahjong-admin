@@ -114,7 +114,9 @@ class ModelTraderMain
 
                 $item['id'] = $id;
                 $items[]    = $item;
-                $pids[]     = new MongoId($item['Parent']);
+                if($item['Parent']) {
+                    $pids[] = new MongoId($item['Parent']);
+                }
             }
         }
         if($pids) {
