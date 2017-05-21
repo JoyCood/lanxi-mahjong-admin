@@ -38,31 +38,34 @@ class Config
             ),
             // 路径设置
             'routes' => array(
-                    '/admin/'                       => 'GET::AdminController::indexAction',
-                    '/admin/login'                  => 'GET::AdminController::loginAction',
-                    '/admin/login-auth'             => 'POST::AdminController::loginAuthAction',
-                    '/admin/logout'                 => 'POST::AdminController::logoutAction',
-                    '/admin/log'                    => 'GET::AdminController::logAction',
+                    '/admin'           => 'GET::AdminController::indexAction',
+                    '/admin/login'      => 'GET::AdminController::loginAction',
+                    '/admin/login-auth' => 'POST::AdminController::loginAuthAction',
+                    '/admin/logout'     => 'POST::AdminController::logoutAction',
+                    '/admin/log'        => 'GET::AdminController::logAction',
                     // 订单
-                    '/admin/money/inpour'           => 'GET::MoneyController::inpourAction',
+                    '/admin/money/inpour/'          => 'GET::MoneyController::inpourAction',
                     '/admin/money/inpour/form'      => 'GET::MoneyController::inpourFormAction',
                     '/admin/money/inpour/list'      => 'GET::MoneyController::inpourListAction',
-                    '/admin/money/withdraw'         => 'GET::MoneyController::withdrawAction',
+                    '/admin/money/withdraw/'        => 'GET::MoneyController::withdrawAction',
                     '/admin/money/withdraw/form'    => 'GET::MoneyController::withdrawFormAction',
                     '/admin/money/withdraw/list'    => 'GET::MoneyController::withdrawListAction',
                     '/admin/money/withdraw/summary' => 'GET::MoneyController::withdrawSummaryAction',
                     // 公告
-                    '/admin/notice'                 => 'GET::NoticeController::indexAction',
-                    '/admin/notice/list'            => 'GET::NoticeController::listAction',
-                    '/admin/notice/form'            => 'GET::NoticeController::formAction',
-                    '/admin/notice/save'            => 'POST::NoticeController::formSaveAction',
-                    '/admin/notice/delete'          => 'POST::NoticeController::deleteAction',
+                    '/admin/notice/'          => 'GET::NoticeController::indexAction',
+                    '/admin/notice/list'      => 'GET::NoticeController::listAction',
+                    '/admin/notice/form'      => 'GET::NoticeController::formAction',
+                    '/admin/notice/save'      => 'POST::NoticeController::formSaveAction',
+                    '/admin/notice/delete'    => 'POST::NoticeController::deleteAction',
                     // 代理商
-                    '/admin/trader'                 => 'GET::TraderController::indexAction',
-                    '/admin/trader/list'            => 'GET::TraderController::listAction',
-                    '/admin/trader/form'            => 'GET::TraderController::formAction',
-                    '/admin/trader/save'            => 'POST::TraderController::formSaveAction',
-                    '/admin/trader/delete'          => 'POST::TraderController::deleteAction',
+                    '/admin/trader/'        => 'GET::TraderController::indexAction',
+                    '/admin/trader/list'    => 'GET::TraderController::listAction',
+                    '/admin/trader/form'    => 'GET::TraderController::formAction',
+                    '/admin/trader/save'    => 'POST::TraderController::formSaveAction',
+                    '/admin/trader/delete'  => 'POST::TraderController::deleteAction',
+
+					//房卡
+					'/admin/card/recharge' => 'POST::CardController::rechargeAction'
             )
         );
     }

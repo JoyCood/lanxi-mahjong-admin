@@ -7,6 +7,7 @@ class BaseController {
     
     public function __construct($app) {
         $this->app      = & $app;
+		$this->log      = & $app->log;
         $this->request  = & $app->request;
         $this->response = & $app->response;
 
@@ -32,6 +33,19 @@ class BaseController {
             $data
         ));
     }
+
+	protected function responseJSON($data,$exit=TRUE) {
+		if(!is_array($data)) {
+			$data = json_decode($data, true);
+		}	
+		$this->app->view->renderJSON(array_merge(
+			$this->viewData,
+			$data
+		));
+		if($exit) {
+		    exit();
+		}
+	}
 
     protected function addViewData($key, $val) {
         $this->viewData[$key] = $val;

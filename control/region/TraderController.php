@@ -52,7 +52,7 @@ class TraderController extends BaseController {
     public function registerAction() {
         if($this->request->isGet()) {
             $this->render('register.html', array(
-                'AuthCode' => Admin::model('authcode.main')
+                'AuthCode' => Admin::model('auth.main')
             ));
         } else if($this->request->isPost()) {
             $this->register();
@@ -99,7 +99,7 @@ class TraderController extends BaseController {
         if(!$player) {
             $this->error('游戏ID不存在');
         }
-        $AuthCode = Admin::model('authcode.main');
+        $AuthCode = Admin::model('auth.main');
         $filters  = array('Phone'=>$phone, 'Code'=>$code);
         $auth = $AuthCode->findOne($filters);
         if(!$auth) {
@@ -158,7 +158,7 @@ class TraderController extends BaseController {
 
 	//重置密码
     public function resetPwdAction() {
-        $AuthCode = Admin::model('authcode.main');
+        $AuthCode = Admin::model('auth.main');
 
 		if($this->request->isGet()) {
 			$this->render('pwd.html');	
@@ -211,7 +211,7 @@ class TraderController extends BaseController {
         if(!Phone::validation($phone)) {
             $this->error('请填写正确的手机号码');
         }
-        $AuthCode = Admin::model('authcode.main');
+        $AuthCode = Admin::model('auth.main');
         $filters = array('phone' => $phone);
         $auth = $AuthCode->findOne($filters);
         if(!$auth) {
