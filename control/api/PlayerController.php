@@ -27,28 +27,38 @@ class PlayerController extends BaseController {
 
 	protected function getUserByCode($code) {
 		$tokenInfo = $this->getAccessTokenAction($code);
-		$this->log->debug($tokenInfo);
         $tokenInfo = json_decode($tokenInfo, true);
 		if(isset($tokenInfo['errcode'])) {
-		    return $tokenInfo;
+			$this->responseJSON($tokenInfo);
 		}
-        $auth = Admin::model('auth.main');
+        $Auth = Admin::model('auth.main');
 		$filters = array(
 			'Openid'  => $tokenInfo['openid'],
 			'Unionid' => $tokenInfo['unionid'], 
-			'Channel' => $auth::CHANNEL_WEIXIN
+			'Channel' => $Auth::CHANNEL_WEIXIN
 		);
-		$update  = array(
+		$data  = array(
+			'Channel'       => $Auth::CHANNEL_WEIXIN,
+			'Phone'         => '',
+			'Code'          => '',
+			'CTime'         => time(),
 			'Openid'        => $tokenInfo['openid'],
 			'Unionid'       => $tokenInfo['unionid'],
 			'Access_token'  => $tokenInfo['access_token'],
 			'Refresh_token' => $tokenInfo['refresh_token']
 		);
-		$auth->findAndModify($filters, $update);
+		$auth = $Auth->findOne($filters);
+		if(!$auth) {
+			$Auth->insert($data);
+		} else {
+		    unset($data['CTime']);
+			$Auth->update($filters, $data);
+		}
+
 		$userInfo = $this->getUserInfoAction($tokenInfo['openid'], $tokenInfo['access_token']);
 		$userInfo = json_decode($userInfo, true);
 		//todo 判断refresh_token是否已过期，过期了才刷新
-		$this->refreshTokenAction($userInfo['fresh_token']);
+		$this->refreshTokenAction($userInfo['refresh_token']);
 		return $userInfo;
 	}
 
@@ -57,27 +67,39 @@ class PlayerController extends BaseController {
 		$filters = array('Access_token' => $accessToken);
 		$Auth = Admin::model('auth.main');
 		$auth = $Auth->findOne($filters);
+	    if(!$auth) {
+			$data = array('code'=> 40014, 'errmsg'=> 'invalid access_token');
+		    $this->responseJSON($data);	
+		}
 		$userInfo = $this->getUserInfoAction($auth['Openid'], $accessToken);
 		$userInfo = json_decode($userInfo, true);
-		if(isset($userInfo['errcode']) && $userInfo['errcode'] == 42001) { //access_token超时
-			$freshToken = $this->refreshTokenAction($auth['Refresh_token']);
-			if(isset($freshToken['errcode'])) { //刷新TOKEN失败
-				return $freshToken;
+		if(isset($userInfo['errcode'])) { 
+			if($userInfo['errcode'] == 42001) { //access_token超时
+				$freshToken = $this->refreshTokenAction($auth['Refresh_token']);
+				$freshToken = json_decode($freshToken, true);
+				if(isset($freshToken['errcode'])) { //刷新TOKEN失败
+					$this->responseJSON($freshToken);
+				}
+				$filters = array(
+					'Channel' => $auth::CHANNEL_WEIXIN,
+					'Openid'  => $freshToken['openid'],
+					'Unionid' => $freshToken['unionid'],
+				);
+				$update  = array(
+					'Access_token'  => $freshToken['access_token'],
+					'Refresh_token' => $freshToken['refresh_token']
+				);
+				$auth->update($filters, $update);
+				$userInfo = $this->getUserInfoAction($freshToken['openid'], $freshToken['access_token']);
+				$userInfo = json_decode($userInfo, true);
+				if(isset($userInfo['errcode'])) {
+					$this->responseJSON($userInfo);
+				}
+			} else { //其它错误,原封不动返回给客户端
+			    $thisis->responseJSON($userInfo);
 			}
-			$filters = array(
-				'Channel' => $auth::CHANNEL_WEIXIN,
-				'Openid'  => $freshToken['openid'],
-				'Unionid' => $freshToken['unionid'],
-			);
-			$update  = array(
-				'Access_token'  => $freshToken['access_token'],
-				'Refresh_token' => $freshToken['fresh_token']
-			);
-			$auth->update($filters, $update);
-			$userInfo = $this->getUserInfoAction($freshToken['openid'], $freshToken['access_token']);
-			$userInfo = json_decode($userInfo, true);
 		}
-
+		
 		return $userInfo;
 	}
 
@@ -93,7 +115,7 @@ class PlayerController extends BaseController {
 		}
 		*/
 		$params = $this->request->post('data');
-		//$params['code'] = '081ft7Do0FHO1p1ierEo0TPSCo0ft7Dg';
+		$params['code'] = '081ft7Do0FHO1p1ierEo0TPSCo0ft7Dg';
 		$this->log->debug(json_encode($params));
 		if(isset($params['code'])) {
 		    $userInfo = $this->getUserByCode($params['code']);

@@ -34,6 +34,19 @@ class BaseController {
         ));
     }
 
+	protected function responseJSON($data,$exit=TRUE) {
+		if(!is_array($data)) {
+			$data = json_decode($data, true);
+		}	
+		$this->app->view->renderJSON(array_merge(
+			$this->viewData,
+			$data
+		));
+		if($exit) {
+		    exit();
+		}
+	}
+
     protected function addViewData($key, $val) {
         $this->viewData[$key] = $val;
     }
