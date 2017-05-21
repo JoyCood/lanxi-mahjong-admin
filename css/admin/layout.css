@@ -131,6 +131,7 @@ body {
     }
     #main-aside>nav>a:first-child {
         padding-left: 12px;
+        min-width: 120px;
         background-color: transparent;
         color: #5C9ACF;
     }
@@ -154,6 +155,9 @@ body {
     #main-aside>nav>a>i {
         font-size: 20px;
         padding: 0;
+    }
+    #main-aside>nav>a:first-child {
+        min-width: 50px;
     }
     #main-aside>nav>a:first-child>span {
         display: none;

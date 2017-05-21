@@ -22,8 +22,8 @@ class Config
                         'templates.path' => DOC_ROOT. '/view/admin'
                     ),
                     'sessionSecret' => '61789127738e4799de0e2bd462d5a10b',
-                    'resVersion'    => 1,
-                    'res3rdVersion' => 1
+                    'resVersion'    => 2,
+                    'res3rdVersion' => 2
             ),
             // 日志
             'log' => array(
@@ -38,7 +38,7 @@ class Config
             ),
             // 路径设置
             'routes' => array(
-                    '/admin'           => 'GET::AdminController::indexAction',
+                    '/admin/'           => 'GET::AdminController::indexAction',
                     '/admin/login'      => 'GET::AdminController::loginAction',
                     '/admin/login-auth' => 'POST::AdminController::loginAuthAction',
                     '/admin/logout'     => 'POST::AdminController::logoutAction',
@@ -65,7 +65,7 @@ class Config
                     '/admin/trader/delete'  => 'POST::TraderController::deleteAction',
 
 					//房卡
-					'/admin/card/recharge' => 'POST::CardController::rechargeAction'
+					'/admin/card/recharge' => '::CardController::rechargeAction',
             )
         );
     }

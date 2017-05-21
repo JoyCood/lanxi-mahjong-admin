@@ -185,6 +185,10 @@ Responsive Utils
 	margin: 0 4px;
 }
 
+.display-none {
+	display: none!important;
+}
+
 #app-loading { z-index: 10600; }
 #app-notify { z-index: 10600; }
 .app-dialog { z-index: 100300; }

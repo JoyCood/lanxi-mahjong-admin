@@ -1,0 +1,62 @@
+{% set TITLE="房卡充值" %}
+{% extends "_base.html" %}
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="app nofooter">
+    <header class="app-header">
+        <a class="app-back" app-action="back"></a>
+        <h1>{{TITLE}}</h1>
+        <nav>
+            <a href="javascript:;" class="fa fa-bars" app-action="menu"></a>
+        </nav>
+    </header>
+    <main class="app-main">
+        <div>
+            <form id="recharge-form" class="w" method="POST">
+                <div class="form-row">
+                    <label class="form-label xl">玩家游戏ID:*</label>
+                    <input class="form-control" id="recharge-target" type="number" name="target" value="" placeholder="请输入玩家游戏ID" autocomplete="off" app-required="on" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label xl">充值数量:*</label>
+                    <input class="form-control" id="recharge-quantity" type="number" name="quantity" value="" placeholder="请输入充值数量" autocomplete="off" app-required="on" />
+                </div>
+                <div class="form-action">
+                    <button id="register-submit-btn" type="submit" class="btn btn-success form-control">确定</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    $('#recharge-form').on('submit', function() {
+        App.submitForm(this, {
+            checkValidity: function(form) {
+                var qtyElement = $('#recharge-quantity');
+                var qty = parseInt($.trim(qtyElement.val()), 10) || 0;
+                qtyElement.val(qty);
+                if(qty < 0) {
+                    App.alert('充值数量不能小于0', function() {
+                        qtyElement.val(qty).focus();
+                    });
+                    return false;
+                }
+            },
+            success: function(json) {
+                App.info('充值成功', function() {
+                    $('#recharge-form').get(0).reset();
+
+                });
+            }
+        });
+        return false;
+    });
+});
+</script>
+{% endblock %}

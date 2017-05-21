@@ -28,8 +28,8 @@ class Config
                             'templates.path' => DOC_ROOT. '/view/region'
                          ),
                         'sessionSecret' => 'a0e0eba2c41369c5797dbb3ab158b9e6',
-                        'resVersion'    => 3,
-                        'res3rdVersion' => 2
+                        'resVersion'    => 5,
+                        'res3rdVersion' => 5
                 ),
                 // 日志
                 'log' => array(
@@ -58,7 +58,7 @@ class Config
                         '/region/money/withdraw'      => 'POST::MoneyController::withdrawAction',       //提现
 			            '/region/money/log'           => 'GET::MoneyController::withdrawLogAction',    //提现记录表列
 						'/region/pwd'                 => '::TraderController::resetPwdAction',         //重置密码
-						'/region/recharge'            => 'POST::CardController::rechargeAction'         //代理商给玩家充房卡
+						'/region/recharge'            => '::CardController::rechargeAction'         //代理商给玩家充房卡
                 )
         );
     }

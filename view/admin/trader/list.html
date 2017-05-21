@@ -50,7 +50,7 @@
                     <tr app-check="on">
                         <!--<td align="center"><input type="checkbox" app-check="item" /></td>-->
                         <td app-check="off">{{item.Gameid}}</td>
-                        <td><a href="{{listUrl}}/1/parent={{item.id}}" class="fa fa-arrow-circle-o-down">{{item.Phone}}</a></td>
+                        <td><a href="{{listUrl}}/1/parent={{item.id}}">{{item.Phone}} <i class="fa fa-sitemap"></i></a></td>
                         <td class="hidden-800">{{item.Wechat}}</td>
                         <td class="hidden-480" align="right">{{item.Lv}}</td>
                         <td class="hidden-1024"><a href="{{formUrl}}{{item.ParentData.id}}">{{item.ParentData.Phone}}</a></td>

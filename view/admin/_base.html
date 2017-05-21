@@ -55,44 +55,40 @@
         </a>
     </nav>
     <nav>
-        <a href="admin/trader" title="代理商管理">
+        <a href="admin/trader/" title="代理商管理">
             <i class="fa fa-adn"></i>
             <span>代理商管理</span>
         </a>
-        <a href="admin/notice"{{MENU_ITEM=="notice"? ' class="active"': ''}} title="公告">
+        <a href="admin/notice/"{{MENU_ITEM=="notice"? ' class="active"': ''}} title="公告">
             <i class="fa fa-comment-o"></i>
             <span>公告</span>
         </a>
-        <a href="admin/trader"{{MENU_ITEM=="trader"? ' class="active"': ''}} title="代理商">
+        <a href="admin/trader/"{{MENU_ITEM=="trader"? ' class="active"': ''}} title="代理商">
             <i class="fa fa-adn"></i>
             <span>代理商</span>
         </a>
-        <a href="admin/money/inpour"{{MENU_ITEM=="inpour"? ' class="active"': ''}} title="付费流水">
+        <a href="admin/money/inpour/"{{MENU_ITEM=="inpour"? ' class="active"': ''}} title="付费流水">
             <i class="fa fa-list-ol"></i>
             <span>付费流水</span>
         </a>
-        <a href="admin/money/withdraw"{{MENU_ITEM=="withdraw"? ' class="active"': ''}} title="返现申请">
+        <a href="admin/money/withdraw/"{{MENU_ITEM=="withdraw"? ' class="active"': ''}} title="返现申请">
             <i class="fa fa-yen"></i>
             <span>返现申请</span>
         </a>
-        <a href="admin/money/withdraw/summary"{{MENU_ITEM=="summary"? ' class="active"': ''}} title="返现汇总">
+        <a href="admin/money/withdraw/#summary"{{MENU_ITEM=="summary"? ' class="active"': ''}} title="返现汇总">
             <i class="fa fa-list-alt"></i>
             <span>返现汇总</span>
         </a>
     </nav>
     <nav>
-        <a href="admin/" title="游戏数据管理">
-            <i class="fa fa-trello"></i>
-            <span>游戏数据管理</span>
+        <a href="admin/card/recharge"{{MENU_ITEM=="card"? ' class="active"': ''}} title="房卡">
+            <i class="fa fa-credit-card"></i>
+            <span>房卡</span>
         </a>
-        <a href="admin/" title="玩家数据">
-            <i class="fa fa-child"></i>
-            <span>玩家数据</span>
-        </a>
-        <a href="admin/" title="充值记录">
-            <i class="fa fa-database"></i>
-            <span>充值记录</span>
-        </a>
+        <!--<a href="admin/" title="充值">
+            <i class="fa fa-credit-card"></i>
+            <span>充值</span>
+        </a>-->
     </nav>
 </aside>
 {% endblock %}
