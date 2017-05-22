@@ -50,7 +50,7 @@ $(document).ready(function() {
     $('#reset-captcha-btn').on('click', function() {
         var btn = $(this);
         var txt = btn.text();
-        var sec = "{{constant('ModelAuthCodeMain::AUTHCODE_EXPIRE')}}" * 1;
+        var sec = "{{constant('ModelAuthMain::AUTHCODE_EXPIRE')}}" * 1;
         var num = $.trim($('#reset-phone').val());
         if(num == '') {
             App.alert('请输入有效的手机号码');
