@@ -39,7 +39,7 @@ class Admin {
         if(in_array($collection, $allowedCollections)) {
             return self::$db->$collection;
         } else {
-            return null;
+            throw new Exception("Collectoin '{$collection}' does not exists.");
         }
     }
 

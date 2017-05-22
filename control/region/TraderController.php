@@ -212,7 +212,7 @@ class TraderController extends BaseController {
             $this->error('请填写正确的手机号码');
         }
         $AuthCode = Admin::model('auth.main');
-        $filters = array('phone' => $phone);
+        $filters = array('Phone' => $phone);
         $auth = $AuthCode->findOne($filters);
         if(!$auth) {
             $code = substr(mt_rand(), -6);
@@ -238,7 +238,7 @@ class TraderController extends BaseController {
             $this->renderJSON($result);
         }
 
-        $msg = "【兰溪雀神】您的验证码是{$auth['code']}";
+        $msg = "【兰溪雀神】您的验证码是{$auth['Code']}";
         $result = Phone::send($phone, $msg);
         $this->renderJSON($result);
     }
