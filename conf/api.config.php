@@ -50,7 +50,7 @@ class Config {
             //路由设置
 			'routes' => array(
 				'/api/app' => 'GET::ShareController::appAction',
-                '/api/wechat-login'  => 'GET::PlayerController::wechatLoginAction',
+                '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
                 '/api/goods'  => 'GET::GoodsController::listAction',
                 '/api/place-order' => 'GET::PaymentController::placeOrderAction'
             )

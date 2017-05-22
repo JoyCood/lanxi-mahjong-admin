@@ -26,7 +26,9 @@ class PlayerController extends BaseController {
 	}
 
 	protected function getUserByCode($code) {
+		$code = '061dxXHS1QlJya1ow3HS1AGdIS1dxXHc';
 		$tokenInfo = $this->getAccessTokenAction($code);
+	    $this->log->debug($tokenInfo);
         $tokenInfo = json_decode($tokenInfo, true);
 		if(isset($tokenInfo['errcode'])) {
 			$this->responseJSON($tokenInfo);
@@ -115,7 +117,7 @@ class PlayerController extends BaseController {
 		}
 		*/
 		$params = $this->request->post('data');
-		$params['code'] = '081ft7Do0FHO1p1ierEo0TPSCo0ft7Dg';
+		//$params['code'] = '081ft7Do0FHO1p1ierEo0TPSCo0ft7Dg';
 		$this->log->debug(json_encode($params));
 		if(isset($params['code'])) {
 		    $userInfo = $this->getUserByCode($params['code']);
