@@ -3,7 +3,7 @@ require(DOC_ROOT. '/control/BaseController.php');
 
 class PlayerController extends BaseController {
     const WEIXIN_BASE_URL     = 'https://api.weixin.qq.com';
-	const WEIXIN_USER_INFO    = self::WEIXIN_BASE_URL . '/sns/oauth2/userinfo?';
+	const WEIXIN_USER_INFO    = self::WEIXIN_BASE_URL . '/sns/userinfo?';
 	const WEIXIN_ACCESS_TOKEN = self::WEIXIN_BASE_URL . '/sns/oauth2/access_token?';
 	const WEIXIN_FRESH_TOKEN  = self::WEIXIN_BASE_URL . '/sns/oauth2/fresh_token?';
 
@@ -21,14 +21,12 @@ class PlayerController extends BaseController {
 	}
 
 	protected function getUserInfoAction($openid, $accessToken) {
-		$url = self::WEIXIN_USER_INFO . "access_token?access_token={$accessToken}&openid={$openid}";
+		$url = self::WEIXIN_USER_INFO . "access_token={$accessToken}&openid={$openid}";
         return Helper::curl($url);        	
 	}
 
 	protected function getUserByCode($code) {
-		$code = '061dxXHS1QlJya1ow3HS1AGdIS1dxXHc';
 		$tokenInfo = $this->getAccessTokenAction($code);
-	    $this->log->debug($tokenInfo);
         $tokenInfo = json_decode($tokenInfo, true);
 		if(isset($tokenInfo['errcode'])) {
 			$this->responseJSON($tokenInfo);
@@ -56,11 +54,13 @@ class PlayerController extends BaseController {
 		    unset($data['CTime']);
 			$Auth->update($filters, $data);
 		}
-
 		$userInfo = $this->getUserInfoAction($tokenInfo['openid'], $tokenInfo['access_token']);
 		$userInfo = json_decode($userInfo, true);
+		if(isset($userInfo['errcode'])) {
+		    $this->responseJSON($userInfo);
+		}
 		//todo 判断refresh_token是否已过期，过期了才刷新
-		$this->refreshTokenAction($userInfo['refresh_token']);
+		$this->refreshTokenAction($tokenInfo['refresh_token']);
 		return $userInfo;
 	}
 
@@ -105,6 +105,13 @@ class PlayerController extends BaseController {
 		return $userInfo;
 	}
 
+	public function wechatLogin2Action() {
+		$id = (string)Admin::model('sequence.main')->nextSequence('userId');	
+		exit($id);
+	    $params = $this->request->get();
+		$userInfo = $this->getUserByToken($params['token']);
+		$this->renderJSON($userInfo);
+	}
     //登录游戏
     public function wechatLoginAction() {
 		/*
@@ -116,42 +123,42 @@ class PlayerController extends BaseController {
 			exit();
 		}
 		*/
-		$params = $this->request->post('data');
-		//$params['code'] = '081ft7Do0FHO1p1ierEo0TPSCo0ft7Dg';
+		$params = $this->request->post();
 		$this->log->debug(json_encode($params));
-		if(isset($params['code'])) {
+		if(isset($params['code']) && $params['code']!='') {
 		    $userInfo = $this->getUserByCode($params['code']);
 		} else if(isset($params['access_token'])) {
 			$userInfo = $this->getUserByToken($params['access_token']);
 		}
-		$this->log->debug(json_encode($userInfo));
-		exit();
+		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
+		$ip *= 1;
 		$User = Admin::model('user.main');
 
 		$filters = array(
 		    'Wechat_uid' => $userInfo['openid']
 		);
 		$update = array(
-		    'Nickname'        => (string)$userInfo['nick'], 
+		    'Nickname'        => (string)$userInfo['nickname'], 
 			'Sex'             => (string)$userInfo['sex'],
-			'Sign'            => (string)$userInfo['sign'],
-			'Photo'           => (string)$userInfo['photo'],
+			'Sign'            => '',
+			'Photo'           => (string)$userInfo['headimgurl'],
 			'Last_login_time' => time(),
-			'Last_Login_ip'   => Admin::getRemoteIP(),
+			'Last_Login_ip'   => $ip
 		);
 		$options = array('new' => true);
 		$user = $User->findAndModify($filters, $update, null, $options);
 	    if($user===null) {
-		    $user = array(
-		        '_id'             => (string)Admin::model('sequence')->nextSquence('userId'),	
-				'Nickname'        => trim($params['nick']),
-			    'Sign'            => trim($params['sign']),
+		    $id = (string)Admin::model('sequence.main')->nextSequence('userId');	
+			$user = array(
+				'_id'             => $id,
+				'Nickname'        => trim($userInfo['nickname']),
+			    'Sign'            => '',
 			    'Email'           => '',
 			    'Phone'           => '',
 			    'Auth'            => '',
 			    'Pwd'             => '',
 			    'Birth'           => '',	
-				'Create_ip'       => (string)Admin::getRemoteIP(),
+				'Create_ip'       => $ip, 
 				'Create_time'     => time(),
 				'Coin'            => 0,
 				'Exp'             => 0,
@@ -161,9 +168,10 @@ class PlayerController extends BaseController {
 				'Terminal'        => '',
 				'Status'          => $User::STATUS_NORMAL,
 				'Address'         => '',
-				'Photo'           => trim($params['photo']),
+				'Photo'           => $userInfo['headimgurl'],
 				'Qq_uid'          => '',
-				'Wechat_uid'      => trim($params['uid']),
+				'Wechat_uid'      => $userInfo['openid'],
+				'Wechat_unionid'  => $userInfo['unionid'],
 				'Microblog_uid'   => '',
 				'Vip'             => 0,
 				'Win'             => 0,
@@ -181,12 +189,12 @@ class PlayerController extends BaseController {
 			    'FyAccountPwd'    => '',
 			    'IsTrader'        => $User::PLAYER,
 			    'Last_login_time' => time(),
-			    'Last_Login_ip'   => (string)Admin::getRemoteIP()	
+			    'Last_Login_ip'   => $ip 	
 			);    
 			$User->insert($user);
 		}	
-		$response = Helper::encodeParams(array('code'=>0, 'data' => $user));
-		$this->renderJSON(array('data' => $response));	
+		$user['server_ip'] = '120.77.175.1:8005';
+		$this->renderJSON($user);	
     }
 
 	public function deviceAction() {

@@ -45,12 +45,14 @@ class Config {
                 '/api/goods',
                 '/api/wechat-login',
 				'/api/place-order',
+				'/api/wechat-test',
             ),
 
             //路由设置
 			'routes' => array(
 				'/api/app' => 'GET::ShareController::appAction',
                 '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
+				'/api/wechat-test' => 'GET::PlayerController::wechatLogin2Action',
                 '/api/goods'  => 'GET::GoodsController::listAction',
                 '/api/place-order' => 'GET::PaymentController::placeOrderAction'
             )

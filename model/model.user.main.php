@@ -52,12 +52,17 @@ class ModelUserMain
         'FyAccountPwd',  #string
         'IsTrader',      #uint32 //是否为代理商(self::PLAYER普通玩家 self::TRADER代理商) 
 		'Last_login_time', #uint32 最后登录时间
-	    'Last_Login_ip', #string 最后登录IP	
+	    'Last_Login_ip', #uint32 最后登录IP	
     );  
 
     public function collection() {
         return Admin::db('user');
     }
+
+	public function insert($data) {
+	    $data = Helper::allowed($data, $this->fields);
+		return $this->collection()->insert($data);
+	}
 
     public function findOne($filter, $projection=array()) {
         return $this->collection()->findOne($filter, $projection);
@@ -73,6 +78,7 @@ class ModelUserMain
     }
 
 	public function findAndModify($filter, $data, $projection=null, $options=array('new'=>true)) {
+		$data = array('$set'=>$data);
 		return $this->collection()->findAndModify($filter, $data, $projection, $options);
 	}
 

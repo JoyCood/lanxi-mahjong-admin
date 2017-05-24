@@ -1,6 +1,6 @@
 <?php !defined('TANG_FENG') AND exit('Access Denied!');
 
-class ModelSequence {
+class ModelSequenceMain {
     public function collection() {
 	    return Admin::db('sequence');
 	}
