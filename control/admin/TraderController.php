@@ -1,7 +1,7 @@
 <?php
-require(DOC_ROOT. '/control/BaseController.php');
+require(DOC_ROOT. '/control/AdminBaseController.php');
 
-class TraderController extends BaseController{
+class TraderController extends AdminBaseController{
     protected $under = false;
     public function init() {
         $this->addViewData('MENU_ITEM', 'trader');
@@ -96,11 +96,18 @@ class TraderController extends BaseController{
             $this->error('请选择正确的帐户状态');
         }
 
+        $pre = null;
         if($id) {
             $filters = array('_id' => new MongoId($id));
+            $pre     = $Trader->findOne($filters);
             $result  = $Trader->update($filters, $doc);
         } else {
             $result  = $Trader->insert($doc);
+        }
+        if($result) {
+            unset($pre['Pwd']);
+            unset($doc['Pwd']);
+            $this->logData('trader-'. $id? 'update': 'insert', $pre, $doc, $id);
         }
 
         $this->renderJSON((boolean)$result);

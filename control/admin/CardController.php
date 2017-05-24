@@ -1,7 +1,7 @@
 <?php
-require(DOC_ROOT. '/control/BaseController.php');
+require(DOC_ROOT. '/control/AdminBaseController.php');
 
-class CardController extends BaseController {
+class CardController extends AdminBaseController {
 	protected function init() {
 		$this->addViewData('MENU_ITEM', 'card');
 	}
@@ -36,12 +36,16 @@ class CardController extends BaseController {
 		$filters = array('_id'  => strval($target));
 		$update  = array('$inc' => array('RoomCard' => $quantity));
 		$options = array('new'  => true);
+		$pre     = $User->findOne($filters);
 		$result  = $User->findAndModify($filters, $update, null, $options);
 		if(!$result) {
 		    $this->error('充值失败，请确认输入的玩家是否正确');
 		}
 
 		$data = $User->findOne($filters);
+		if($data) {
+			$this->logData('recharge', $pre? $pre['RoomCard']: null, $data['RoomCard'], $data['_id']);
+		}
 		$this->renderJSON(array(
 			'result' => (bool)$result,
 			'data'   => array(

@@ -68,4 +68,7 @@ class BaseController {
         // }
         exit();
     }
+
+    protected function logData($kind, $pre, $after, $targetId) {
+    }
 }

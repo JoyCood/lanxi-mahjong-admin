@@ -1,7 +1,7 @@
 <?php
-require(DOC_ROOT. '/control/BaseController.php');
+require(DOC_ROOT. '/control/AdminBaseController.php');
 
-class NoticeController extends BaseController{
+class NoticeController extends AdminBaseController{
     public function init() {
         $this->addViewData('MENU_ITEM', 'notice');
     }

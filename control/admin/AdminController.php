@@ -1,7 +1,7 @@
 <?php
-require(DOC_ROOT. '/control/BaseController.php');
+require(DOC_ROOT. '/control/AdminBaseController.php');
 
-class AdminController extends BaseController {
+class AdminController extends AdminBaseController {
     public function indexAction() {
         $this->render('index.html');
     }

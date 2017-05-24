@@ -1,7 +1,7 @@
 <?php
-require(DOC_ROOT. '/control/BaseController.php');
+require(DOC_ROOT. '/control/AdminBaseController.php');
 
-class MoneyController extends BaseController{
+class MoneyController extends AdminBaseController{
     //订单列表
     public function inpourAction() {
         $this->addViewData('MENU_ITEM', 'inpour');
