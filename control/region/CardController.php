@@ -13,7 +13,7 @@ class CardController extends BaseController {
 
 	protected function rechargeForm() {
 		$this->render('card/recharge.html', array(
-
+			'options' => require(DOC_ROOT. '/conf/card.config.php')
 		));
 	}
 

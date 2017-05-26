@@ -24,7 +24,6 @@ class TraderController extends BaseController {
             
         $filters = array(
             'Phone' => $phone, 
-            // 'Pwd'   => md5($pwd)
         );
         $user = $Trader->findOne($filters);
         if(!$user || $user['Pwd'] != $Trader->password($pwd)) {

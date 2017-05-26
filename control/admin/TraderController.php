@@ -107,7 +107,7 @@ class TraderController extends AdminBaseController{
         if($result) {
             unset($pre['Pwd']);
             unset($doc['Pwd']);
-            $this->logData('trader-'. $id? 'update': 'insert', $pre, $doc, $id);
+            $this->logData('trader-'. ($id? 'update': 'insert'), $pre, $doc, $id);
         }
 
         $this->renderJSON((boolean)$result);

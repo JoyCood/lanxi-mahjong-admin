@@ -20,8 +20,8 @@ class ModelAdminLog
 
 	public function insert($data) {
 		$data = Helper::allowed($data, $this->fields);
-		$collection = $this->collection();
-		return $collection->insert($data);
+		$rs   = $this->collection()->insert($data);
+		return $rs;
 	}
 
     public function find($filters=array(), $projection=array()) {
