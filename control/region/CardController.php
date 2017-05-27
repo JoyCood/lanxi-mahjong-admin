@@ -19,7 +19,17 @@ class CardController extends BaseController {
 
 	protected function recharge() {
 		$target   = intval($this->request->post('target'));
-	    $quantity = intval($this->request->post('quantity'));
+	    $optValue = trim($this->request->post('option'));
+		$options  = require(DOC_ROOT. '/conf/card.config.php');
+	    $quantity = 0;
+	    $money    = 0;
+
+		if(empty($options[$optValue])) {
+			$this->error('请选择房卡数量');
+		} else {
+			$quantity = $options[$optValue]['CardNum'];
+			$money    = $options[$optValue]['Money'];
+		}
 
 		$User    = Admin::model('user.main');
 		$filters = array('_id' => $_SESSION[Config::SESSION_UID]);
@@ -48,5 +58,21 @@ class CardController extends BaseController {
 			$User->findAndModify($filters, $update, null, $options);
 		}
 		$this->renderJSON((bool)$result);
+	}
+
+	public function userAction() {
+		$User   = Admin::model('user.main');
+		$target = intval($this->request->post('target'));
+		$filter = array('_id' => strval($target));
+		$data   = $User->findOne($filter);
+		if($data) {
+			$this->renderJSON(array(
+				'Nickname' => $data['Nickname'],
+				'Phone'    => $data['Phone'],
+				'RoomCard' => number_format($data['RoomCard'], 0),
+			));
+		} else {
+			$this->error('未找到用户信息');
+		}
 	}
 }

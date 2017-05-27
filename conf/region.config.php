@@ -58,7 +58,8 @@ class Config
                         '/region/money/withdraw'      => 'POST::MoneyController::withdrawAction',       //提现
 			            '/region/money/log'           => 'GET::MoneyController::withdrawLogAction',    //提现记录表列
 						'/region/pwd'                 => '::TraderController::resetPwdAction',         //重置密码
-						'/region/recharge'            => '::CardController::rechargeAction'         //代理商给玩家充房卡
+						'/region/recharge'            => '::CardController::rechargeAction',         //代理商给玩家充房卡
+						'/region/recharge/user'       => '::CardController::userAction',         //代理商给玩家充房卡
                 )
         );
     }
