@@ -57,22 +57,33 @@ class CardController extends BaseController {
 			$options = array('new' => true);
 			$User->findAndModify($filters, $update, null, $options);
 		}
-		$this->renderJSON((bool)$result);
+
+		$data = $this->getUserInfo($target);
+		$this->renderJSON($data? $data: array());
 	}
 
 	public function userAction() {
-		$User   = Admin::model('user.main');
 		$target = intval($this->request->post('target'));
+		$data   = $this->getUserInfo($target);
+		if($data) {
+			$this->renderJSON($data);
+		} else {
+			$this->error('未找到用户信息');
+		}
+	}
+
+	protected function getUserInfo($target) {
+		$User   = Admin::model('user.main');
 		$filter = array('_id' => strval($target));
 		$data   = $User->findOne($filter);
 		if($data) {
-			$this->renderJSON(array(
+			return array(
 				'Nickname' => $data['Nickname'],
 				'Phone'    => $data['Phone'],
 				'RoomCard' => number_format($data['RoomCard'], 0),
-			));
+			);
 		} else {
-			$this->error('未找到用户信息');
+			return null;
 		}
 	}
 }
