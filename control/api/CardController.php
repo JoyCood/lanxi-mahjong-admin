@@ -1,12 +1,12 @@
 <?php 
 require(DOC_ROOT. '/control/BaseController.php');
 
-class GoodsController extends BaseController {
+class CardController extends BaseController {
     //商品列表
     public function listAction() {
-        $goods = Config::getOptions('goods');
+        $card = Config::getOptions('card');
         //$encryped = Helper::encodeParams($goods); 
         //$decryped = Helper::decodeParams($encryped);
-        $this->renderJSON($goods);  
+        $this->renderJSON($card);  
     }
 }

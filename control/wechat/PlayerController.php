@@ -9,7 +9,6 @@ class PlayerController extends BaseController {
 
 	protected function getCodeAction() {
 		$APPID  = $this->MP_APP_ID;
-		$SECRET = $this->MP_SECRET; 
 		$MP_URL = $this->MP_URL;
 		$redirect_uri = urlencode('http://yiiyu.cn/lanxi/web/wechat-test');
         $url = "{$MP_URL}/connect/oauth2/authorize?appid=$APPID&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
@@ -39,7 +38,7 @@ class PlayerController extends BaseController {
 		return Helper::curl($url);
 	}
 
-    public function testAction() {
+    public function loginAction() {
         $code = $this->request->get('code');	
 		if(empty($code)) {
 	        $this->getCodeAction();            	
