@@ -47,7 +47,7 @@
 #recharge-user-form button[type="reset"] { display: none; }
 #recharge-user-form.actived button[type="submit"] { display: none; }
 #recharge-user-form.actived button[type="reset"] { display: block; }
-#recharge-user-form #recharge-user-info { display: none; }
+#recharge-user-form #recharge-user-info { display: block; }
 #recharge-user-form.actived #recharge-user-info { display: block; }
 #recharge-user-form div.form-control { line-height: 36px; text-indent: 5px; background-color: transparent; }
 
@@ -61,29 +61,27 @@
     <header class="app-header">
         <a class="app-back" app-action="back"></a>
         <h1>{{TITLE}}</h1>
-		<!--
         <nav>
             <a href="javascript:;" class="fa fa-bars" app-action="menu"></a>
         </nav>
-		-->
     </header>
     <main class="app-main">
         <div id="recharge-body">
             <form id="recharge-user-form" class="w" method="POST" action="wechat/recharge/user">
                 <div class="form-row">
                     <label class="form-label xl">玩家游戏ID:*</label>
-                    <input class="form-control" id="recharge-target" type="number" name="target" value="16019" placeholder="请输入玩家游戏ID" autocomplete="off" app-required="on" />
+					<input class="form-control" id="recharge-target" type="number" name="target" value="{{userinfo._id}}" placeholder="请输入玩家游戏ID" autocomplete="off" app-required="on" />
                     <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
                     <button type="reset" class="btn btn-warning"><i class="fa fa-times"></i></button>
                 </div>
                 <div id="recharge-user-info">
                     <div class="form-row">
                         <label class="form-label xl">昵称：</label>
-                        <div class="form-control" id="recharge-user-name"></div>
+						<div class="form-control" id="recharge-user-name">{{userinfo.Nickname}}</div>
                     </div>
                     <div class="form-row">
                         <label class="form-label xl">房卡：</label>
-                        <div class="form-control" id="recharge-user-card">j</div>
+						<div class="form-control" id="recharge-user-card">{{userinfo.RoomCard}}</div>
                     </div>
                 </div>
             </form>
@@ -92,7 +90,7 @@
                     <div>
                         {% for id, opt in options %}
                         <span class="card-opt">
-                            <input id="card-opt-{{id}}" type="radio" name="option" value="{{id}}"{{opt.Default? ' checked': ''}} disabled="disabled" />
+                            <input id="card-opt-{{id}}" type="radio" name="option" value="{{id}}"{{opt.Default? ' checked': ''}}  />
                             <label for="card-opt-{{id}}">
                                 <strong>房卡{{opt.CardNum}}</strong>
                                 ￥{{opt.Money|number_format(2)}}
@@ -103,7 +101,7 @@
                 </div>
                 <div class="form-action">
                     <input type="hidden" id="recharge-target-value" name="target" />
-                    <button id="recharge-submit-btn" type="submit" class="btn btn-disabled form-control" disabled>确定</button>
+                    <button id="recharge-submit-btn" type="submit" class="btn btn-success form-control" >确定</button>
                 </div>
             </form>
         </div>

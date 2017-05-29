@@ -135,6 +135,7 @@ class PlayerController extends BaseController {
 		);
 		$update = array(
 		    'Nickname'        => (string)$userInfo['nickname'], 
+			'Wechat_unionid'  => $userInfo['unionid'],
 			'Sex'             => $userInfo['sex'],
 			'Sign'            => '',
 			'Photo'           => (string)$userInfo['headimgurl'],

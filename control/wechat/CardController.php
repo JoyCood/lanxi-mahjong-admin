@@ -4,9 +4,6 @@ require(DOC_ROOT. '/control/WechatController.php');
 class CardController extends WechatController {
 	//代理商给其它玩家充房卡
 	public function rechargeAction() {
-		$url = Helper::requestURI();
-		$userinfo = $this->login($url);
-
 		if($this->request->isGet()) {
 		    $this->rechargeForm();
 		} else if($this->request->isPost()) {
@@ -15,23 +12,23 @@ class CardController extends WechatController {
 	}
 
 	protected function rechargeForm() {
-		$this->render('card/recharge.html', array(
-			'options' => require(DOC_ROOT. '/conf/card.config.php')
-		));
-	}
-
-    public function loginAction() {
 		$url = Helper::requestURI();
 		$userinfo = $this->login($url);
-		if(isset($userinfo['nickname'])) {
-		    $_SESSION[Config::SESSION_USER] = $userinfo['nickname'];
+		if(isset($userinfo['unionid'])) {
+		    $User = Admin::model('user.main');
+		    $filter = array('Wechat_unionid'=>$userinfo['unionid']);
+		    $userinfo = $User->findOne($filter);
 		}
-		print_r($userinfo);
+		$this->render('card/recharge.html', array(
+			'userinfo' => $userinfo,
+			'options' => require(DOC_ROOT. '/conf/card.config.php')
+		));
 	}
 
 	public function userAction() {
 		$target = intval($this->request->post('target'));
 		$data   = $this->getTargetInfo($target);
+	    
 		if($data) {
 			$this->renderJSON($data);
 		} else {
@@ -45,7 +42,7 @@ class CardController extends WechatController {
 		$data   = $User->findOne($filter);
 		if($data) {
 			return array(
-				'Nickname' => $data['Nickname'],
+				'NickName' => $data['Nickname'],
 				'Phone'    => $data['Phone'],
 				'RoomCard' => number_format($data['RoomCard'], 0),
 			);

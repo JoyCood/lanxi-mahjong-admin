@@ -63,7 +63,7 @@ class WechatController extends BaseController {
 			}
 		}
 		if(isset($userinfo['errcode'])) {
-		    if(in_array($userinfo['errcode'], array(40014, 42001))) {
+		    if(in_array($userinfo['errcode'], array(40001, 40014, 42001))) {
 			    $token = json_decode($this->getAccessToken($code), true);
 				$userinfo = $this->getUserInfo($token['openid'], $token['access_token']);
 				$_SESSION[self::MP_SESSION_OPENID] = $token['openid'];
