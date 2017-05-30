@@ -19,10 +19,10 @@ class Helper
 	{
 		return max(0, (int)$num);
 	}
-
+    
 	public static function requestURI() {
 	    $host = str_replace('www.', '', $_SERVER['HTTP_HOST']);
-		return 'http://'.$host.$_SERVER['REQUEST_URI'];
+		return "http://{$host}{$_SERVER['REQUEST_URI']}";
 	}
 
     public static function array_orderby()
