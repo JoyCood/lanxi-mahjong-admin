@@ -30,7 +30,7 @@ class Config {
             ),
             //日志
             'log' => array(
-                'dir' => DOC_ROOT .  '/logs/web',
+                'dir' => DOC_ROOT .  '/logs/wechat',
                 'file' => 'log-'. date('Y-m-d'). '.log',
             ),
 
