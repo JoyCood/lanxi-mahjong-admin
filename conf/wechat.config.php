@@ -36,6 +36,7 @@ class Config {
 
             //免登录 
             'notauth' => array(
+				'/wechat/download',
 				'/wechat/login',
 				'/wechat/recharge',
 				'/wechat/recharge/user'
@@ -43,8 +44,9 @@ class Config {
 
             //路由设置
 			'routes' => array(
-				'/wechat/login'    => 'GET::CardController::loginAction',
-				'/wechat/recharge' => 'GET::CardController::rechargeAction',
+				'/wechat/download'      => 'GET::ShareController::downloadAction',
+				'/wechat/login'         => 'GET::CardController::loginAction',
+				'/wechat/recharge'      => 'GET::CardController::rechargeAction',
 				'/wechat/recharge/user' => 'POST::CardController::userAction'
             )
         ); 
