@@ -45,32 +45,58 @@ class WechatController extends BaseController {
         $code = $this->request->get('code');	
 		if(empty($code)) {
 		    $this->getCode($redirect);
+			exit();
 		}
 		$userinfo = array();
 		if(isset($_SESSION[self::MP_SESSION_OPENID]) && isset($_SESSION[self::MP_SESSION_ACCESS_TOKEN])) {
 		    $userinfo = $this->getUserInfo($_SESSION[self::MP_SESSION_OPENID], $_SESSION[self::MP_SESSION_ACCESS_TOKEN]);
 			$userinfo = json_decode($userinfo, true);
+			$data = array('from'=>'session', 'userinfo'=>$userinfo);
+			$this->log->debug(json_encode($data));
 		}
 
 		if(!$userinfo) {
 		    $token = json_decode($this->getAccessToken($code), true);
+			$userinfo2 = array();
 			if(!isset($token['errcode'])) {
 		        $userinfo = $this->getUserInfo($token['openid'], $token['access_token']);
 			    $userinfo = json_decode($userinfo, true);	
 				$_SESSION[self::MP_SESSION_OPENID] = $token['openid'];
 				$_SESSION[self::MP_SESSION_UNIONID] = $token['unionid'];
 				$_SESSION[self::MP_SESSION_ACCESS_TOKEN] = $token['access_token'];
+				$_SESSION[self::MP_SESSION_REFRESH_TOKEN] = $token['refresh_token'];
 			}
+			$data = array(
+				'from'=>'token', 
+				'userinfo' => $userinfo,
+				'token' => $token,
+			);
+			$this->log->debug(json_encode($data));
 		}
 		if(isset($userinfo['errcode'])) {
+			$token2 = array();
+			$userinfo2 = array();
 		    if(in_array($userinfo['errcode'], array(40001, 40014, 42001))) {
 			    $token = json_decode($this->getAccessToken($code), true);
+				$token2 = $token;
 				$userinfo = $this->getUserInfo($token['openid'], $token['access_token']);
+				$userinfo = json_decode($userinfo, true);
+				$userinfo2 = $userinfo;
 				$_SESSION[self::MP_SESSION_OPENID] = $token['openid'];
 				$_SESSION[self::MP_SESSION_UNIONID] = $token['unionid'];
 				$_SESSION[self::MP_SESSION_ACCESS_TOKEN] = $token['access_token'];
 			}
+			$data = array(
+				'from'=>'token_expire', 
+				'userinfo'=>$userinfo, 
+				'userinfo2' => $userinfo2,
+				'token'=>$token,
+				'token2' => $token2
+			);
+			$this->log->debug(json_encode($data));
 		}
+	    $data = array('from'=>'final', 'userinfo'=>$userinfo);
+		$this->log->debug(json_encode($data));
 		return $userinfo;
 	}
 
