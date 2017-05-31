@@ -5,9 +5,11 @@ class WechatController extends BaseController {
 	const MP_SESSION_OPENID = 'mp_session_openid';
 	const MP_SESSION_UNIONID = 'mp_session_unionid';
 	const MP_SESSION_ACCESS_TOKEN = 'mp_session_access_token';
+	const MP_SESSION_REFRESH_TOKEN = 'mp_session_refresh_token';
 
     const MP_APP_ID = Config::MP_APP_ID;
 	const MP_SECRET = Config::MP_SECRET;
+	
 	const MP_BASE_URL = 'https://open.weixin.qq.com';
 	const MP_OAUTH2_URL = 'https://api.weixin.qq.com/sns';
 
