@@ -87,6 +87,7 @@ class WechatController extends BaseController {
 				$_SESSION[self::MP_SESSION_OPENID] = $token['openid'];
 				$_SESSION[self::MP_SESSION_UNIONID] = $token['unionid'];
 				$_SESSION[self::MP_SESSION_ACCESS_TOKEN] = $token['access_token'];
+				$_SESSION[self::MP_SESSION_REFRESH_TOKEN] = $token['refresh_token'];
 			}
 			$data = array(
 				'from'=>'token_expire', 
