@@ -1,10 +1,34 @@
 <?php 
-require(DOC_ROOT. '/control/BaseController.php');
+require(DOC_ROOT. '/control/WechatController.php');
 
-class TraderController extends BaseController {
+class TraderController extends WechatController {
     public function indexAction() {
         $this->listAction();
     }
+
+	//通过微信公众号登录
+	public function wechatLoginAction() {
+        $url = Helper::requestURI();
+	    $userinfo = $this->login($url);
+	    if(isset($userinfo['unionid'])) {
+		    $User = Admin::model('user.main');
+			$filter = array('Wechat_unionid'=>$userinfo['unionid']);
+			$userinfo = $User->findOne($filter);
+			if($userinfo) {
+				$Trader = Admin::model('trader.main');
+				$filter = array('Gameid'=>$userinfo['_id']);
+				$trader = $Trader->findOne($filter);
+				if($trader) { //是代理商
+					$this->userLogin($trader['Gameid'], $trader['Nickname']);
+					$this->listAction();
+				} else { //只是普通用户,跳到代理商注册页面
+					$this->registerAction();
+				}
+			} else { //非游戏玩家,todo:跳转到游戏下载页
+				$this->error('请先下载并登录游戏');
+			}
+		}
+	}
 
     public function loginAction() {
         if($this->request->isGet()) {

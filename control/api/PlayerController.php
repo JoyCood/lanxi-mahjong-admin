@@ -59,8 +59,7 @@ class PlayerController extends BaseController {
 		if(isset($userInfo['errcode'])) {
 		    $this->responseJSON($userInfo);
 		}
-		//todo 判断refresh_token是否已过期，过期了才刷新
-		$this->refreshTokenAction($tokenInfo['refresh_token']);
+		$userInfo['access_token'] = $tokenInfo['access_token'];
 		return $userInfo;
 	}
 
@@ -75,11 +74,13 @@ class PlayerController extends BaseController {
 		}
 		$userInfo = $this->getUserInfoAction($auth['Openid'], $accessToken);
 		$userInfo = json_decode($userInfo, true);
+		$userInfo['access_token'] = $accessToken;
+
 		if(isset($userInfo['errcode'])) { 
 			if($userInfo['errcode'] == 42001) { //access_token超时
 				$freshToken = $this->refreshTokenAction($auth['Refresh_token']);
 				$freshToken = json_decode($freshToken, true);
-				if(isset($freshToken['errcode'])) { //刷新TOKEN失败
+				if(isset($freshToken['errcode'])) { //刷新TOKEN失败 42002==fresh_token超时
 					$this->responseJSON($freshToken);
 				}
 				$filters = array(
@@ -97,6 +98,7 @@ class PlayerController extends BaseController {
 				if(isset($userInfo['errcode'])) {
 					$this->responseJSON($userInfo);
 				}
+				$userInfo['access_token'] = $freshToken['access_token'];
 			} else { //其它错误,原封不动返回给客户端
 			    $thisis->responseJSON($userInfo);
 			}
@@ -105,13 +107,6 @@ class PlayerController extends BaseController {
 		return $userInfo;
 	}
 
-	public function wechatLogin2Action() {
-		$id = (string)Admin::model('sequence.main')->nextSequence('userId');	
-		exit($id);
-	    $params = $this->request->get();
-		$userInfo = $this->getUserByToken($params['token']);
-		$this->renderJSON($userInfo);
-	}
     //登录游戏
     public function wechatLoginAction() {
 		/*
@@ -127,9 +122,10 @@ class PlayerController extends BaseController {
 		$this->log->debug(json_encode($params));
 		if(isset($params['code']) && $params['code']!='') {
 		    $userInfo = $this->getUserByCode($params['code']);
-		} else if(isset($params['access_token'])) {
-			$userInfo = $this->getUserByToken($params['access_token']);
+		} else if(isset($params['accessToken'])) {
+			$userInfo = $this->getUserByToken($params['accessToken']);
 		}
+		$accessToken = $userInfo['access_token'];
 		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
 		$ip *= 1;
 		$User = Admin::model('user.main');
@@ -139,7 +135,8 @@ class PlayerController extends BaseController {
 		);
 		$update = array(
 		    'Nickname'        => (string)$userInfo['nickname'], 
-			'Sex'             => (string)$userInfo['sex'],
+			'Wechat_unionid'  => $userInfo['unionid'],
+			'Sex'             => $userInfo['sex'],
 			'Sign'            => '',
 			'Photo'           => (string)$userInfo['headimgurl'],
 			'Last_login_time' => time(),
@@ -148,56 +145,97 @@ class PlayerController extends BaseController {
 		$options = array('new' => true);
 		$user = $User->findAndModify($filters, $update, null, $options);
 	    if($user===null) {
-		    $id = (string)Admin::model('sequence.main')->nextSequence('userId');	
-			$user = array(
-				'_id'             => $id,
-				'Nickname'        => trim($userInfo['nickname']),
-			    'Sign'            => '',
-			    'Email'           => '',
-			    'Phone'           => '',
-			    'Auth'            => '',
-			    'Pwd'             => '',
-			    'Birth'           => '',	
-				'Create_ip'       => $ip, 
-				'Create_time'     => time(),
-				'Coin'            => 0,
-				'Exp'             => 0,
-				'Diamond'         => 0,
-				'Ticket'          => 0,
-				'Exchange'        => 0,
-				'Terminal'        => '',
-				'Status'          => $User::STATUS_NORMAL,
-				'Address'         => '',
-				'Photo'           => $userInfo['headimgurl'],
-				'Qq_uid'          => '',
-				'Wechat_uid'      => $userInfo['openid'],
-				'Wechat_unionid'  => $userInfo['unionid'],
-				'Microblog_uid'   => '',
-				'Vip'             => 0,
-				'Win'             => 0,
-				'Lost'            => 0,
-				'Ping'            => 0,
-				'Platform'        => $User::PLATFORM_WECHAT, 
-				'ChenmiTime'      => 0,
-				'Chenmi'          => 0,
-				'Sound'           => true,
-				'Robot'           => false,
-				'RoomCard'        => $User::INIT_ROOM_CARD,
-			    'Build'           => '',
-			    'BuildTime'       => 0,
-			    'FyAccountId'     => '',
-			    'FyAccountPwd'    => '',
-			    'IsTrader'        => $User::PLAYER,
-			    'Last_login_time' => time(),
-			    'Last_Login_ip'   => $ip 	
-			);    
-			$User->insert($user);
+			$user = $this->registerAction($userInfo);
 		}	
-		$user['server_ip'] = '120.77.175.1:8005';
-		$this->renderJSON($user);	
+	    $userData['userid']     = $user['_id'];
+		$userData['nickname']   = $user['Nickname'];
+		$userData['email']      = $user['Email'];
+		$userData['phone']      = $user['Phone'];
+		$userData['sex']        = $user['Sex'];
+		$userData['status']     = $user['Status'];
+		$userData['online']     = false;
+		$userData['exp']        = 0;
+		$userData['ip']         = $user['Create_ip']; 
+		$userData['photo']      = $user['Photo'];
+		$userData['address']    = $user['Address'];
+		$userData['createtime'] = $user['Create_time'];
+		$userData['sign']       = $user['Sign'];
+		$userData['birth']      = time();
+		$userData['terminal']   = $user['Terminal'];
+		$userData['coin']       = 0;
+		$userData['roomtype']   = 0;
+		$userData['roomid']     = 0;
+		$userData['invitecode'] = '';
+		$userData['diamond']    = 0;
+		$userData['exchange']   = 0;
+		$userData['ticket']     = 0;
+		$userData['vip']        = 0;
+		$userData['win']        = 0;
+		$userData['lost']       = 0;
+		$userData['ping']       = 0;
+		$userData['platform']   = 1;
+		$userData['rupt']       = 0;
+		$userData['sound']      = false;
+		$userData['roomcard']   = $user['RoomCard'];
+		$userData['build']      = '';
+		$userData['token']      = '';
+		$userData['accessToken'] = $accessToken;
+		$userData['serverIp']    = '120.77.175.1:8005';
+
+		$this->log->debug(json_encode($userData));
+		$this->renderJSON($userData);	
     }
 
-	public function deviceAction() {
-	
+	//注册
+	protected function registerAction($userInfo) {
+		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
+		$ip *= 1;
+		$id = (string)Admin::model('sequence.main')->nextSequence('userId');	
+		$User = Admin::model('user.main');
+		$user = array(
+			'_id'             => $id,
+			'Nickname'        => trim($userInfo['nickname']),
+			'Sex'             => $userInfo['sex'],
+			'Sign'            => '',
+			'Email'           => '',
+			'Phone'           => '',
+			'Auth'            => '',
+			'Pwd'             => '',
+			'Birth'           => '',	
+			'Create_ip'       => $ip, 
+			'Create_time'     => time(),
+			'Coin'            => 0,
+			'Exp'             => 0,
+			'Diamond'         => 0,
+			'Ticket'          => 0,
+			'Exchange'        => 0,
+			'Terminal'        => '',
+			'Status'          => $User::STATUS_NORMAL,
+			'Address'         => '',
+			'Photo'           => $userInfo['headimgurl'],
+			'Qq_uid'          => '',
+			'Wechat_uid'      => $userInfo['openid'],
+			'Wechat_unionid'  => $userInfo['unionid'],
+			'Microblog_uid'   => '',
+			'Vip'             => 0,
+			'Win'             => 0,
+			'Lost'            => 0,
+			'Ping'            => 0,
+			'Platform'        => $User::PLATFORM_WECHAT, 
+			'ChenmiTime'      => 0,
+			'Chenmi'          => 0,
+			'Sound'           => true,
+			'Robot'           => false,
+			'RoomCard'        => $User::INIT_ROOM_CARD,
+			'Build'           => '',
+			'BuildTime'       => 0,
+			'FyAccountId'     => '',
+			'FyAccountPwd'    => '',
+			'IsTrader'        => $User::PLAYER,
+			'Last_login_time' => time(),
+			'Last_Login_ip'   => $ip 	
+		);    
+		$User->insert($user);
+		return $user;
 	}
 }

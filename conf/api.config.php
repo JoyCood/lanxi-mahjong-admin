@@ -18,7 +18,7 @@ class Config {
             //数据库
             'db' => require('db.config.php'), 
             //房卡
-            'goods' => require('goods.config.php'),
+            'card' => require('card.config.php'),
             //支付
             'payment' => require('pay.config.php'), 
 			//游戏服务器地址
@@ -41,8 +41,7 @@ class Config {
 
             //免登录 
             'notauth' => array(
-				'/api/app',
-                '/api/goods',
+                '/api/card',
                 '/api/wechat-login',
 				'/api/place-order',
 				'/api/wechat-test',
@@ -50,10 +49,8 @@ class Config {
 
             //路由设置
 			'routes' => array(
-				'/api/app' => 'GET::ShareController::appAction',
                 '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
-				'/api/wechat-test' => 'GET::PlayerController::wechatLogin2Action',
-                '/api/goods'  => 'GET::GoodsController::listAction',
+                '/api/card'  => 'GET::CardController::listAction',
                 '/api/place-order' => 'GET::PaymentController::placeOrderAction'
             )
         ); 

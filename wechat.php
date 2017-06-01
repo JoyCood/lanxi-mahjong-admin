@@ -1,5 +1,5 @@
 <?php
-require('conf/web.config.php');
+require('conf/wechat.config.php');
 
 $app = require('common.php');
 $app->run();

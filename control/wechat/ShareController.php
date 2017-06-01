@@ -2,7 +2,7 @@
 require(DOC_ROOT. '/control/BaseController.php');
 
 class ShareController extends BaseController {
-    public function appAction() {
+    public function downloadAction() {
         $this->render('app.html');	
 	}
 }

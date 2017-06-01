@@ -14,7 +14,7 @@ class ModelUserMain
     private $fields = array(
         '_id',           #string 用户id
         'Nickname',      #string 昵称
-        'Sex',           #string 用户性别,男1 女2 非男非女3
+        'Sex',           #uint32 用户性别,男1 女2 非男非女3
         'Sign',          #string 签名
         'Email',         #string 邮箱
         'Phone',         #string 手机号码
@@ -34,6 +34,7 @@ class ModelUserMain
         'Photo',         #string 头像
         'Qq_uid',        #string QQ平台openid
         'Wechat_uid',    #string  微信平台openid
+		'Wechat_unionid', #string 微信平台unionid
         'Microblog_uid', #string 微博平台openid
         'Vip',           #uint32 是否为vip
         'VipExpire',     #uint32 vip过期时间

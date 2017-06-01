@@ -8,6 +8,10 @@ class Config
     const SESSION_USER  = 'lanxi-region-user';
     const SESSION_GROUP = 'lanxi-region-group';
 
+	//公众号
+	const MP_APP_ID = 'wxd70a955fe9efa1e8';
+	const MP_SECRET = 'be1934227f8fbbb34b630f70d83e9d42';
+
     static public function & get($key, $field) {
         return self::$Options[$key][$field];
     }
@@ -38,6 +42,7 @@ class Config
                 ),
                 // 免登录
                 'notauth' => array(
+					    '/region/wechat-login',
                         '/region/login',
                         '/region/logout',
                         '/region/code',
@@ -48,6 +53,7 @@ class Config
                 // 路径设置
                 'routes' => array(
                         '/region/'                    => 'GET::TraderController::indexAction',
+						'/region/wechat-login'        => 'GET::TraderController::wechatLoginAction',
                         '/region/login'               => '::TraderController::loginAction',
                         '/region/agreement'           => 'GET::TraderController::agreementAction',
                         '/region/logout'              => 'POST::TraderController::logoutAction',       //登出

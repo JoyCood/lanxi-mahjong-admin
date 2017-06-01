@@ -17,38 +17,37 @@ class Config {
             //数据库
             'db' => require('db.config.php'), 
             //房卡
-            'goods' => require('goods.config.php'),
+            'card' => require('card.config.php'),
             //支付
             'payment' => require('pay.config.php'), 
             //网站设置
             'settings' => array(
                 'slim' => array(
-                    'templates.path' => DOC_ROOT. '/view/web'
+                    'templates.path' => DOC_ROOT. '/view/wechat'
                 ),
                 'resVersion' => 1,
                 'res3rdVersion' => 1
             ),
             //日志
             'log' => array(
-                'dir' => DOC_ROOT .  '/logs/web',
+                'dir' => DOC_ROOT .  '/logs/wechat',
                 'file' => 'log-'. date('Y-m-d'). '.log',
             ),
 
             //免登录 
             'notauth' => array(
-				'/web/app',
-                '/web/goods',
-				'/web/place-order',
-				'/web/wechat-test',
-				'/web/goods',
+				'/wechat/download',
+				'/wechat/login',
+				'/wechat/recharge',
+				'/wechat/recharge/user'
             ),
 
             //路由设置
 			'routes' => array(
-                '/web/goods'  => 'GET::GoodsController::listAction',
-                '/web/place-order' => 'GET::GoodsController::placeOrderAction',
-				'/web/wechat-test' => 'GET::PlayerController::testAction',
-				'/web/goods' => 'GET::GoodsController::goodsAction'
+				'/wechat/download'      => 'GET::ShareController::downloadAction',
+				'/wechat/login'         => 'GET::CardController::loginAction',
+				'/wechat/recharge'      => 'GET::CardController::rechargeAction',
+				'/wechat/recharge/user' => 'POST::CardController::userAction'
             )
         ); 
     }
