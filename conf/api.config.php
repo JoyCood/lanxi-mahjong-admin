@@ -8,8 +8,6 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
-	const GAME_SERVER_HOST = 'http://yiiyu.cn:7229/roomcard';
-	const GAME_SERVER_SIGN = 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw';
 	const WEIXIN_APP_ID = 'wxa0f7643705d54733';
 	const WEIXIN_SECRET = '2046430fc5a9b9ea50ab89285d6d17c6';
 
@@ -24,7 +22,7 @@ class Config {
 			//游戏服务器地址
 			'game-server-host' => 'http://lanxi.yiiyu.cn:7229/roomcard',
             //游戏服务器通讯密钥
-			'game-server-sign' => 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw"',
+			'game-server-sign' => 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw',
             //网站设置
             'settings' => array(
                 'slim' => array(
