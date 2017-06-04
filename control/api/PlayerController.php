@@ -146,7 +146,11 @@ class PlayerController extends BaseController {
 		$user = $User->findAndModify($filters, $update, null, $options);
 	    if($user===null) {
 			$user = $this->registerAction($userInfo);
-		}	
+		}
+		$time = time();
+		$sign = Config::getOptions('game-server-sign');
+		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
+
 	    $userData['userid']     = $user['_id'];
 		$userData['nickname']   = $user['Nickname'];
 		$userData['email']      = $user['Email'];
@@ -178,8 +182,9 @@ class PlayerController extends BaseController {
 		$userData['sound']      = false;
 		$userData['roomcard']   = $user['RoomCard'];
 		$userData['build']      = '';
-		$userData['token']      = '';
+		$userData['token']      = $token;
 		$userData['accessToken'] = $accessToken;
+		$userData['timestamp']   = time();
 		$userData['serverIp']    = '120.77.175.1:8005';
 
 		$this->log->debug(json_encode($userData));
@@ -237,5 +242,31 @@ class PlayerController extends BaseController {
 		);    
 		$User->insert($user);
 		return $user;
+	}
+
+	protected function apply_ip($project_id, $user_id, $ip, $country, $area, $device_id, $device_name)
+	{
+		$message = 'YY';
+		$message .= pack("CNN", $project_id, $user_id, ip2long($ip));
+		$message .= pack('C', strlen($country)).$country;
+		$message .= pack('n', $area);
+		$message .= pack('C', strlen($device_id)).$device_id;
+		$message .= pack('C', strlen($device_name)).$device_name;
+		$ip_bin = pack("N", ip2long($ip));
+		// echo "SEND...\n";
+		$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP) or die("Could not create  socket\n");
+		$connection = socket_connect($socket, "192.168.1.2", 6677) or die("Could not connet server\n");
+		socket_write($socket, $message) or die("Write failed\n");
+		$len = socket_read($socket, 1, PHP_NORMAL_READ);
+		$recv = socket_read($socket, ord($len), PHP_NORMAL_READ);
+		socket_close($socket);
+		return explode("|", $recv);
+	}	
+
+	public function ipTestAction() {
+	    $ip = $this->request->getIP();
+		var_dump($ip);
+		$address = Helper::ip2addr($ip);
+		var_dump($address);
 	}
 }

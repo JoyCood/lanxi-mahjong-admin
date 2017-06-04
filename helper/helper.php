@@ -42,6 +42,10 @@ class Helper
         return array_pop($args);
     }
 
+	public static function ip2addr($ip) {
+	    return ip2addr($ip);
+	}
+
     /**
      * 返回数组差集
      *

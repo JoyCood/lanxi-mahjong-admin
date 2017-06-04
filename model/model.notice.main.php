@@ -40,7 +40,7 @@ class ModelNoticeMain
 		$filters = (array)$filters;
 		$projection = (array)$projection;
 	    $collection = $this->collection();
-		return $collection->find($params, $projection);
+		return $collection->find($filters, $projection);
 	}
 
 	//查找一条数据

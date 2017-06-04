@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 查IP所在地(需纯真IP数据包)
  * 来自discuz
@@ -6,7 +7,7 @@
 function ip2addr($ip) {
     if(!$ip)return '';
     //IP数据文件路径
-    $dat_path = SYS_DIR . '/wry.dat';
+    $dat_path = dirname(__FILE__) . '/wry.dat';
 
     //检查IP地址
     if (! preg_match ( "/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $ip )) {

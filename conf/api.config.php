@@ -40,7 +40,9 @@ class Config {
             ),
 
             //免登录 
-            'notauth' => array(
+			'notauth' => array(
+				'/api/notice',
+				'/api/ip',
                 '/api/card',
                 '/api/wechat-login',
 				'/api/place-order',
@@ -49,6 +51,8 @@ class Config {
 
             //路由设置
 			'routes' => array(
+				'/api/notice' => 'POST::NoticeController::broadcastAction',
+				'/api/ip' => 'GET::PlayerController::ipTestAction',
                 '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
                 '/api/card'  => 'GET::CardController::listAction',
                 '/api/place-order' => 'GET::PaymentController::placeOrderAction'
