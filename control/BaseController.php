@@ -11,6 +11,14 @@ class BaseController {
         $this->request  = & $app->request;
         $this->response = & $app->response;
 
+        if(Config::get('settings', 'csrfProtection') === 'auto') {
+            if($this->request->isPost()) {
+                $this->checkCsrfToken();
+            } else {
+                $this->setCsrfToken();
+            }
+        }
+
         $this->init();
     }
 
@@ -70,5 +78,39 @@ class BaseController {
     }
 
     protected function logData($kind, $pre, $after, $targetId) {
+    }
+
+    protected function setCsrfToken($force = false) {
+        if(Config::get('settings', 'csrfProtection')) {
+            if($force || empty($_SESSION['CSRF_TOKEN_CODE'])) {
+                $prefix = 'LX';
+                $secret = Config::get('settings', 'sessionSecret');
+                $secret = $secret? $secret: $prefix;
+                $_SESSION['CSRF_TOKEN_NAME'] = $prefix. rand(1000, 9999);
+                $_SESSION['CSRF_TOKEN_CODE'] = md5($secret. uniqid(mt_rand(), true));
+            }
+        }
+    }
+
+    protected function checkCsrfToken() {
+        if(Config::get('settings', 'csrfProtection')) {
+            if($this->request->isPost()) {
+                $result = false;
+                $name   = $_SESSION['CSRF_TOKEN_NAME'];
+                $code   = $_SESSION['CSRF_TOKEN_CODE'];
+
+                if($name && $code) {
+                    $postToken = $this->request->post($name);
+                    if($postToken == $code) {
+                        $result = true;
+                    }
+                }
+                $this->setCsrfToken(true);
+
+                if(!$result) {
+                    $this->error('令牌已失效，请刷新后再试');
+                }
+            }
+        }
     }
 }

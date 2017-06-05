@@ -41,7 +41,11 @@ $app = new \Slim\Slim($setting);
 Admin::init($app);
 Phone::init();
 
+$sessionName = Config::get('settings', 'sessionName');
+ini_set('session.name', $sessionName? $sessionName: 'LXSESSION');
+ini_set('session.cookie_httponly', 1);
 session_start();
+
 $app->hook('slim.before.router', function() use($app){
     $path   = $app->request->getPathInfo();
     $routes = Config::getOptions('routes');

@@ -5,8 +5,10 @@ class CardController extends BaseController {
 	//代理商给其它玩家充房卡
 	public function rechargeAction() {
 		if($this->request->isGet()) {
+			$this->setCsrfToken();
 			$this->rechargeForm();
 		} else if($this->request->isPost()) {
+			$this->checkCsrfToken();
 			$this->recharge();
 		}
 	}

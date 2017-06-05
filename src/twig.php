@@ -117,6 +117,7 @@ class SwimTwigExtension extends \Twig_Extension {
 			'session'        => new \Twig_Function_Method($this, 'fn_session'),
 			'pagination_url' => new \Twig_Function_Method($this, 'fn_pagination_url'),
 			'url_path'       => new \Twig_Function_Method($this, 'fn_url_path'),
+			'csrf_input'     => new \Twig_Function_Method($this, 'fn_csrf_input', array('is_safe' => array('html'))),
 
 		);
 	}
@@ -204,6 +205,15 @@ class SwimTwigExtension extends \Twig_Extension {
 
 	public function fn_session($key) {
 		return $_SESSION[$key];
+	}
+
+	public function fn_csrf_input() {
+		return isset($_SESSION['CSRF_TOKEN_CODE'])? join(' ', array(
+					'<input type="hidden"',
+					'name="'. $_SESSION['CSRF_TOKEN_NAME']. '"',
+					'value="'. $_SESSION['CSRF_TOKEN_CODE']. '"',
+					'/>'
+				)): '';
 	}
 
 	public function fn_imageSrc($src, $prefix) {

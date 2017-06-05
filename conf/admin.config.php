@@ -21,9 +21,11 @@ class Config
                     'slim'          => array(
                         'templates.path' => DOC_ROOT. '/view/admin'
                     ),
-                    'sessionSecret' => '61789127738e4799de0e2bd462d5a10b',
-                    'resVersion'    => 2,
-                    'res3rdVersion' => 2
+                    'csrfProtection' => true,
+                    'sessionName'    => 'LXASESSION',
+                    'sessionSecret'  => '61789127738e4799de0e2bd462d5a10b',
+                    'resVersion'     => 2,
+                    'res3rdVersion'  => 2
             ),
             // 日志
             'log' => array(

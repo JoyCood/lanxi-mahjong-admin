@@ -31,9 +31,11 @@ class Config
                         'slim'          => array(
                             'templates.path' => DOC_ROOT. '/view/region'
                          ),
-                        'sessionSecret' => 'a0e0eba2c41369c5797dbb3ab158b9e6',
-                        'resVersion'    => 5,
-                        'res3rdVersion' => 5
+                        'csrfProtection' => true,
+                        'sessionName'    => 'LXRSESSION',
+                        'sessionSecret'  => 'a0e0eba2c41369c5797dbb3ab158b9e6',
+                        'resVersion'     => 5,
+                        'res3rdVersion'  => 5
                 ),
                 // 日志
                 'log' => array(
