@@ -37,7 +37,7 @@ class CardController extends AdminBaseController {
 		$update  = array('$inc' => array('RoomCard' => $quantity));
 		$options = array('new'  => true);
 		$pre     = $User->findOne($filters);
-		$result  = true; //$User->findAndModify($filters, $update, null, $options);
+		$result  = $User->findAndModify($filters, $update, null, $options);
 		if(!$result) {
 		    $this->error('充值失败，请确认输入的玩家是否正确');
 		}
@@ -60,7 +60,7 @@ class CardController extends AdminBaseController {
 		$target  = intval($this->request->post('target'));
 		$filters = array('_id'  => strval($target));
 		$data    = $User->findOne($filters);
-		
+
 		if($data) {
 			$this->renderJSON(array(
 				'Id'       => intval($data['_id']),
