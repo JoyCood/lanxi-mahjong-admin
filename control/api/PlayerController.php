@@ -265,8 +265,8 @@ class PlayerController extends BaseController {
 
 	public function ipTestAction() {
 	    $ip = $this->request->getIP();
-		var_dump($ip);
-		$address = Helper::ip2addr($ip);
-		var_dump($address);
+		$result = $this->apply_ip("1", "16442", $ip, "CN", "12", "deviceId", "deviceName");
+		print_r($result);
+
 	}
 }
