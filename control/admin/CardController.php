@@ -37,7 +37,7 @@ class CardController extends AdminBaseController {
 		$update  = array('$inc' => array('RoomCard' => $quantity));
 		$options = array('new'  => true);
 		$pre     = $User->findOne($filters);
-		$result  = $User->findAndModify($filters, $update, null, $options);
+		$result  = true; //$User->findAndModify($filters, $update, null, $options);
 		if(!$result) {
 		    $this->error('充值失败，请确认输入的玩家是否正确');
 		}
@@ -54,4 +54,22 @@ class CardController extends AdminBaseController {
 			)
 		));
 	} 
+
+	public function userAction() {
+		$User    = Admin::model('user.main');
+		$target  = intval($this->request->post('target'));
+		$filters = array('_id'  => strval($target));
+		$data    = $User->findOne($filters);
+		
+		if($data) {
+			$this->renderJSON(array(
+				'Id'       => intval($data['_id']),
+				'Nickname' => $data['Nickname'],
+				'Phone'    => $data['Phone'],
+				'RoomCard' => number_format($data['RoomCard'], 0),
+			));
+		} else {
+			$this->error('未找到用户信息');
+		}
+	}
 }

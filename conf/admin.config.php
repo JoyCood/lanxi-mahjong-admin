@@ -68,6 +68,7 @@ class Config
 
 					//房卡
 					'/admin/card/recharge' => '::CardController::rechargeAction',
+					'/admin/card/user'     => 'POST::CardController::userAction',
             )
         );
     }
