@@ -8,30 +8,35 @@ require_once('lib/wxpay/WxPay.Notify.php');
 
 class PaymentController extends BaseController {
     //下单
-    public function placeOrderAction() {
-        $userId    = '11006';//$this->request->post('userId');         
-        $goodsId   = '1';//$this->request->post('goodsId');
-        $secret    = '';//$this->request->post('secret');
-        $timestamp = $this->request->post('timestamp');
-        $goods     = Config::get('goods', $goodsId);
+    public function wxPayAction() {
+        $userId    = $this->request->post('userId');         
+        $cardId    = $this->request->post('cardId');
+        $card      = Config::get('card', $cardId);
+
+        if(!$card) {
+            $this->responseJSON(array(
+                'code' => 10001,
+                'msg'  => '商品不存在',
+            ));
+        }
 
         $filter    = array('_id' => $userId);
         $user = Admin::model('user.main')->findOne($filter);
         if(!$user) {
-            $this->renderJSON(array(
+            $this->responseJSON(array(
                 'code' => 10000, 
                 'msg'  => '用户不存在'
             ));
-            exit();
         }
         $MoneyInpour = Admin::model('money.inpour');
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(
             'Transid'   => $transId,
             'Userid'    => $userId,
+            'Itemid'    => $cardId,
             'Amount'    => 1,
-            'Quantity'  => $goods['quantity'],
-            'Money'     => $goods['price'] * 100,
+            'Quantity'  => $card['CardNum'],
+            'Money'     => $card['Money'],
             'Transtime' => time(),
             'Result'    => $MoneyInpour::PROCESSING,
             'Currency'  => 'CNY',
@@ -40,25 +45,25 @@ class PaymentController extends BaseController {
             'Parent'    => $user['Build'],
             'Ctime'     => time(),
             'Lv'        => 0,
-            'Rebate'    => 0,
+            'Rebate'    => 0, //给上级代理商的返点
+            'NotifyRes' => array(),
         ); 
         $MoneyInpour->insert($doc);
 
         $nonceStr = md5(Helper::mkrand());
         $input = new WxPayUnifiedOrder();
-        $input->SetBody($goods['title']);
+        $input->SetBody($card['Title']);
         $input->SetNonce_str($nonceStr);
         $input->SetOut_trade_no($transId);
-        $input->SetTotal_fee($goods['price'] * 100);
+        $input->SetTotal_fee($card['Money'] * 100);
         $input->SetTrade_type('APP');
         $prepay = WxPayApi::unifiedOrder($input);
 
         if(!isset($prepay['prepay_id'])) {
-            $this->renderJSON(array(
+            $this->responseJSON(array(
                 'code' => 10001, 
                 'msg'  => '支付出错，请稍后重试'
             ));
-            exit();
         }
 
         $paramters = array(

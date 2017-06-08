@@ -43,7 +43,7 @@ class Config {
 				'/api/ip',
                 '/api/card',
                 '/api/wechat-login',
-				'/api/place-order',
+				'/api/wxpay',
 				'/api/wechat-test',
             ),
 
@@ -53,7 +53,7 @@ class Config {
 				'/api/ip' => 'GET::PlayerController::ipTestAction',
                 '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
                 '/api/card'  => 'GET::CardController::listAction',
-                '/api/place-order' => 'GET::PaymentController::placeOrderAction'
+                '/api/wxpay' => 'GET::PaymentController::wxPayAction'
             )
         ); 
     }

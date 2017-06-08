@@ -7,7 +7,7 @@ class ModelMoneyInpour
 	const PROCESSING = 2; //交易中
 	const DELIVER = 3;    //发货中
 
-	const WEXIN = 1;      //微信支付 
+	const WEIXIN = 1;      //微信支付 
 
 	const GOODS_TYPE_ROOMCARD = 4; //商品类型：房卡
 
