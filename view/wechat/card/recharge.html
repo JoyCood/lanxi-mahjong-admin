@@ -89,7 +89,7 @@
                     </div>
                 </div>
             </form>
-            <form id="recharge-form" class="w" method="POST">
+            <form id="recharge-form" class="w" method="POST" action="wechat/wxpay">
                 <div class="form-row">
                     <div>
                         {% for id, opt in options %}
@@ -111,8 +111,10 @@
         </div>
         <div id="recharge-result">
             <div class="alert alert-success">充值成功</div>
+            {#
             <p>昵称：<span id="recharge-result-name"></span></p>
             <p>房卡：<span id="recharge-result-card"></span></p>
+            #}
             <div class="form-action">
                 <button id="recharge-result-btn" type="button" class="btn btn-primary form-control">继续充值</button>
             </div>
@@ -124,6 +126,36 @@
 {% block js %}
 <script>
 $(document).ready(function() {
+    function wxPay(data){
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', {
+                "appId"    : data.appid,     
+                "timeStamp": data.timestamp,    
+                "nonceStr" : data.noncestr,   
+                "package"  : "prepay_id=" + data.package,    
+                "signType" : "MD5",     
+                "paySign"  : data.sign
+            },
+            function(res){     
+                if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                    $('#recharge-body').css('display', 'none');
+                    $('#recharge-result').css('display', 'block');
+
+                    // $('#recharge-result-name').text(resp.NickName || '');
+                    // $('#recharge-result-phone').text(resp.Phone || '');
+                    // $('#recharge-result-card').text(resp.RoomCard || '');
+
+                    $('#recharge-form').get(0).reset();
+                    $('#recharge-user-form').removeClass('actived').get(0).reset();
+                    $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', true);
+                    $('#recharge-submit-btn').addClass('btn-disabled').removeClass('btn-success');
+                } else {
+                    app.Notific.alert('充值失败，请稍候再试');
+                } 
+            }
+        ); 
+    }
+
     $('#recharge-user-form').on('submit', function() {
         var targetValue = $.trim($('#recharge-target').val());
         App.submitForm(this, {
@@ -156,17 +188,11 @@ $(document).ready(function() {
                 }
             },
             success: function(resp) {
-                $('#recharge-body').css('display', 'none');
-                $('#recharge-result').css('display', 'block');
-
-                $('#recharge-result-name').text(resp.NickName || '');
-                $('#recharge-result-phone').text(resp.Phone || '');
-                $('#recharge-result-card').text(resp.RoomCard || '');
-
-                $('#recharge-form').get(0).reset();
-                $('#recharge-user-form').removeClass('actived').get(0).reset();
-                $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', true);
-                $('#recharge-submit-btn').addClass('btn-disabled').removeClass('btn-success');
+                if(resp && resp.data && resp.data.appid) {
+                    wxPay(resp.data);
+                } else {
+                    app.Notific.alert('操作异常，请稍候再试');
+                }
             }
         });
         return false;

@@ -104,7 +104,7 @@ class CardController extends WechatController {
 		}
 		$this->render('card/recharge.html', array(
 			'userinfo' => $userinfo,
-			'options' => require(DOC_ROOT. '/conf/card.config.php')
+		    'options'  => require(DOC_ROOT. '/conf/card.config.php')
 		));
 	}
 
