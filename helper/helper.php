@@ -2,6 +2,10 @@
     
 class Helper
 {
+    const ENCRYPT_METHOD = 'aes-256-cbc';
+    const ENCRYPT_KEY    = '^lanxi@YiyuTech_168^';
+    const ENCRYPT_IV     = '@lanxi@YiyuTech_888@';
+
 	/**
 	 * 返回大于或等于0的整数
 	 *
@@ -14,6 +18,11 @@ class Helper
 	public static function uint($num)
 	{
 		return max(0, (int)$num);
+	}
+    
+	public static function requestURI() {
+	    $host = str_replace('www.', '', $_SERVER['HTTP_HOST']);
+		return "http://{$host}{$_SERVER['REQUEST_URI']}";
 	}
 
     public static function array_orderby()
@@ -32,6 +41,10 @@ class Helper
         call_user_func_array('array_multisort', $args);
         return array_pop($args);
     }
+
+	public static function ip2addr($ip) {
+	    return ip2addr($ip);
+	}
 
     /**
      * 返回数组差集
@@ -64,6 +77,64 @@ class Helper
     }
 
     /**
+     * 加密
+     *
+     * @param $data string
+     *
+     * @return string
+     */
+    public static function encrypt($data) {
+        $ivLenth = openssl_cipher_iv_length(self::ENCRYPT_METHOD);
+        $iv = substr(self::ENCRYPT_IV, 0, $ivLenth);
+        return openssl_encrypt(base64_encode($data), self::ENCRYPT_METHOD, self::ENCRYPT_KEY, 0, $iv); 
+    }
+
+    /**
+     * 解密
+     *
+     * @param $data string
+     *
+     * @return string
+     */
+    public static function decrypt($data) {
+        $ivLenth = openssl_cipher_iv_length(self::ENCRYPT_METHOD);
+        $iv = substr(self::ENCRYPT_IV, 0, $ivLenth);
+        $data = openssl_decrypt($data, self::ENCRYPT_METHOD, self::ENCRYPT_KEY, 0, $iv);
+        return base64_decode($data); 
+    }
+    
+    /**
+     * 加密参数
+     *
+     * @param $params array
+     *
+     * @return string
+     */
+    public static function encodeParams($params) {
+        ksort($params);
+        $params = http_build_query($params);
+        return self::encrypt($params);
+    }
+
+    /**
+     * 将加密后的参数解密
+     *
+     * @param $data string
+     *
+     * @return array
+     */
+    public static function decodeParams($params) {
+        $params = self::decrypt($params);
+        if(!$params) {
+            return false;
+        }
+
+        $params = self::parseQueryString($params);
+        ksort($params);
+        return $params;
+    }
+
+    /**
      * 将url中的参数转换成数组
      *
      * @author afoskoo
@@ -74,7 +145,7 @@ class Helper
      */
     public static function parseQueryString($url) {
         $tmp    = explode('?', $url);
-        $query  = isset($tmp[1])? $tmp[1]: $tmp[0]; //sizeof($tmp) == 2? $tmp[1]: '';
+        $query  = isset($tmp[1])? $tmp[1]: $tmp[0];
         $rs     = array();
 
         parse_str($query, $rs);
@@ -119,6 +190,19 @@ class Helper
         list($usec, $sec) = explode(' ', microtime());
         return (float) $sec + ((float) $usec * 100000);
     }
+
+	static public function curl($url, $data=array(), $method='GET', $timeout=5) {
+        $ch = curl_init($url);
+	    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+	    if($method=='POST') {
+		    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		}	
+		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$response = curl_exec($ch);
+		curl_close($ch);
+		return $response;
+	}
 
 	static public function filesize($url) 
 	{

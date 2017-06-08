@@ -1,124 +1,112 @@
-App.Box = function() {
-	var box = new Object();
-
-	var createBox = function() {
-		var div = $('#app-box');
-		if(div.length == 0) {
-			div = $([
-				'<div id="app-box">',
-					'<div id="app-box-content">',
-						'<a id="app-box-close"><i class="fa fa-times"></i></a>',
-					'</div>',
-				'</div>'
-			].join(''));
-			div.appendTo(document.body);
-			div.on('click', '#app-box-close', function() {
-				close('close');
-			}).on('click', 'button[app-state]', function() {
-				var state = $(this).attr('app-state');
-				close(state);
-			});
-		}
-		return div;
-	}
-
-	box.open = function(src) {
-		var div = createBox();
-		box.state = true;
-		$.ajax({
-			url: src,
-			dataType: 'html',
-			success: function(response) {
-				var context = $('<div id="app-box-body"></div>');
-				context.html(response);
-				context.appendTo('#app-box-content');
-				div.show(0, function() {
-					var content = context.children().eq(0);
-					if(!content.attr('app-init')) {
-						content.trigger('init');
-						content.attr('app-init', 'on');
+$(document).on('ready', function() {
+	var win = $(window);
+	var doc = $(document);
+	$('#main-user-icon').on('click', function() {
+		App.confirm('确定要出退登录吗？', function(state) {
+			if(state) {
+				App.ajax({
+					url: 'admin/logout',
+					type: 'post',
+					dataType: 'json',
+					success: function() {
+						location.href = 'admin/';
 					}
-					content.find('input[autofocus]').focus();
-					content.trigger('active');
 				});
 			}
 		});
-	}
-
-	var close = function(state) {
-		var content = $('#app-box-body').children().eq(0);
-		(state != undefined || state !== true) && content.trigger('close', [box, state]);
-		if(box.state != false) {
-			content.remove();
-			$('#app-box-body').remove();
-			createBox().hide();
+	});
+	$('#main-menu-toggle').on('click', function(e) {
+		var aside = $('#main-aside');
+		if(!aside.is(':visible')) {
+			aside.addClass('visible').css('opacity');
+			aside.addClass('slide');
+			e.stopPropagation();
+			$(document).one('click', function() {
+				$('#main-aside').removeClass('visible slide');
+			});
 		}
-		box.state = true;
-	}
+	});
+	$('#main-aside').on('click', function(e) {
+		var tag = e.target.tagName;
+		if(['NAV', 'ASIDE'].indexOf(tag) > -1) {
+			e.stopPropagation();
+		}
+	});
 
-	box.close = function(state) {
-		if(state !== false) {
-			close(state);
+	win.on('hashchange', function() {
+		var hash    = (location.hash || '').substr(1).split('/');
+		var action  = (hash[0] || 'index') + 'Action';
+		var params  = hash.slice(1);
+		if(window.Controller) {
+			if(action in window.Controller) {
+				window.Controller[action].apply(window.Controller, params);
+			} else {
+				(window.Controller.indexAction || $.noop).call(window.Controller, params);
+			}
+		}
+	}).trigger('hashchange');
+	App.hash = function(hash) {
+		var loc = location.href;
+		var url = loc.split('#')[0] + '#' + hash;
+		if(loc == url) {
+			$(window).trigger('hashchange');
+		} else {
+			location.href = url;
 		}
 	}
 
-	return box;
-}();
+	App.Loading.hide();
+    win.on('scroll', function() {
+        var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if(scrollTop > 60) {
+            $('#to-top').show();
+        } else {
+            $('#to-top').hide();
+        }
+    });
+    $('#to-top').on('click', function() {
+        $(window).scrollTop(0);
+    });
 
-App.urlReplace = function(url, key, val) {
-	var tmp   = url.split('?');
-	var query = '?' + (tmp[1] || '');
-	var reg   = new RegExp('([\?&])' + key + '=[^&]*');
+	doc.on('click', '[app-check]', function(e) {
+		var radio = $(this);
+		switch(radio.attr('app-check')) {
+			case 'on':
+				radio.closest('tr').find('input[app-check]').trigger('click');
+				break;
+			case 'off':
+				e.preventDefault();
+				break;
+			case 'all':
+				var table = radio.closest('table');
+				var items = table.find('input[app-check="item"]');
+				items.prop('checked', this.checked);
+				break;
+			case 'item':
+				var table      = radio.closest('table');
+				var items      = table.find('input[app-check="item"]');
+				var target     = table.find('input[app-check="all"]');
+				var itemsNum   = items.length;
+				var checkedNum = items.filter(':checked').length;
+				var rel        = table.attr('app-check-rel');
+				if(checkedNum && checkedNum == itemsNum) {
+					target.prop('checked', true);
+				} else {
+					target.prop('checked', false);
+				}
+				if(rel) {
+					var btns = $(rel).find('button.btn, a.btn').not('[app-check-rel="off"]');
+					if(checkedNum == 0) {
+						btns.prop('disabled', true).addClass('disabled');
+					} else {
+						btns.prop('disabled', false).removeClass('disabled');
+					}
+				}
+				break;
+		}
+		e.stopPropagation();
+	}).on('click', '.disabled', function() {
+		return false;
+	});
+});
 
-	query = query.replace(reg, '');
-	query = query + (query? '&': '?');
-	if(key) {
-		query += encodeURIComponent(key) + '=' + encodeURIComponent(val || '');
-	}
-	return url = tmp[0] + query;
-}
-
-App.PushBox = new function() {
-	this.open = function(id, mod, text) {
-		var params = [
-			'id=' + encodeURIComponent(id),
-			'mod=' + encodeURIComponent(mod),
-			'text=' + encodeURIComponent(text)
-		];
-		App.Box.open('push.html?' + params.join('&'));
-	}
-}
-
-App.Notific = new function() {
-	var _alert = function(type, msg, callback) {
-		$().toastmessage('showToast', {
-			text             : msg,
-			sticky           : false,
-			inEffectDuration : 100,   // in effect duration in miliseconds
-			stayTime         : 5000,
-			position         : 'top-center',
-			type             : type,
-			close            : callback
-		});
-	}
-
-	this.popover = function(type, msg, callback) {
-		_alert(type, msg, callback);
-	}
-
-	this.info = function(msg, callback) {
-		_alert('info', msg, callback);
-	}
-
-	this.success = function(msg, callback) {
-		_alert('success', msg, callback);
-	}
-
-	this.warning = function(msg, callback) {
-		_alert('warning', msg, callback);
-	}
-
-	this.error = function(msg, callback) {
-		_alert('error', msg, callback);
-	}
-}

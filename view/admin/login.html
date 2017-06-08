@@ -1,0 +1,37 @@
+{% set TITLE="管理员登录" %}
+{% extends "_base.html" %}
+{% block css %}
+<link rel="stylesheet" href="css/admin/login.css?v={{CONFIG.resVersion}}" />
+{% endblock %}
+{% block javascript %}{% endblock %}
+
+{% block header %}{% endblock %}
+{% block main %}
+<div id="login-box">
+    <form id="login-form" method="POST" action="admin/login-auth">
+        <div id="login-caption">{{CONFIG.title}}</div>
+        <div id="login-body" class="form-group">
+            <input name="username" type="text" class="form-control" value="admin" placeholder="请输入帐号" autocomplete="off" app-required="on" />
+            <input name="password" type="password" class="form-control" value="Lanxi123!" placeholder="请输入密码" app-required="on" />
+            <input id="from" type="hidden" value="{{from}}" />
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success form-control">登录</button>
+        </div>
+    </form>
+</div>
+<script>
+    $('#login-form').on('submit', function() {
+        App.submitForm(this, {
+            success: function() {
+                location.href = $('#from').val() || 'admin/';
+            }
+        });
+        return false;
+    });
+</script>
+{% endblock %}
+{% block aside %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block js %}{% endblock %}

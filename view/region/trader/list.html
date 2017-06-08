@@ -1,0 +1,21 @@
+{% set TITLE="下级代理" %}
+{% extends "_base.html" %}
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="app nofooter">
+    <header class="app-header">
+        <a class="app-back" app-action="back"></a>
+        <h1>{{TITLE}}</h1>
+        <nav>
+            <a href="javascript:;" class="fa fa-bars" app-action="menu"></a>
+        </nav>
+    </header>
+    <main class="app-main">
+        <div id="trader-list">
+            {% include 'trader/data-list.html' %}
+        </div>
+    </main>
+</div>
+{% endblock %}

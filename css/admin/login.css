@@ -1,70 +1,38 @@
-#login-section {
-	position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-	background-color: #368EE0;
-	font-size: 14px;
-	color: #555;
+body { 
+	background-color: #465568; 
 }
+.form-control {
+    height: 38px;
+}
+#main-body { padding: 0; }
 
+#login-box {
+    max-width: 420px; min-width: 300px;
+    margin: 0 auto;
+    padding-top: 148px;
+}
 #login-form {
-	position: absolute; top: 50%; left: 50%;
-	width: 400px; height: 400px; margin-top: -220px; margin-left: -200px;
+    padding: 10px 32px 30px;
+    background-color: #323d4b;
+    border-radius: 5px;
 }
-
-#login-title { 
-	font-size: 24px; text-align: center; 
-	line-height: 60px;
-	color: #fff;
+#login-form>div.form-actions {
+    padding-top: 10px;
 }
-#login-fieldset {
-	position: relative;
-	border: none; background-color: #fff;
-	padding-top: 60px;
-	box-shadow: 0 0 3px #369;
+#login-caption {
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 22px;
+    font-weight: 400;
+    color: #4db3a5;
 }
-#login-fieldset>legend {
-	position: absolute; top: 0; left: 0;
-	padding: 20px 30px 0;
-	font-size: 18px;
+#login-body {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 5px;
 }
-#login-content {
-	padding: 0px 20px 20px;
+#login-body>input {
+    margin-bottom: 2px;
+    border: none;
 }
-#login-content input[type="text"], #login-content input[type="password"] {
-	height: 36px; padding: 5px 10px;
-	font-size: 14px;
-	width: 360px;
-}
-#login-check { line-height: 30px; }
-#login-check>i.fa { 
-	float: left; margin-right: 5px; margin-top: 5px;
-	width: 20px; height: 20px; line-height: 18px;
-	border: 1px solid #ccc; text-align: center;
-	color: #368EE0;
-}
-#login-check:hover>i.fa {
-	border-color: #368EE0;
-	box-shadow: 0 0 1px #09f;
-}
-#login-check:hover>i.fa, #login-check.checked>i.fa {
-	border-color: #368EE0;
-}
-#login-submit {
-	float: right;
-	line-height: 30px; padding: 0 30px;
-	border: none; margin: 0;
-	text-align: center;
-	background-color: #368EE0; color: #fff;
-	vertical-align: middle;
-}
-.login-msg {
-	height: 24px; line-height: 24px; margin-bottom: 10px;
-	color: #a94442;
-	padding: 2px 5px;
-}
-
-#login-footer {
-	height: 40px; line-height: 40px; margin-top: 5px;
-	background-color: #ddd; color: #666; font-size: 12px;
-	text-align: center;
-}
-

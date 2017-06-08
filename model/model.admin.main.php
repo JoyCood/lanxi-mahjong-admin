@@ -1,13 +1,17 @@
-<?php !defined('TANG_FENG') AND exit('Access Denied!');
+<?php
 class ModelAdminMain {
+	const DEFAULT_USER  = 'admin';
+	const DEFAULT_PASS  = 'Lanxi123!';
+	const PASSWORD_SALT = '_tangfeng_';
+
 	private $fields = array(
-		'username'		=> '',	 	// 用户名
-		'password'		=> '', 		// 密码
-		'name'			=> '',		// 姓名
-		'active'		=> true,	// 状态: true 可用， false 停用
-		'last_login'	=> 0,		// 最后登录时间
-		'last_ip'		=> '',		// 最后登录IP
-		'group'			=> 0		// 所属组
+		'Username',
+		'Password',
+		'Name',
+		'Status',
+		'LastLogin',
+		'LastIP',
+		'Group',
 	);
 
 
@@ -15,10 +19,20 @@ class ModelAdminMain {
 		return Admin::db('admin');
 	}
 
+	public function addDefaultUser() {
+		$user = array(
+			'Username' => self::DEFAULT_USER,
+			'Password' => $this->password(self::DEFAULT_PASS),
+			'Name'     => 'Administrator',
+			'Status'   => true,
+			'Group'    => '*'
+		);
+		return $this->addUser($user)? $this->getUserByUsername(self::DEFAULT_USER): false;
+	}
+
 	public function addUser($user) {
-		$admin 	= $this->collection();
-		$user 	= Admin::combine($this->fields, $user);
-		$user = Helper::allowed($user, array_keys($this->fields));
+		$admin = $this->collection();
+		$user  = Helper::allowed($user, $this->fields);
 		$admin->insert($user);
 
 		$user['id'] = (string)$user['_id'];
@@ -31,8 +45,8 @@ class ModelAdminMain {
         $collection = $this->collection();
         $id = new MongoId($id);
         $data = Helper::allowed($data, array_keys($this->fields));
-        $data['modified_by'] = $_SESSION[S_USER];
-        $data['modified_on'] = time();
+        $data['ModifiedBy'] = $_SESSION[Config::SESSION_USER];
+        $data['ModifiedOn'] = time();
         $result = $collection->update(array('_id' => $id), array('$set' => $data));
         return $result;
     }
@@ -51,14 +65,14 @@ class ModelAdminMain {
 
 	public function changePassword($username, $password) {
 		$collection = $this->collection();
-		return $collection->update(array('username' => $username), array('$set' => array(
-			'password' => $this->password($password)
+		return $collection->update(array('Username' => $username), array('$set' => array(
+			'Password' => $this->password($password)
 		)));
 	}
 
 	public function getOneByName($username) {
 		$collection = $this->collection();
-	    $row = $collection->findOne(array('username' => $username));
+	    $row = $collection->findOne(array('Username' => $username));
 	    return $row;
 	}
 
@@ -71,10 +85,10 @@ class ModelAdminMain {
 	public function pagination($url = '', $pnValue = null) {
         $params  = Helper::parseQueryString($url? $url: $_SERVER['REQUEST_URI']);
         $pn      = Helper::popValue($params, 'pn', 1);
-        $sort    = Helper::popValue($params, 'sort', 'username');
+        $sort    = Helper::popValue($params, 'sort', 'Username');
         $order   = Helper::popValue($params, 'order', 1);
         $filters = array(
-        	'username' => array('$ne' => 'admin')  // admin 隐藏
+        	'Username' => array('$ne' => self::DEFAULT_USER)  // admin 隐藏
         );
         $data = Admin::pagination(
             $url,
@@ -111,7 +125,7 @@ class ModelAdminMain {
     		));
     		foreach($result as $item) {
     			$gid = (string)$item['_id'];
-    			$groups[$gid] = $item['name'];
+    			$groups[$gid] = $item['Name'];
     		}
     	}
 
@@ -135,12 +149,16 @@ class ModelAdminMain {
 	 * 生成加密密码
 	 */
 	public function password($password) {
-		return md5('_swim_'. $password);
+		return md5(self::PASSWORD_SALT. $password);
 	}
 
 	public function getUserByUsername($username) {
-		$admin 	= Admin::db('admin');
-		$user   = $admin->findOne(array('username' => $username));
+		$admin = Admin::db('admin');
+		$user  = $admin->findOne(array('Username' => $username));
+		if($user) {
+			$user['id'] = (string)$user['_id'];
+			unset($user['_id']);
+		}
 		return $user;
 	}
 }

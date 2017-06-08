@@ -1,0 +1,12 @@
+{% set TITLE="代理商" %}
+{% extends "_base.html" %}
+{% block css %}
+<link rel="stylesheet" href="css/admin/trader.css?v={{CONFIG.resVersion}}" />
+{% endblock %}
+
+{% block js %}
+<script src="js/admin/trader.js?v={{CONFIG.resVersion}}"></script>
+<script>
+window.Controller = Trader;
+</script>
+{% endblock %}

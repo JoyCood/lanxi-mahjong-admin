@@ -1,0 +1,35 @@
+message UserData {
+    required string userid = 1; //用户账号
+    required string nickname = 2; //昵称
+    required string email = 3; //邮箱地址
+    required string phone = 4; //电话号码
+    required uint32 sex = 5; //用户性别,男1 女2 非男非女3
+    required uint32 status = 6; //屏蔽状态(正常1  锁定2  黑名单3)
+    required bool online = 7; //
+    required uint32 exp = 8; //经验
+    required uint32 ip = 9; //注册IP地址(字节表示)
+    required string photo = 10; //头像
+    required string address = 11; //真实物理地址
+    required uint32 createtime = 12; //注册时间(unix 时间戳)
+    required string sign = 13; //签名
+    required uint32 birth = 14; // 生日日期(unix 时间戳)
+    required string terminal = 15; //
+    required uint32 coin = 16; //
+    required uint32 roomtype = 18; // 如果玩家已经在房间里打牌，就是房间表房间类型id，否则为0
+    required uint32 roomid = 19; // 所在普通场或者比赛场，就是房间号，不在房间为0
+    required string invitecode = 20; // 所在私人房间就是私人房邀请码，不在房间为""
+    required uint32 diamond = 21; //钻石
+    required uint32 exchange = 22; //兑换券
+    required uint32 ticket = 23; // 入场券
+    required uint32 vip = 24; // vip
+    required uint32 win = 25; // 输的局数
+    required uint32 lost = 26; //  赢的局数
+    required uint32 ping = 27; //  平局数
+    required uint32 platform = 28; //  登录平台0：手机登录，1：微信登录
+    required uint32 rupt = 29; //  破产领取补助次数
+    required bool sound = 30; //  是否购买语音
+    required uint32 roomcard = 31; // 房卡
+    required string build = 32; //  绑定id
+    required string conferenceId = 33; //飞语会议号
+	required string conferenceId = 34; // 逻辑服的IP和端口 eg: "192.168.1.1:5220"
+}

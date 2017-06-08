@@ -1,0 +1,10 @@
+#notice-input-content { 
+    height: 200px;
+}
+h2.notice-title {
+    font-size: 14px; padding: 5px; margin: 0;
+}
+p.notice-content {
+    padding: 5px 10px;
+    color: #485a6a;
+}

@@ -1,0 +1,13 @@
+.hs-scroll-fix[hs-fixed] { position: fixed; z-index: 998; }
+.hs-table table { width: 100%; border-collapse: collapse; border: 1px solid #333; }
+.hs-table th, .hs-table td { border: 1px solid #d6d6d6; padding: 3px; color: #333; overflow: hidden; }
+.hs-table thead th { line-height: 24px; background-color: #ddd; color: #666; }
+.hs-table-footer { background-color: #f0f0f0; color: #333; }
+.hs-table-header { background-color: #fff; }
+.hs-table-header[hs-fixed] { z-index: 999; }
+.hs-table tbody tr:nth-child(odd) { background-color: #f9f9f9; }
+.hs-table tbody tr.hs-row-selected { background-color: #F5F3F2; }
+.hs-table-col-resize { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -3px; cursor: ew-resize; }
+.hs-table-col-resize.active { 
+	border-right: 1px dotted #eee;
+}
