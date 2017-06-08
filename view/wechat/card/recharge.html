@@ -105,7 +105,7 @@
                 </div>
                 <div class="form-action">
                     <input type="hidden" id="recharge-target-value" name="target" />
-                    <button id="recharge-submit-btn" type="submit" class="btn btn-success form-control" >确定</button>
+                    <button id="recharge-submit-btn" type="submit" class="btn btn-success btn-disabled form-control" disabled="disabled">确定</button>
                 </div>
             </form>
         </div>
@@ -119,6 +119,7 @@
                 <button id="recharge-result-btn" type="button" class="btn btn-primary form-control">继续充值</button>
             </div>
         </div>
+	    <div id="debug"></div>
     </main>
 </div>
 {% endblock %}
@@ -127,15 +128,17 @@
 <script>
 $(document).ready(function() {
     function wxPay(data){
+        var json = {
+            "appId"    : data.appid,     
+            "timeStamp": data.timestamp + '',    
+            "nonceStr" : data.noncestr,   
+            "package"  : "prepay_id=" + data.prepayid,    
+            "signType" : "MD5",     
+            "paySign"  : data.sign
+        }
         WeixinJSBridge.invoke(
-            'getBrandWCPayRequest', {
-                "appId"    : data.appid,     
-                "timeStamp": data.timestamp,    
-                "nonceStr" : data.noncestr,   
-                "package"  : "prepay_id=" + data.package,    
-                "signType" : "MD5",     
-                "paySign"  : data.sign
-            },
+            'getBrandWCPayRequest', 
+            json,
             function(res){     
                 if(res.err_msg == "get_brand_wcpay_request:ok" ) {
                     $('#recharge-body').css('display', 'none');
@@ -191,7 +194,7 @@ $(document).ready(function() {
                 if(resp && resp.data && resp.data.appid) {
                     wxPay(resp.data);
                 } else {
-                    app.Notific.alert('操作异常，请稍候再试');
+                    App.Notific.alert('操作异常，请稍候再试');
                 }
             }
         });
