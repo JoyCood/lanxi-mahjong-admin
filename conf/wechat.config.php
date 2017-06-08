@@ -39,7 +39,8 @@ class Config {
 				'/wechat/download',
 				'/wechat/login',
 				'/wechat/recharge',
-				'/wechat/recharge/user'
+				'/wechat/recharge/user',
+                '/wechat/wxpay',
             ),
 
             //路由设置
@@ -47,7 +48,8 @@ class Config {
 				'/wechat/download'      => 'GET::ShareController::downloadAction',
 				'/wechat/login'         => 'GET::CardController::loginAction',
 				'/wechat/recharge'      => 'GET::CardController::rechargeAction',
-				'/wechat/recharge/user' => 'POST::CardController::userAction'
+                '/wechat/recharge/user' => 'POST::CardController::userAction',
+                '/wechat/wxpay'         => 'POST::CardController::wxPayAction'
             )
         ); 
     }

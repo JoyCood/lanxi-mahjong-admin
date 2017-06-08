@@ -3,7 +3,7 @@ return array(
     '1' => array(
         'Title'   => '房卡',
         'CardNum' => 10,
-        'Money'   => 100,
+        'Money'   => 0.01,
         'Default' => false,
     ),
     '2' => array(
