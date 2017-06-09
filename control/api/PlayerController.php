@@ -69,7 +69,7 @@ class PlayerController extends BaseController {
 		$Auth = Admin::model('auth.main');
 		$auth = $Auth->findOne($filters);
 	    if(!$auth) {
-			$data = array('code'=> 40014, 'errmsg'=> 'invalid access_token');
+			$data = array('errcode'=> 40014, 'errmsg'=> 'invalid access_token');
 		    $this->responseJSON($data);	
 		}
 		$userInfo = $this->getUserInfoAction($auth['Openid'], $accessToken);
