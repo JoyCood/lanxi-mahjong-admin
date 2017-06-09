@@ -119,12 +119,24 @@ class PlayerController extends BaseController {
 		}
 		*/
 		$params = $this->request->post();
+        if(!isset($params['code']) && !isset($params['accessToken'])) {
+            $response = array('errcode'=>44002, 'errmsg'=>'empty post data');
+            $this->responseJSON($response);
+        } else {
+            if(isset($params['code'])) {
+                $params['code'] = trim($params['code']);
+            } else {
+                $params['accessToken'] = trim($params['accessToken']);
+            }
+        }
+
 		$this->log->debug(json_encode($params));
-		if(isset($params['code']) && $params['code']!='') {
+		if(isset($params['code'])) {
 		    $userInfo = $this->getUserByCode($params['code']);
-		} else if(isset($params['accessToken'])) {
+		} else {
 			$userInfo = $this->getUserByToken($params['accessToken']);
-		}
+        }
+
 		$accessToken = $userInfo['access_token'];
 		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
 		$ip *= 1;
