@@ -8,23 +8,17 @@ require_once('lib/wxpay/WxPay.Notify.php');
 class CardController extends WechatController {
 
     public function wxPayAction() {
-        $userId = '17106';
+        $userId = '16004';
         $cardId  = '1';
 
         $card = Config::get('card', $cardId);
         if(!$card) {
-            $this->responseJSON(array(
-                'code' => 10000,
-                'msg'  => '商品不存在',
-            ));
+            $this->error('商品不存在');
         }
         $filter = array('_id' => $userId);
         $user = Admin::model('user.main')->findOne($filter);
         if(!$user) {
-            $this->responseJSON(array(
-                'code' => 10001,
-                'msg'  => '用户不存在'
-            ));
+             $this->error('用户不存在');
         }
 
         $MoneyInpour = Admin::model('money.inpour');
@@ -57,12 +51,8 @@ class CardController extends WechatController {
         $input->SetTotal_fee($card['Money'] * 100);
         $input->SetTrade_type('APP');
         $prepay = WxPayApi::unifiedOrder($input);
-        //print_r($prepay);
         if(!isset($prepay['prepay_id'])) {
-            $this->responseJSON(array(
-                'code' => 10002, 
-                'msg'  => '支付出错，请稍后重试'
-            ));
+            $this->error('支付出错，请稍后重试');
         }
 
         $paramters = array(

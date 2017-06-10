@@ -1,0 +1,40 @@
+{% set _Title = '错误' %}
+{% extends '_base.html' %}
+
+{% block css %}
+<style type="text/css">
+h1 { 
+	font-size: 16px; line-height: 24px; 
+	padding: 5px 0px 20px;
+}
+h2 { margin: 0; padding: 0; font-size: 14px; }
+#error {
+	display: block; margin: auto;
+	min-width: 300px; max-width: 420px;
+	padding: 10px 10px 20px;
+	background-color: #f2dede;
+	border: 1px solid #ebccd1; color: #a94442;
+}
+{% if code %}#main-nav { display: none; }{% endif %}
+#app-loading { display: none; }
+</style>
+{% endblock %}
+
+{% block main %}
+<div style="margin: 12% 0 0 0;">
+	<div id="error">
+		<h2>{{code}}</h2>
+		<h1>{{message}}</h1>
+		<a href="javascript: history.go(-1);"><b class="fa fa-angle-left"></b>返回</a>
+		&nbsp; &nbsp;
+		<a href="index.html"><b class="fa fa-home"></b>首页</a>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+});
+</script>
+{% endblock %}
