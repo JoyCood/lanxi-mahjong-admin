@@ -120,6 +120,13 @@ class PlayerController extends BaseController {
 		}
 		*/
 		$params = $this->request->post();
+		if(!isset($params['deviceId'])) {
+		    $params['deviceId'] = 'deviceId';
+		}
+		if(!isset($params['deviceName'])) {
+		    $params['deviceName'] = 'deviceName';
+		}
+
         if(!isset($params['code']) && !isset($params['accessToken'])) {
             $response = array('errcode'=>44002, 'errmsg'=>'empty post data');
             $this->responseJSON($response);
@@ -163,6 +170,9 @@ class PlayerController extends BaseController {
 		$time = time();
 		$sign = Config::getOptions('game-server-sign');
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
+	    $clientIp = Admin::getRemoteIP();
+		$result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $params['deviceId'], $params['deviceName']);
+
 
 	    $userData['userid']     = $user['_id'];
 		$userData['nickname']   = $user['Nickname'];
@@ -198,7 +208,7 @@ class PlayerController extends BaseController {
 		$userData['token']      = $token;
 		$userData['accessToken'] = $accessToken;
 		$userData['timestamp']   = time();
-		$userData['serverIp']    = '120.77.175.1:8005';
+		$userData['serverIp']    = "{$result[0]}:8005";
 
 		$this->log->debug(json_encode($userData));
 		$this->renderJSON($userData);	
