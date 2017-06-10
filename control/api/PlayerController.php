@@ -100,7 +100,8 @@ class PlayerController extends BaseController {
 				}
 				$userInfo['access_token'] = $freshToken['access_token'];
 			} else { //其它错误,原封不动返回给客户端
-			    $thisis->responseJSON($userInfo);
+			    $this->log->debug(json_encode($userInfo));
+			    $this->responseJSON($userInfo);
 			}
 		}
 		
