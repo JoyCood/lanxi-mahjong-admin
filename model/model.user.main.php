@@ -79,7 +79,6 @@ class ModelUserMain
     }
 
 	public function findAndModify($filter, $data, $projection=null, $options=array('new'=>true)) {
-		$data = array('$set'=>$data);
 		return $this->collection()->findAndModify($filter, $data, $projection, $options);
 	}
 

@@ -22,7 +22,7 @@ class CardController extends AdminBaseController {
 	}
 
 	protected function recharge() {
-		$target   = intval($this->request->post('target'));
+		$target   = strval($this->request->post('target'));
 		$quantity = intval($this->request->post('quantity'));
 
 		if(!$target) {
@@ -33,7 +33,7 @@ class CardController extends AdminBaseController {
 		}
 	    	
 		$User    = Admin::model('user.main');
-		$filters = array('_id'  => strval($target));
+		$filters = array('_id'  => $target);
 		$update  = array('$inc' => array('RoomCard' => $quantity));
 		$options = array('new'  => true);
 		$pre     = $User->findOne($filters);
