@@ -3,7 +3,7 @@
 class ModelUserMain
 {
 	const PLATFORM_WECHAT = 1;
-	const INIT_ROOM_CARD  = 4;
+	const INIT_ROOM_CARD  = 1000;
     const PLAYER = 0;
     const TRADER = 1;
     
