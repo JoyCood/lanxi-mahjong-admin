@@ -13,6 +13,7 @@ class ModelMoneyInpour
 
 	private $fields = array(
         'Transid',    #string  交易流水号
+		'Buyer',      #string  付款用户ID
 	    'Userid',     #string  用户id
 	    'Itemid',     #string  购买商品id
 	    'Amount',	  #string  购买商品数量

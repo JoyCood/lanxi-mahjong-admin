@@ -8,7 +8,8 @@ require_once('lib/wxpay/WxPay.Notify.php');
 class CardController extends WechatController {
 
     public function wxPayAction() {
-        $userId = '10010';
+        $userId = '10011';
+		$buyer  = $userId;
         $cardId  = '1';
 
         $card = Config::get('card', $cardId);
@@ -25,6 +26,7 @@ class CardController extends WechatController {
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(
             'Transid'   => $transId,
+			'Buyer'     => $buyer,
             'Userid'    => $userId,
             'Itemid'    => $cardId,
             'Amount'    => 1,
@@ -69,11 +71,7 @@ class CardController extends WechatController {
         $wxPayDataBase->SetSign();
         $result = $wxPayDataBase->getValues();
         $result['out_trade_no'] = $transId;
-        $data = array(
-            'code' => 0,
-            'data' => $result
-        );
-        $this->renderJSON($data);
+        $this->renderJSON($result);
     }
 
 	public function rechargeAction() {

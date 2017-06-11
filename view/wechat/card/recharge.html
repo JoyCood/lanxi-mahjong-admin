@@ -191,8 +191,8 @@ $(document).ready(function() {
                 }
             },
             success: function(resp) {
-                if(resp && resp.data && resp.data.appid) {
-                    wxPay(resp.data);
+                if(resp && resp.appid) {
+                    wxPay(resp);
                 } else {
                     App.Notific.alert('操作异常，请稍候再试');
                 }  //用于登录<C-D-a>
