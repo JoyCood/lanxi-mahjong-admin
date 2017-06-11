@@ -79,10 +79,12 @@
                         <label class="form-label xl">昵称：</label>
                         <div class="form-control" id="recharge-user-name"></div>
                     </div>
+					<!--
                     <div class="form-row">
                         <label class="form-label xl">电话：</label>
                         <div class="form-control" id="recharge-user-phone"></div>
                     </div>
+					-->
                     <div class="form-row">
                         <label class="form-label xl">房卡：</label>
                         <div class="form-control" id="recharge-user-card">j</div>
@@ -113,7 +115,7 @@
         <div id="recharge-result">
             <div class="alert alert-success">充值成功</div>
             <p>昵称：<span id="recharge-result-name"></span></p>
-            <p>电话：<span id="recharge-result-phone"></span></p>
+			<!--<p>电话：<span id="recharge-result-phone"></span></p>-->
             <p>房卡：<span id="recharge-result-card"></span></p>
             <div class="form-action">
                 <button id="recharge-result-btn" type="button" class="btn btn-primary form-control">继续充值</button>
@@ -134,8 +136,8 @@ $(document).ready(function() {
                 $('#recharge-target-value').val(targetValue);
                 $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', false);
                 $('#recharge-submit-btn').removeClass('btn-disabled').addClass('btn-success');
-                $('#recharge-user-name').text(resp.NickName || '');
-                $('#recharge-user-phone').text(resp.Phone || '');
+                $('#recharge-user-name').text(resp.Nickname || '');
+                //$('#recharge-user-phone').text(resp.Phone || '');
                 $('#recharge-user-card').text(resp.RoomCard || '');
             }
         });
@@ -162,8 +164,8 @@ $(document).ready(function() {
                 $('#recharge-body').css('display', 'none');
                 $('#recharge-result').css('display', 'block');
 
-                $('#recharge-result-name').text(resp.NickName || '');
-                $('#recharge-result-phone').text(resp.Phone || '');
+                $('#recharge-result-name').text(resp.Nickname || '');
+                //$('#recharge-result-phone').text(resp.Phone || '');
                 $('#recharge-result-card').text(resp.RoomCard || '');
 
                 $('#recharge-form').get(0).reset();

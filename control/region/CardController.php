@@ -81,7 +81,7 @@ class CardController extends BaseController {
 		if($data) {
 			return array(
 				'Nickname' => $data['Nickname'],
-				'Phone'    => $data['Phone'],
+				//'Phone'    => $data['Phone'],
 				'RoomCard' => number_format($data['RoomCard'], 0),
 			);
 		} else {
