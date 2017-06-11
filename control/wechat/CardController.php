@@ -8,7 +8,7 @@ require_once('lib/wxpay/WxPay.Notify.php');
 class CardController extends WechatController {
 
     public function wxPayAction() {
-        $userId = '16004';
+        $userId = '10010';
         $cardId  = '1';
 
         $card = Config::get('card', $cardId);
