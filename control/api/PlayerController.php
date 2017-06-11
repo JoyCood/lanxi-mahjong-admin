@@ -153,7 +153,7 @@ class PlayerController extends BaseController {
 		$filters = array(
 		    'Wechat_uid' => $userInfo['openid']
 		);
-		$update = array(
+		$update = array('$set' => array(
 		    'Nickname'        => (string)$userInfo['nickname'], 
 			'Wechat_unionid'  => $userInfo['unionid'],
 			'Sex'             => $userInfo['sex'],
@@ -161,7 +161,7 @@ class PlayerController extends BaseController {
 			'Photo'           => (string)$userInfo['headimgurl'],
 			'Last_login_time' => time(),
 			'Last_Login_ip'   => $ip
-		);
+		));
 		$options = array('new' => true);
 		$user = $User->findAndModify($filters, $update, null, $options);
 	    if($user===null) {
@@ -171,8 +171,7 @@ class PlayerController extends BaseController {
 		$sign = Config::getOptions('game-server-sign');
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
 	    $clientIp = Admin::getRemoteIP();
-		$result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $params['deviceId'], $params['deviceName']);
-
+		$result = array('120.77.175.1');//$this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $params['deviceId'], $params['deviceName']);
 
 	    $userData['userid']     = $user['_id'];
 		$userData['nickname']   = $user['Nickname'];
