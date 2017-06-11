@@ -16,7 +16,7 @@ class CardController extends AdminBaseController {
 	}
 
 	protected function rechargeForm() {
-		$this->render('card/recharge-form.html', array(
+		$this->render('card/recharge.html', array(
 
 		));
 	}
@@ -25,6 +25,7 @@ class CardController extends AdminBaseController {
 		$target   = strval($this->request->post('target'));
 		$quantity = intval($this->request->post('quantity'));
 
+		$this->checkCsrfToken();
 		if(!$target) {
 		    $this->error('请输入代理商游戏ID');
 		}
@@ -62,11 +63,14 @@ class CardController extends AdminBaseController {
 		$data    = $User->findOne($filters);
 
 		if($data) {
-			$this->renderJSON(array(
+			$this->setCsrfToken();
+			$this->render('card/recharge-form.html', array(
 				'Id'       => intval($data['_id']),
 				'Nickname' => $data['Nickname'],
 				'Phone'    => $data['Phone'],
-				'RoomCard' => number_format($data['RoomCard'], 0),
+				'RoomCard' => $data['RoomCard'],
+				'CsrfName' => $_SESSION['CSRF_TOKEN_NAME'],
+				'CsrfCode' => $_SESSION['CSRF_TOKEN_CODE'],
 			));
 		} else {
 			$this->error('未找到用户信息');

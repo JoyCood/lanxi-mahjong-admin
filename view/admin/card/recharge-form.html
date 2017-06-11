@@ -1,133 +1,58 @@
-{% set TITLE="房卡充值" %}
-{% extends "_base.html" %}
-{% block css %}
-<link rel="stylesheet" href="css/admin/money.css?v={{CONFIG.resVersion}}" />
-<link rel="stylesheet" href="css/3rd/plugins/datepicker/datepicker.css?v={{CONFIG.res3rdVersion}}" />
-{% endblock %}
-
-{% block main %}
-<div>
-    <ol class="breadcrumb">
-        <li><a href="admin/"><i class="fa fa-home"></i> 首页</a></li>
-        <li><a href="admin/card/recharge">房卡</a></li>
-        <li class="active">{{TITLE}}</li>
-    </ol>
-    <div class="portlet">
-        <header class="portlet_header">
-            <h1>{{TITLE}}</h1>
-            <nav>
-                {#% if data %}<a href="admin/trader/#form" type="button" class="btn btn-default">新建</a>{% endif %#}
-                <a href="javascript:history.back();" type="button" class="btn btn-default"><i class="fa fa-angle-left"></i> 返回</a>
-            </nav>
-        </header>
-        <main class="portlet_main">
-            <form id="card-recharge-user-form" method="POST" action="admin/card/user" class="form-horizontal">
-                <div class="app-dialog-content" style="padding-bottom: 0;">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="card-recharge-user" class="col-sm-3 control-label">*游戏ID:</label>
-                                <div class="col-sm-9">
-                                    <div style="position: relative; padding-right: 42px;">
-                                        <input id="card-recharge-user" name="target" type="number" class="form-control" value="" placeholder="请输入游戏ID" autocomplete="off" app-required="on" autofocus="on" />
-                                        <button id="card-recharge-user-submit" type="submit" class="btn btn-primary" style="position: absolute; top: 0; right: 0;"><i class="fa fa-search"></i></button>
-                                        <button id="card-recharge-user-reset" type="reset" class="btn btn-gray" style="position: absolute; top: 0; right: 0; display: none;"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<form id="recharge-form" method="POST" action="admin/card/recharge" class="form-horizontal">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">游戏ID:</label>
+                <div class="col-sm-9">
+                    <span style="line-height: 30px;">{{Id}}</span>
+                    <input id="card-recharge-target" name="target" value="{{Id}}" type="hidden" app-required="on" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">昵称:</label>
+                <div class="col-sm-9">
+                    <span style="line-height: 30px;">{{Nickname}}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">电话:</label>
+                <div class="col-sm-9">
+                    <span style="line-height: 30px;">{{Phone}}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">房卡数量:</label>
+                <div class="col-sm-9">
+                    <span style="line-height: 30px;">{{RoomCard|number_format(0)}}</span>
+                </div>
+            </div>
+            <div id="recharge-form-action">
+                <div class="form-group">
+                    <label for="recharge-quantity" class="col-sm-3 control-label">*充值数量:</label>
+                    <div class="col-sm-9">
+                        <input id="recharge-quantity" name="quantity" type="number" class="form-control" value="{{data.Phone}}" placeholder="请输入充值数量" autocomplete="off" app-required="on" />
                     </div>
                 </div>
-            </form>
-
-            <form id="card-recharge-form" method="POST" action="admin/card/recharge" class="form-horizontal" style="display: none;">
-                <div class="app-dialog-content">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">游戏ID:</label>
-                                <div class="col-sm-9">
-                                    <span id="card-recharge-id" style="line-height: 30px;"></span>
-                                    <input id="card-recharge-target" name="target" type="hidden" app-required="on" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">昵称:</label>
-                                <div class="col-sm-9">
-                                    <span id="card-recharge-nick" style="line-height: 30px;"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">电话:</label>
-                                <div class="col-sm-9">
-                                    <span id="card-recharge-phone" style="line-height: 30px;"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">房卡数量:</label>
-                                <div class="col-sm-9">
-                                    <span id="card-recharge-card" style="line-height: 30px;"></span>
-                                </div>
-                            </div>
-                            <div id="recharge-body">
-                                <div class="form-group">
-                                    <label for="card-recharge-quantity" class="col-sm-3 control-label">*充值数量:</label>
-                                    <div class="col-sm-9">
-                                        <input id="card-recharge-quantity" name="quantity" type="number" class="form-control" value="{{data.Phone}}" placeholder="请输入充值数量" autocomplete="off" app-required="on" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label"></label>
-                                    <div class="col-sm-9">
-                                        <button type="submit" class="btn btn-primary">确定</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"></label>
+                    <div class="col-sm-9">
+                        <input type="hidden" name="{{CsrfName}}" value="{{CsrfCode}}" />
+                        <button type="submit" class="btn btn-primary">确定</button>
                     </div>
                 </div>
-                <div id="recharge-info" style="display: none; margin: 0 30px;" class="alert alert-success">
-                    <p>充值成功，充值后房卡数量：<span id="card-num"></span></p>
-                    <br />
-                    <button id="card-recharge-continue" type="button" class="btn btn-primary">继续充值</button>
-                </div>
-            </form>
-        </main>
+            </div>
+        </div>
+    </div>
+    <div id="recharge-info" style="display: none; margin: 0 30px;" class="alert alert-success">
+        <p>充值成功，充值后房卡数量：<span id="card-num"></span></p>
+        <br />
+        <button id="recharge-continue" type="button" class="btn btn-primary">继续充值</button>
     </div>
     <script>
-        $('#card-recharge-user-form').on('submit', function() {
-            App.submitForm(this, {
-                success: function(data) {
-                    $('#card-recharge-target').val(data.Id || '');
-                    $('#card-recharge-id').text(data.Id || '');
-                    $('#card-recharge-nick').text(data.Nickname || '');
-                    $('#card-recharge-phone').text(data.Phone || '');
-                    $('#card-recharge-card').text(data.RoomCard || '');
-                    $('#card-recharge-user').prop('disabled', true);
-                    $('#card-recharge-user-submit').hide();
-                    $('#card-recharge-user-reset').show();
-                    $('#card-recharge-form').show(0, function() {
-                        $('#card-recharge-quantity').focus();
-                    });
-                }
-            });
-            return false;
-        });
-        $('#card-recharge-user-reset').on('click', function() {
-            var userInput = $('#card-recharge-user');
-            userInput.val('');
-            userInput.get(0).disabled = false;
-            userInput.focus();
-            $('#card-recharge-user-submit').show();
-            $('#card-recharge-user-reset').hide();
-            $('#card-recharge-form').hide().get(0).reset();
-            $('#recharge-body').show();
-            $('#recharge-info').hide();
-        });
-        $('#card-recharge-form').on('submit', function() {
+        $('#recharge-form').on('submit', function() {
             App.submitForm(this, {
                 checkValidity: function(form) {
-                    var qtyElement = $('#card-recharge-quantity');
+                    var qtyElement = $('#recharge-quantity');
                     var qty = parseInt($.trim(qtyElement.val()), 10) || 0;
                     qtyElement.val(qty);
                     if(qty < 0) {
@@ -139,22 +64,14 @@
                 },
                 success: function(json) {
                     $('#card-num').text(json.data.RoomCard || 'N/A');
-                    $('#recharge-body').hide();
                     $('#recharge-info').show();
+                    $('#recharge-form-action').hide();
                 }
             });
             return false;
         });
-        $('#card-recharge-continue').on('click', function() {
-            $('#card-recharge-user-reset').trigger('click');
+        $('#recharge-continue').on('click', function() {
+            $('#recharge-user-reset').trigger('click');
         });
     </script>
-</div>
-{% endblock %}
-
-{% block js %}
-<script src="js/admin/card.js?v={{CONFIG.resVersion}}"></script>
-<script>
-window.Controller = Card;
-</script>
-{% endblock %}
+</form>

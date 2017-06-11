@@ -1,0 +1,72 @@
+{% set TITLE="房卡充值" %}
+{% extends "_base.html" %}
+{% block css %}
+<link rel="stylesheet" href="css/admin/money.css?v={{CONFIG.resVersion}}" />
+<link rel="stylesheet" href="css/3rd/plugins/datepicker/datepicker.css?v={{CONFIG.res3rdVersion}}" />
+{% endblock %}
+
+{% block main %}
+<div>
+    <ol class="breadcrumb">
+        <li><a href="admin/"><i class="fa fa-home"></i> 首页</a></li>
+        <li><a href="admin/card/recharge">房卡</a></li>
+        <li class="active">{{TITLE}}</li>
+    </ol>
+    <div class="portlet">
+        <header class="portlet_header">
+            <h1>{{TITLE}}</h1>
+            <nav>
+                {#% if data %}<a href="admin/trader/#form" type="button" class="btn btn-default">新建</a>{% endif %#}
+                <a href="javascript:history.back();" type="button" class="btn btn-default"><i class="fa fa-angle-left"></i> 返回</a>
+            </nav>
+        </header>
+        <main class="portlet_main">
+            <form id="recharge-user-form" method="POST" action="admin/card/user" target="#recharge-content" data-type="html" class="form-horizontal">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="recharge-user-id" class="col-sm-3 control-label">*游戏ID:</label>
+                            <div class="col-sm-9">
+                                <div style="position: relative; padding-right: 42px;">
+                                    <input id="recharge-user-id" name="target" type="number" class="form-control" value="16019" placeholder="请输入游戏ID" autocomplete="off" app-required="on" autofocus="on" />
+                                    <button id="recharge-user-submit" type="submit" class="btn btn-primary" style="position: absolute; top: 0; right: 0;"><i class="fa fa-search"></i></button>
+                                    <button id="recharge-user-reset" type="reset" class="btn btn-gray" style="position: absolute; top: 0; right: 0; display: none;"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div id="recharge-content"></div>
+        </main>
+    </div>
+    <script>
+        $('#recharge-user-form').on('submit', function() {
+            App.submitForm(this, {
+                success: function(data) {
+                    $('#recharge-user-id').prop('disabled', true);
+                    $('#recharge-user-submit').hide();
+                    $('#recharge-user-reset').show();
+                    $('#recharge-quantity').focus();
+                }
+            });
+            return false;
+        }).on('click', '#recharge-user-reset', function() {
+            var userInput = $('#recharge-user-id');
+            userInput.val('');
+            userInput.get(0).disabled = false;
+            userInput.focus();
+            $('#recharge-user-submit').show();
+            $('#recharge-user-reset').hide();
+            $('#recharge-content').empty();
+        });
+    </script>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="js/admin/card.js?v={{CONFIG.resVersion}}"></script>
+<script>
+window.Controller = Card;
+</script>
+{% endblock %}
