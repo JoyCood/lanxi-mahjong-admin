@@ -45,7 +45,6 @@ class ModelMoneyInpour
     }
 
 	public function findAndModify($filter, $data, $projection, $options) {
-	    $data = Helper::allowed($data, $this->allowed);
 	    return $this->collection()->findAndModify($filter, $data, $projection, $options);
 	}
 

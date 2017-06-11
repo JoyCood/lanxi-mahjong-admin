@@ -15,7 +15,7 @@ class PaymentController extends BaseController {
 
         if(!$card) {
             $this->responseJSON(array(
-                'code' => 10001,
+                'code' => 10000,
                 'msg'  => '商品不存在',
             ));
         }
@@ -24,7 +24,7 @@ class PaymentController extends BaseController {
         $user = Admin::model('user.main')->findOne($filter);
         if(!$user) {
             $this->responseJSON(array(
-                'code' => 10000, 
+                'code' => 10001, 
                 'msg'  => '用户不存在'
             ));
         }
@@ -42,11 +42,11 @@ class PaymentController extends BaseController {
             'Currency'  => 'CNY',
             'Paytype'   => $MoneyInpour::WEIXIN,
             'Clientip'  => Admin::getRemoteIP(),
-            'Parent'    => $user['Build'],
+            'Parent'    => $user['Build'], //上级代理
             'Ctime'     => time(),
             'Lv'        => 0,
             'Rebate'    => 0, //给上级代理商的返点
-            'NotifyRes' => array(),
+            'NotifyRes' => array(), //微信回调结果
         ); 
         $MoneyInpour->insert($doc);
 
@@ -61,7 +61,7 @@ class PaymentController extends BaseController {
 
         if(!isset($prepay['prepay_id'])) {
             $this->responseJSON(array(
-                'code' => 10001, 
+                'code' => 10002, 
                 'msg'  => '支付出错，请稍后重试'
             ));
         }
@@ -110,15 +110,15 @@ class PaymentController extends BaseController {
 					'Transid' => $xmlarr['out_trade_no'],
 					'Result'  => $MoneyInpour::PROCESSING
 				);
-				$update = array(
+				$update = array( '$set' => array(
 				    'Result' => $MoneyInpour::DELIVER,
 					'notify_data' => $xmlarr
-				);
+				));
 				$options = array('new' => true);
 				//状态更新为发货中，用于锁定
 				$order = Admin::model('money.inpour')->findAndModify($filters, $update, null, $options);
 				if(isset($order['Result']) && $order['Result']==$MoneyInpour::DELIVER) {
-					$filters = array('Gameid'=>$order['Userid']);
+					$filters = array('_id'=>$order['Userid']);
 					$update  = array('$inc' => array('RoomCard' => $order['Quantity']));
 					$options = array('new' => true);
 					$user    = Admin::model('user.main')->findAndModify($filters, $update); //发货

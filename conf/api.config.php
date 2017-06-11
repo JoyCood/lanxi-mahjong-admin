@@ -8,7 +8,7 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
-	const WEIXIN_APP_ID = 'wxa0f7643705d54733';
+	const WEIXIN_APP_ID = 'wxa0f7643705d54733'; //用于登录
 	const WEIXIN_SECRET = '2046430fc5a9b9ea50ab89285d6d17c6';
 
     static function init() {
