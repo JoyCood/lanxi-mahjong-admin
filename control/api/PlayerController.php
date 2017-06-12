@@ -8,14 +8,14 @@ class PlayerController extends BaseController {
 	const WEIXIN_FRESH_TOKEN  = self::WEIXIN_BASE_URL . '/sns/oauth2/fresh_token?';
 
 	protected function getAccessTokenAction($code) {
-		$appid = Config::WEIXIN_APP_ID;
-		$secret = Config::WEIXIN_SECRET;
+		$appid = Config::get('core', 'wx.app.id');
+		$secret = Config::get('core', 'wx.app.secret');
 		$tokenURL  = self::WEIXIN_ACCESS_TOKEN . "appid={$appid}&secret={$secret}&code={$code}&grant_type=authorization_code";
 		return Helper::curl($tokenURL);
 	}
 
 	protected function refreshTokenAction($refreshToken) {
-		$appid = Config::WEIXIN_APP_ID;
+		$appid = Config::get('core', 'wx.app.id');
         $url = self::WEIXIN_FRESH_TOKEN . "appid={$appid}&grant_type=refresh_token&refresh_token={$refreshToken}";	
 		return Helper::curl($url);
 	}
@@ -100,7 +100,6 @@ class PlayerController extends BaseController {
 				}
 				$userInfo['access_token'] = $freshToken['access_token'];
 			} else { //其它错误,原封不动返回给客户端
-			    $this->log->debug(json_encode($userInfo));
 			    $this->responseJSON($userInfo);
 			}
 		}
@@ -138,13 +137,11 @@ class PlayerController extends BaseController {
             }
         }
 
-		$this->log->debug(json_encode($params));
 		if(isset($params['code'])) {
 		    $userInfo = $this->getUserByCode($params['code']);
 		} else {
 			$userInfo = $this->getUserByToken($params['accessToken']);
         }
-
 		$accessToken = $userInfo['access_token'];
 		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
 		$ip *= 1;
@@ -171,9 +168,8 @@ class PlayerController extends BaseController {
 		$sign = Config::getOptions('game-server-sign');
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
 	    $clientIp = Admin::getRemoteIP();
-		//$result = array('120.77.175.1');
 		$result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $params['deviceId'], $params['deviceName']);
-
+        
 	    $userData['userid']     = $user['_id'];
 		$userData['nickname']   = $user['Nickname'];
 		$userData['email']      = $user['Email'];
@@ -210,7 +206,6 @@ class PlayerController extends BaseController {
 		$userData['timestamp']   = time();
 		$userData['serverIp']    = "{$result[0]}:8005";
 
-		$this->log->debug(json_encode($userData));
 		$this->renderJSON($userData);	
     }
 
@@ -269,6 +264,9 @@ class PlayerController extends BaseController {
 
 	protected function apply_ip($project_id, $user_id, $ip, $country, $area, $device_id, $device_name)
 	{
+        if(DEVELOPMENT) {
+            return array('120.77.175.1'); //todo 开发服ip地址可放到配置文件中
+        } 
 		$message = 'YY';
 		$message .= pack("CNN", $project_id, $user_id, ip2long($ip));
 		$message .= pack('C', strlen($country)).$country;

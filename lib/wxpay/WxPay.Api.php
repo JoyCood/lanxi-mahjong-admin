@@ -43,12 +43,12 @@ class WxPayApi
 		}
 		
 		//异步通知url未设置，则使用配置文件中的url
-		if(!$inputObj->IsNotify_urlSet()){
-			$inputObj->SetNotify_url(Config::get('payment', 'wx.notify.url'));//异步通知url
-		}
+		//if(!$inputObj->IsNotify_urlSet()){
+		//	$inputObj->SetNotify_url(Config::get('core', 'wx.notify.url'));//异步通知url
+		//}
 		
-		$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-		$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+		//$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+		//$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
 		$inputObj->SetSpbill_create_ip($_SERVER['REMOTE_ADDR']);//终端ip	  
 		//$inputObj->SetSpbill_create_ip("1.1.1.1");  	    
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
@@ -81,8 +81,8 @@ class WxPayApi
 		if(!$inputObj->IsOut_trade_noSet() && !$inputObj->IsTransaction_idSet()) {
 			throw new WxPayException("订单查询接口中，out_trade_no、transaction_id至少填一个！");
 		}
-		$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-		$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+		//$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+		//$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 		
 		$inputObj->SetSign();//签名
@@ -112,8 +112,8 @@ class WxPayApi
         if(!$inputObj->IsOut_trade_noSet()) {
                 throw new WxPayException("订单查询接口中，out_trade_no必填！");
         }
-        $inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-        $inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+        //$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+        //$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
         $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
         
         $inputObj->SetSign();//签名
@@ -152,8 +152,8 @@ class WxPayApi
 		}else if(!$inputObj->IsOp_user_idSet()){
 			throw new WxPayException("退款申请接口中，缺少必填参数op_user_id！");
 		}
-		$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-		$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+		//$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+		//$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 		
 		$inputObj->SetSign();//签名
@@ -188,8 +188,8 @@ class WxPayApi
 			!$inputObj->IsRefund_idSet()) {
 			throw new WxPayException("退款查询接口中，out_refund_no、out_trade_no、transaction_id、refund_id四个参数必填一个！");
 		}
-		$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-		$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+		//$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+		//$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 		
 		$inputObj->SetSign();//签名
@@ -218,8 +218,8 @@ class WxPayApi
 		if(!$inputObj->IsBill_dateSet()) {
 			throw new WxPayException("对账单接口中，缺少必填参数bill_date！");
 		}
-		$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-		$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+		//$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+		//$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 		
 		$inputObj->SetSign();//签名
@@ -256,8 +256,8 @@ class WxPayApi
 		}
 		
 		$inputObj->SetSpbill_create_ip($_SERVER['REMOTE_ADDR']);//终端ip
-		$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-		$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+		//$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+		//$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 		
 		$inputObj->SetSign();//签名
@@ -287,8 +287,8 @@ class WxPayApi
 			throw new WxPayException("撤销订单API接口中，参数out_trade_no和transaction_id必须填写一个！");
 		}
 		
-		$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-		$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+		//$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+		//$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 		
 		$inputObj->SetSign();//签名
@@ -327,8 +327,8 @@ class WxPayApi
 		} if(!$inputObj->IsExecute_time_Set()) {
 			throw new WxPayException("接口耗时，缺少必填参数execute_time_！");
 		}
-		$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-		$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+		//$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+		//$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
 		$inputObj->SetUser_ip($_SERVER['REMOTE_ADDR']);//终端ip
 		$inputObj->SetTime(date("YmdHis"));//商户上报时间	 
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
@@ -356,8 +356,8 @@ class WxPayApi
 			throw new WxPayException("生成二维码，缺少必填参数product_id！");
 		}
 		
-		$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-		$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+		//$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+		//$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
 		$inputObj->SetTime_stamp(time());//时间戳	 
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 		
@@ -384,8 +384,8 @@ class WxPayApi
 		if(!$inputObj->IsLong_urlSet()) {
 			throw new WxPayException("需要转换的URL，签名用原串，传输需URL encode！");
 		}
-		$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
-		$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
+		//$inputObj->SetAppid(Config::get('payment', 'wx.app.id'));//公众账号ID
+		//$inputObj->SetMch_id(Config::get('payment', 'wx.mch.id'));//商户号
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 		
 		$inputObj->SetSign();//签名

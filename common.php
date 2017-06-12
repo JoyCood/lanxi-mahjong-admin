@@ -1,5 +1,6 @@
 <?php define('TANG_FENG', TRUE);
 
+define('DEVELOPMENT', TRUE);
 define('DOC_ROOT', __DIR__);
 define('DOC_DIR', substr(dirname($_SERVER['SCRIPT_NAME']), 0));
 define('BASE_URL', DOC_DIR == DIRECTORY_SEPARATOR? '' : DOC_DIR);

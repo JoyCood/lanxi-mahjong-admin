@@ -7,14 +7,19 @@ class WechatController extends BaseController {
 	const MP_SESSION_ACCESS_TOKEN = 'mp_session_access_token';
 	const MP_SESSION_REFRESH_TOKEN = 'mp_session_refresh_token';
 
-    const MP_APP_ID = Config::MP_APP_ID;
-	const MP_SECRET = Config::MP_SECRET;
-	
 	const MP_BASE_URL = 'https://open.weixin.qq.com';
 	const MP_OAUTH2_URL = 'https://api.weixin.qq.com/sns';
+    
+    protected function getAppId() {
+        return Config::get('core', 'wx.mp.id');
+    }
+
+    protected function getAppSecret() {
+        return Config::get('core', 'wx.mp.secret');
+    }
 
 	protected function getCode($redirect) {
-	    $APPID = self::MP_APP_ID; 
+	    $APPID = $this->getAppId(); 
 		$BASEURL = self::MP_BASE_URL;	
 		$redirect = urlencode(trim($redirect));
 		$url = "{$BASEURL}/connect/oauth2/authorize?appid={$APPID}&redirect_uri={$redirect}&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
@@ -22,16 +27,16 @@ class WechatController extends BaseController {
 	}
 
 	protected function getAccessToken($code) {
-	    $APPID = self::MP_APP_ID;
-		$SECRET = self::MP_SECRET;
+	    $APPID = $this->getAppId();
+		$SECRET = $this->getAppSecret();
 		$OAUTH2_URL = self::MP_OAUTH2_URL;
 		$url = "{$OAUTH2_URL}/oauth2/access_token?appid={$APPID}&secret={$SECRET}&code={$code}&grant_type=authorization_code";
 		return Helper::curl($url);
 	}
 
 	protected function freshToken($refreshToken) {
-        $APPID = self::MP_APP_ID;
-	    $SECRET = self::MP_SECRET;
+        $APPID = $this->getAppId();
+	    $SECRET = $this->getAppSecret();
 	    $OAUTH2_URL = self::MP_OAUTH2_URL;	
 		$url = "{$OAUTH2_URL}/oauth2/refresh_token?appid={$APPID}&grant_type=refresh_token&refresh_token={$refreshToken}";
 		return Helper::curl($url);
@@ -53,8 +58,8 @@ class WechatController extends BaseController {
 		if(isset($_SESSION[self::MP_SESSION_OPENID]) && isset($_SESSION[self::MP_SESSION_ACCESS_TOKEN])) {
 		    $userinfo = $this->getUserInfo($_SESSION[self::MP_SESSION_OPENID], $_SESSION[self::MP_SESSION_ACCESS_TOKEN]);
 			$userinfo = json_decode($userinfo, true);
-			$data = array('from'=>'session', 'userinfo'=>$userinfo);
-			$this->log->debug(json_encode($data));
+			//$data = array('from'=>'session', 'userinfo'=>$userinfo);
+			//$this->log->debug(json_encode($data));
 		}
 
 		if(!$userinfo) {
@@ -67,13 +72,15 @@ class WechatController extends BaseController {
 				$_SESSION[self::MP_SESSION_UNIONID] = $token['unionid'];
 				$_SESSION[self::MP_SESSION_ACCESS_TOKEN] = $token['access_token'];
 				$_SESSION[self::MP_SESSION_REFRESH_TOKEN] = $token['refresh_token'];
-			}
+            }
+            /*
 			$data = array(
 				'from'=>'token', 
 				'userinfo' => $userinfo,
 				'token' => $token,
 			);
 			$this->log->debug(json_encode($data));
+             */
 		}
 		if(isset($userinfo['errcode'])) {
 			$token2 = array();
@@ -89,6 +96,7 @@ class WechatController extends BaseController {
 				$_SESSION[self::MP_SESSION_ACCESS_TOKEN] = $token['access_token'];
 				$_SESSION[self::MP_SESSION_REFRESH_TOKEN] = $token['refresh_token'];
 			}
+            /*
 			$data = array(
 				'from'=>'token_expire', 
 				'userinfo'=>$userinfo, 
@@ -97,10 +105,13 @@ class WechatController extends BaseController {
 				'token2' => $token2
 			);
 			$this->log->debug(json_encode($data));
+             */
 		}
+        /*
 	    $data = array('from'=>'final', 'userinfo'=>$userinfo);
 		$this->log->debug(json_encode($data));
-		return $userinfo;
+         */
+        return $userinfo;
 	}
 
 }

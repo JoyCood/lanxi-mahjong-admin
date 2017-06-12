@@ -113,7 +113,7 @@ class WxPayDataBase
 		ksort($this->values);
 		$string = $this->ToUrlParams();
 		//签名步骤二：在string后加入KEY
-		$string = $string . "&key=".Config::get('payment', 'wx.app.key');
+		$string = $string . "&key=".Config::get('core', 'wx.app.key');
 		//签名步骤三：MD5加密
 		$string = md5($string);
 		//签名步骤四：所有字符转为大写

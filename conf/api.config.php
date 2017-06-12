@@ -8,7 +8,7 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
-	const WEIXIN_APP_ID = 'wxa0f7643705d54733'; //用于登录
+	const WEIXIN_APP_ID = 'wxa0f7643705d54733'; //用于游戏登录
 	const WEIXIN_SECRET = '2046430fc5a9b9ea50ab89285d6d17c6';
 
     static function init() {
@@ -17,8 +17,8 @@ class Config {
             'db' => require('db.config.php'), 
             //房卡
             'card' => require('card.config.php'),
-            //支付
-            'payment' => require('pay.config.php'), 
+            //支付、登录
+            'core' => require('core.config.php'), 
 			//游戏服务器地址
 			'game-server-host' => 'http://lanxi.yiiyu.cn:7229/roomcard',
             //游戏服务器通讯密钥

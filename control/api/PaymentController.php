@@ -9,9 +9,9 @@ require_once('lib/wxpay/WxPay.Notify.php');
 class PaymentController extends BaseController {
     //下单
     public function wxPayAction() {
-        $userId    = $this->request->post('userId');         
-        $cardId    = $this->request->post('cardId');
-        $card      = Config::get('card', $cardId);
+        $userId = $this->request->post('userId');         
+        $cardId = $this->request->post('cardId');
+        $card   = Config::get('card', $cardId);
 
         if(!$card) {
             $this->responseJSON(array(
@@ -32,6 +32,7 @@ class PaymentController extends BaseController {
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(
             'Transid'   => $transId,
+            'Buyer'     => $userId,
             'Userid'    => $userId,
             'Itemid'    => $cardId,
             'Amount'    => 1,
@@ -52,11 +53,14 @@ class PaymentController extends BaseController {
 
         $nonceStr = md5(Helper::mkrand());
         $input = new WxPayUnifiedOrder();
+        $input->SetAppid(Config::get('core', 'wx.app.id'));
+        $input->SetMch_id(Config::get('core', 'wx.mch.id'));
         $input->SetBody($card['Title']);
         $input->SetNonce_str($nonceStr);
         $input->SetOut_trade_no($transId);
         $input->SetTotal_fee($card['Money'] * 100);
         $input->SetTrade_type('APP');
+        $input->SetNotify_url(Config::get('core', 'wx.notify.url'));
         $prepay = WxPayApi::unifiedOrder($input);
 
         if(!isset($prepay['prepay_id'])) {
@@ -67,10 +71,10 @@ class PaymentController extends BaseController {
         }
 
         $paramters = array(
-            'appid'     => Config::get('payment', 'wx.app.id'),
+            'appid'     => Config::get('core', 'wx.app.id'),
             'noncestr'  => $nonceStr,
             'package'   => 'Sign=WXPay',
-            'partnerid' => Config::get('payment', 'wx.mch.id'),
+            'partnerid' => Config::get('core', 'wx.mch.id'),
             'prepayid'  => $prepay['prepay_id'],
             'timestamp' => time(),
         );

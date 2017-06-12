@@ -8,6 +8,10 @@ require_once('lib/wxpay/WxPay.Notify.php');
 class CardController extends WechatController {
 
     public function wxPayAction() {
+        if(!isset($_SESSION[self::MP_SESSION_OPENID]) || $_SESSION[self::MP_SESSION_OPENID]=='') {
+            $this->rechargeForm();
+        }
+         
         $userId = '10000';
 		$buyer  = $userId;
         $cardId  = '1';
@@ -47,21 +51,28 @@ class CardController extends WechatController {
 
         $nonceStr = md5(Helper::mkrand());
         $input = new WxPayUnifiedOrder();
-        $input->SetBody('游泳培训课程支付测试'); //Bong 这是个炸弹，不要改这行
+        $input->SetAppid(Config::get('core', 'wx.mp.id'));
+        $input->SetMch_id(Config::get('core', 'wx.mch.id'));
+        $input->SetOpenid($_SESSION[self::MP_SESSION_OPENID]);
+        $input->SetBody($card['Title']); //Bong 这是个炸弹，不要改这行
         $input->SetNonce_str($nonceStr);
         $input->SetOut_trade_no($transId);
         $input->SetTotal_fee($card['Money'] * 100);
-        $input->SetTrade_type('APP');
+        $input->SetTrade_type('JSAPI');
+        $input->SetNotify_url(Config::get('core', 'wx.notify.url'));
+        
         $prepay = WxPayApi::unifiedOrder($input);
+
         if(!isset($prepay['prepay_id'])) {
+            $this->log->debug(json_encode($prepay));
             $this->error('支付出错，请稍后重试');
         }
 
         $paramters = array(
-            'appid'     => Config::get('payment', 'wx.app.id'),
+            'appid'     => Config::get('core', 'wx.mp.id'),
             'noncestr'  => $nonceStr,
             'package'   => 'Sign=WXPay',
-            'partnerid' => Config::get('payment', 'wx.mch.id'),
+            'partnerid' => Config::get('core', 'wx.mch.id'),
             'prepayid'  => $prepay['prepay_id'],
             'timestamp' => time(),
         );
