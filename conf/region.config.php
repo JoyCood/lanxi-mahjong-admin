@@ -24,6 +24,8 @@ class Config
         self::$Options = array(
                 // 数据库
                 'db' => require('db.config.php'),
+				//支付、登录
+				'core' => require('core.config.php'),
                 // 网站设置
                 'settings' => array(
                         'title'         => '区域管理',
