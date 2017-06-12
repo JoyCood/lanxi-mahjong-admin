@@ -40,20 +40,21 @@ class Config {
             //免登录 
 			'notauth' => array(
 				'/api/notice',
-				'/api/ip',
                 '/api/card',
                 '/api/wechat-login',
 				'/api/wxpay',
-				'/api/wechat-test',
+                '/api/phone-reg',
+                '/api/phone-login'
             ),
 
             //路由设置
 			'routes' => array(
 				'/api/notice' => 'POST::NoticeController::broadcastAction',
-				'/api/ip' => 'GET::PlayerController::ipTestAction',
                 '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
                 '/api/card'  => 'GET::CardController::listAction',
-                '/api/wxpay' => 'GET::PaymentController::wxPayAction'
+                '/api/wxpay' => 'GET::PaymentController::wxPayAction',
+                '/api/phone-reg' => 'POST::PlayerController::phoneRegAction',
+                '/api/phone-login' => 'POST::PlayerController::phoneLoginAction'
             )
         ); 
     }

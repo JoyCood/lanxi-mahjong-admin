@@ -221,9 +221,9 @@ class PlayerController extends BaseController {
 			'Sex'             => $userInfo['sex'],
 			'Sign'            => '',
 			'Email'           => '',
-			'Phone'           => '',
+			'Phone'           => isset($userInfo['phone'])? $userInfo['phone'] : '',
 			'Auth'            => '',
-			'Pwd'             => '',
+			'Pwd'             => isset($userInfo['pwd'])? $userInfo['pwd'] : '',
 			'Birth'           => '',	
 			'Create_ip'       => $ip, 
 			'Create_time'     => time(),
@@ -235,16 +235,16 @@ class PlayerController extends BaseController {
 			'Terminal'        => '',
 			'Status'          => $User::STATUS_NORMAL,
 			'Address'         => '',
-			'Photo'           => $userInfo['headimgurl'],
+			'Photo'           => isset($userInfo['headimgurl'])? $userInfo['headimgurl']: '',
 			'Qq_uid'          => '',
-			'Wechat_uid'      => $userInfo['openid'],
-			'Wechat_unionid'  => $userInfo['unionid'],
+			'Wechat_uid'      => isset($userInfo['openid'])? $userInfo['openid']: '',
+			'Wechat_unionid'  => isset($userInfo['unionid'])? $userInfo['unionid']: '',
 			'Microblog_uid'   => '',
 			'Vip'             => 0,
 			'Win'             => 0,
 			'Lost'            => 0,
 			'Ping'            => 0,
-			'Platform'        => $User::PLATFORM_WECHAT, 
+			'Platform'        => isset($userInfo['platform'])? $userInfo['platform'] : $User::PLATFORM_WECHAT, 
 			'ChenmiTime'      => 0,
 			'Chenmi'          => 0,
 			'Sound'           => true,
@@ -284,10 +284,191 @@ class PlayerController extends BaseController {
 		return explode("|", $recv);
 	}	
 
-	public function ipTestAction() {
-	    $ip = $this->request->getIP();
-		$result = $this->apply_ip("1", "16442", $ip, "CN", "12", "deviceId", "deviceName");
-		print_r($result);
+    public function phoneLoginAction() {
+        $phone = trim($this->request->post('phone'));
+        $password = trim($this->request->post('password')); 
+        $deviceId = trim($this->request->post('deviceId', 'deviceId'));
+        $deviceName = trim($this->request->post('deviceName', 'deviceName'));
 
-	}
+        /*
+        $phone = '13533332421';
+        $password = '123456';
+         */
+
+        if(!$phone) {
+            $response = array(
+                'errcode' => 10000,
+                'errmsg'  => '请输入手机号码'
+            );
+            $this->responseJSON($response);
+        }
+        if(!$password) {
+            $response = array(
+                'errcode' => 10001,
+                'errmsg' => '请输入密码'
+            );
+            $this->responseJSON($response);
+        }
+
+        $User = Admin::model('user.main');
+        $filters = array('Phone' => $phone);
+        $user = $User->findOne($filters);
+        if(!$user) {
+            $response = array(
+                'errcode' => 10002,
+                'errmsg'  => '用户不存在，请先注册'
+            );
+            $this->responseJSON($response);
+        }
+        if($user['Pwd'] != md5($password)) {
+            $response = array(
+                'errcode' => 10003,
+                'errmsg'  => '密码错误'
+            );
+            $this->responseJSON($response);
+        }
+        
+		$time = time();
+		$sign = Config::getOptions('game-server-sign');
+		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
+	    $clientIp = Admin::getRemoteIP();
+		$result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $deviceId, $deviceName);
+        
+	    $userData['userid']     = $user['_id'];
+		$userData['nickname']   = $user['Nickname'];
+		$userData['email']      = $user['Email'];
+		$userData['phone']      = $user['Phone'];
+		$userData['sex']        = $user['Sex'];
+		$userData['status']     = $user['Status'];
+		$userData['online']     = false;
+		$userData['exp']        = 0;
+		$userData['ip']         = $user['Create_ip']; 
+		$userData['photo']      = $user['Photo'];
+		$userData['address']    = $user['Address'];
+		$userData['createtime'] = $user['Create_time'];
+		$userData['sign']       = $user['Sign'];
+		$userData['birth']      = time();
+		$userData['terminal']   = $user['Terminal'];
+		$userData['coin']       = 0;
+		$userData['roomtype']   = 0;
+		$userData['roomid']     = 0;
+		$userData['invitecode'] = '';
+		$userData['diamond']    = 0;
+		$userData['exchange']   = 0;
+		$userData['ticket']     = 0;
+		$userData['vip']        = 0;
+		$userData['win']        = 0;
+		$userData['lost']       = 0;
+		$userData['ping']       = 0;
+		$userData['platform']   = 1;
+		$userData['rupt']       = 0;
+		$userData['sound']      = false;
+		$userData['roomcard']   = $user['RoomCard'];
+		$userData['build']      = '';
+		$userData['token']      = $token;
+		$userData['accessToken'] = '';
+		$userData['timestamp']   = time();
+		$userData['serverIp']    = "{$result[0]}:8005";
+
+		$this->renderJSON($userData);	
+    }
+
+    public function phoneRegAction() {
+        $phone      = trim($this->request->post('phone'));
+        $password   = trim($this->request->post('password'));
+        $password2  = trim($this->request->post('password2'));
+        $deviceId   = trim($this->request->post('deviceId', 'deviceId'));
+        $deviceName = trim($this->request->post('deviceName', 'deviceName'));
+/*
+        $phone = '13533332421';
+        $password = '123456';
+        $password2 = '123456';
+ */
+        if(!$phone) {
+            $response = array(
+                'errcode' => 10000,
+                'errmsg'  => '请填写手机号'
+            );
+            $this->responseJSON($response);
+        }
+
+        if(!$password) {
+            $response = array(
+                'errcode' => 10001,
+                'errmsg'  => '请填写密码'
+            );
+            $this->responseJSON($response);
+        }
+
+        if($password != $password2) {
+            $response = array(
+                'errcode' => 10002,
+                'errmsg' => '密码不一致，请重新输入'
+            );
+            $this->responseJSON($response);
+        }
+        $User = Admin::model('user.main'); 
+        $filters = array('Phone'=>$phone);    
+        $user = $User->findOne($filters);
+        if($user) {
+            $response = array(
+                'errcode' => 10003,
+                'errmsg'  => '此号码已注册，请直接登录'
+            );
+            $this->responseJSON($response);
+        }
+        $userInfo = array(
+            'nickname' => substr($phone, -4),
+            'sex'      => 3,
+            'phone'    => $phone,
+            'pwd'      => md5($password),
+            'platform' => $User::PLATFORM_PHONE
+        );
+        $user = $this->registerAction($userInfo);
+
+		$time = time();
+		$sign = Config::getOptions('game-server-sign');
+		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
+	    $clientIp = Admin::getRemoteIP();
+		$result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $deviceId, $deviceName);
+        
+	    $userData['userid']     = $user['_id'];
+		$userData['nickname']   = $user['Nickname'];
+		$userData['email']      = $user['Email'];
+		$userData['phone']      = $user['Phone'];
+		$userData['sex']        = $user['Sex'];
+		$userData['status']     = $user['Status'];
+		$userData['online']     = false;
+		$userData['exp']        = 0;
+		$userData['ip']         = $user['Create_ip']; 
+		$userData['photo']      = $user['Photo'];
+		$userData['address']    = $user['Address'];
+		$userData['createtime'] = $user['Create_time'];
+		$userData['sign']       = $user['Sign'];
+		$userData['birth']      = time();
+		$userData['terminal']   = $user['Terminal'];
+		$userData['coin']       = 0;
+		$userData['roomtype']   = 0;
+		$userData['roomid']     = 0;
+		$userData['invitecode'] = '';
+		$userData['diamond']    = 0;
+		$userData['exchange']   = 0;
+		$userData['ticket']     = 0;
+		$userData['vip']        = 0;
+		$userData['win']        = 0;
+		$userData['lost']       = 0;
+		$userData['ping']       = 0;
+		$userData['platform']   = 1;
+		$userData['rupt']       = 0;
+		$userData['sound']      = false;
+		$userData['roomcard']   = $user['RoomCard'];
+		$userData['build']      = '';
+		$userData['token']      = $token;
+		$userData['accessToken'] = '';
+		$userData['timestamp']   = time();
+		$userData['serverIp']    = "{$result[0]}:8005";
+
+		$this->renderJSON($userData);	
+    }
+
 }
