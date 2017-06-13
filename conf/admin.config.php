@@ -13,7 +13,7 @@ class Config
             // 数据库
             'db' => require('db.config.php'),
             //三方支付
-            'payment' => require('pay.config.php'),
+            'core' => require('core.config.php'),
             // 网站设置
             'settings' => array(
                     'title'         => '代理商管理系统',
