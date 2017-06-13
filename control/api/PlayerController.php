@@ -279,7 +279,7 @@ class PlayerController extends BaseController {
 		// echo "SEND...\n";
 		$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP) or die("Could not create  socket\n");
 		$gameIpHost = Config::GAME_IP_SERVER_HOST;
-		$gameIpPort = Config::GAME_IP_SERVER_PORT
+		$gameIpPort = Config::GAME_IP_SERVER_PORT;
 		$connection = socket_connect($socket, $gameIpHost, $gameIpPort) or die("Could not connet server\n");
 		socket_write($socket, $message) or die("Write failed\n");
 		$len = socket_read($socket, 1, PHP_NORMAL_READ);
@@ -333,7 +333,7 @@ class PlayerController extends BaseController {
         }
         
 		$time = time();
-		$sign = Config::getOptions('game-server-sign');
+		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
 	    $clientIp = Admin::getRemoteIP();
 		$result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $deviceId, $deviceName);
@@ -440,7 +440,7 @@ class PlayerController extends BaseController {
         $user = $this->registerAction($userInfo);
 
 		$time = time();
-		$sign = Config::getOptions('game-server-sign');
+		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
 	    $clientIp = Admin::getRemoteIP();
 		$result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $deviceId, $deviceName);
