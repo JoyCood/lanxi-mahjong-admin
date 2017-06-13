@@ -154,7 +154,7 @@ class PaymentController extends BaseController {
 					$MoneyInpour->update($filters, $update); //更新交易结果
 
 					//通知游戏服务器发货结果
-					$sign     = Config::getOptions('game-server-sign');
+					$sign     = Config::GAME_SERVER_SIGN;
 					$time     = time();
 					$userid   = (string)$order['Userid'];
 					$transid  = (string)$xmlarr['out_trade_no'];
@@ -173,7 +173,7 @@ class PaymentController extends BaseController {
 						'timestamp' => $time,
 						'key'       => $key
 					);
-					Helper::curl(Config::getOptions('game-server-host'), json_encode($data), 'POST');
+					Helper::curl(Config::GAME_SERVER_HOST), json_encode($data), 'POST');
 				}
             }
         }

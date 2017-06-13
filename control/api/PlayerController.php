@@ -165,11 +165,12 @@ class PlayerController extends BaseController {
 			$user = $this->registerAction($userInfo);
 		}
 		$time = time();
-		$sign = Config::getOptions('game-server-sign');
+		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
 	    $clientIp = Admin::getRemoteIP();
 		$result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $params['deviceId'], $params['deviceName']);
-        
+        $gameServerPort = Config::GAME_SERVER_PORT;
+
 	    $userData['userid']     = $user['_id'];
 		$userData['nickname']   = $user['Nickname'];
 		$userData['email']      = $user['Email'];
@@ -204,7 +205,7 @@ class PlayerController extends BaseController {
 		$userData['token']      = $token;
 		$userData['accessToken'] = $accessToken;
 		$userData['timestamp']   = time();
-		$userData['serverIp']    = "{$result[0]}:8005";
+		$userData['serverIp']    = "{$result[0]}:{$gameServerPort}";
 
 		$this->renderJSON($userData);	
     }
@@ -265,8 +266,9 @@ class PlayerController extends BaseController {
 	protected function apply_ip($project_id, $user_id, $ip, $country, $area, $device_id, $device_name)
 	{
         if(DEBUG) {
-            return array('120.77.175.1'); //todo 开发服ip地址可放到配置文件中
+            return array(Config::DEV_SERVER_HOST); 
         } 
+		
 		$message = 'YY';
 		$message .= pack("CNN", $project_id, $user_id, ip2long($ip));
 		$message .= pack('C', strlen($country)).$country;
@@ -276,7 +278,9 @@ class PlayerController extends BaseController {
 		$ip_bin = pack("N", ip2long($ip));
 		// echo "SEND...\n";
 		$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP) or die("Could not create  socket\n");
-		$connection = socket_connect($socket, "192.168.1.2", 6677) or die("Could not connet server\n");
+		$gameIpHost = Config::GAME_IP_SERVER_HOST;
+		$gameIpPort = Config::GAME_IP_SERVER_PORT
+		$connection = socket_connect($socket, $gameIpHost, $gameIpPort) or die("Could not connet server\n");
 		socket_write($socket, $message) or die("Write failed\n");
 		$len = socket_read($socket, 1, PHP_NORMAL_READ);
 		$recv = socket_read($socket, ord($len), PHP_NORMAL_READ);

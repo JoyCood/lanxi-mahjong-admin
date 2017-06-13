@@ -8,6 +8,17 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
+	//逻辑服信息，购买房卡时用于通知游戏服务器发货结果
+	const GAME_SERVER_HOST = 'http://lanxi.yiiyu.cn:7229/roomcard';
+	const GAME_SERVER_SIGN = 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw';
+
+	const DEV_SERVER_HOST  = '120.77.175.1'; //测试环境游戏服务器IP
+	const GAME_SERVER_PORT = 8005; //游戏服务器端口
+
+	//分配逻辑服IP的服务器地址
+	const GAME_IP_SERVER_HOST = '192.168.1.2';
+	const GAME_IP_SERVER_PORT = 6677;
+
     static function init() {
         self::$Options = array(
             //数据库
@@ -16,10 +27,6 @@ class Config {
             'card' => require('card.config.php'),
             //支付、登录
             'core' => require('core.config.php'), 
-			//游戏服务器地址
-			'game-server-host' => 'http://lanxi.yiiyu.cn:7229/roomcard',
-            //游戏服务器通讯密钥
-			'game-server-sign' => 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw',
             //网站设置
             'settings' => array(
                 'slim' => array(
