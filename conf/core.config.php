@@ -11,5 +11,5 @@ return array(
     'wx.curl.proxy.host' => '0.0.0.0',
     'wx.curl.proxy.port' => '0',
     'wx.report.level' => 1,
-    'wx.notify.url' => 'https://developer.7swim.com/swim/pay/weixin'
+    'wx.notify.url' => 'http://lanxi.yiiyu.cn/api/notify/wechat'
 );
