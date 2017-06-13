@@ -52,7 +52,7 @@ class Config {
                 '/api/card'          => 'POST::CardController::listAction',
                 '/api/wxpay'         => 'POST::PaymentController::wxPayAction',
                 '/api/phone-reg'     => 'POST::PlayerController::phoneRegAction',
-                '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction'
+                '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction',
                 '/api/notify/wechat' => 'POST::PaymentController::wxPayNotifyAction'
             )
         ); 

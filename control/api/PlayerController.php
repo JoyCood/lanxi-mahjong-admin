@@ -264,7 +264,7 @@ class PlayerController extends BaseController {
 
 	protected function apply_ip($project_id, $user_id, $ip, $country, $area, $device_id, $device_name)
 	{
-        if(DEVELOPMENT) {
+        if(DEBUG) {
             return array('120.77.175.1'); //todo 开发服ip地址可放到配置文件中
         } 
 		$message = 'YY';
