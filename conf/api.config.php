@@ -8,9 +8,6 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
-	const WEIXIN_APP_ID = 'wxa0f7643705d54733'; //用于游戏登录
-	const WEIXIN_SECRET = '2046430fc5a9b9ea50ab89285d6d17c6';
-
     static function init() {
         self::$Options = array(
             //数据库
@@ -49,12 +46,12 @@ class Config {
 
             //路由设置
 			'routes' => array(
-				'/api/notice' => 'POST::NoticeController::broadcastAction',
+				'/api/notice'        => 'POST::NoticeController::broadcastAction',
                 '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
-                '/api/card'  => 'GET::CardController::listAction',
-                '/api/wxpay' => 'GET::PaymentController::wxPayAction',
-                '/api/phone-reg' => 'POST::PlayerController::phoneRegAction',
-                '/api/phone-login' => 'POST::PlayerController::phoneLoginAction'
+                '/api/card'          => 'POST::CardController::listAction',
+                '/api/wxpay'         => 'POST::PaymentController::wxPayAction',
+                '/api/phone-reg'     => 'POST::PlayerController::phoneRegAction',
+                '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction'
             )
         ); 
     }
