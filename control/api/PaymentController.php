@@ -115,6 +115,7 @@ class PaymentController extends BaseController {
         
         $xmlobj = simplexml_load_string($xmlstr);
         $xmlarr = get_object_vars($xmlobj);
+        $this->log->debug(json_encode($xmlarr));
 
         if($xmlarr['result_code'] == 'SUCCESS' OR $xmlarr['return _code'])
         {

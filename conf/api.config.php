@@ -41,7 +41,8 @@ class Config {
                 '/api/wechat-login',
 				'/api/wxpay',
                 '/api/phone-reg',
-                '/api/phone-login'
+                '/api/phone-login',
+                '/api/notify/wechat'
             ),
 
             //路由设置
@@ -51,7 +52,8 @@ class Config {
                 '/api/card'          => 'POST::CardController::listAction',
                 '/api/wxpay'         => 'POST::PaymentController::wxPayAction',
                 '/api/phone-reg'     => 'POST::PlayerController::phoneRegAction',
-                '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction'
+                '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction',
+                '/api/notify/wechat' => 'POST::PaymentController::wxPayNotifyAction'
             )
         ); 
     }
