@@ -9,14 +9,27 @@ require_once('lib/wxpay/WxPay.Notify.php');
 class PaymentController extends BaseController {
     //下单
     public function wxPayAction() {
-        $userId = $this->request->post('userId');         
-        $cardId = $this->request->post('cardId');
+        $userId    = $this->request->post('userId');         
+        $cardId    = $this->request->post('cardId');
+        $nonceStr  = $this->request->post('nonceStr');
+        $timestamp = $this->request->post('timestamp');
+        $sign      = $this->request->post('sign');
+
+        $key = '9hK200FSCXZx_321/78F84ERxop2qbMT';
+        
+        $hash = md5("{$userId}{$key}{$cardId}{$nonceStr}{$timestamp}");
+        /*
+        $userId = '10000';
+        $cardId = '1';
+        */
+        $appid  = 'wxd32d25b2a43c0f93';
+        $mchid  = '1312998901';
         $card   = Config::get('card', $cardId);
 
         if(!$card) {
             $this->responseJSON(array(
-                'code' => 10000,
-                'msg'  => '商品不存在',
+                'errcode' => 10000,
+                'errmsg'  => '商品不存在',
             ));
         }
 
@@ -24,8 +37,8 @@ class PaymentController extends BaseController {
         $user = Admin::model('user.main')->findOne($filter);
         if(!$user) {
             $this->responseJSON(array(
-                'code' => 10001, 
-                'msg'  => '用户不存在'
+                'errcode' => 10001, 
+                'errmsg'  => '用户不存在'
             ));
         }
         $MoneyInpour = Admin::model('money.inpour');
@@ -53,9 +66,12 @@ class PaymentController extends BaseController {
 
         $nonceStr = md5(Helper::mkrand());
         $input = new WxPayUnifiedOrder();
-        $input->SetAppid(Config::get('core', 'wx.app.id'));
-        $input->SetMch_id(Config::get('core', 'wx.mch.id'));
-        $input->SetBody($card['Title']);
+        //$input->SetAppid(Config::get('core', 'wx.app.id'));
+        //$input->SetMch_id(Config::get('core', 'wx.mch.id'));
+        $input->SetAppid($appid);
+        $input->SetMch_id($mchid);
+        //$input->SetBody($card['Title']);
+        $input->SetBody('培训课程');
         $input->SetNonce_str($nonceStr);
         $input->SetOut_trade_no($transId);
         $input->SetTotal_fee($card['Money'] * 100);
@@ -65,16 +81,16 @@ class PaymentController extends BaseController {
 
         if(!isset($prepay['prepay_id'])) {
             $this->responseJSON(array(
-                'code' => 10002, 
-                'msg'  => '支付出错，请稍后重试'
+                'errcode' => 10002, 
+                'errmsg'  => '支付出错，请稍后重试'
             ));
         }
 
         $paramters = array(
-            'appid'     => Config::get('core', 'wx.app.id'),
+            'appid'     => $appid, //Config::get('core', 'wx.app.id'),
             'noncestr'  => $nonceStr,
             'package'   => 'Sign=WXPay',
-            'partnerid' => Config::get('core', 'wx.mch.id'),
+            'partnerid' => $mchid, //Config::get('core', 'wx.mch.id'),
             'prepayid'  => $prepay['prepay_id'],
             'timestamp' => time(),
         );
@@ -85,7 +101,7 @@ class PaymentController extends BaseController {
         $result = $wxPayDataBase->getValues();
         $result['out_trade_no'] = $transId;
         $data = array(
-            'code' => 0,
+            'errcode' => 0,
             'data' => $result
         );
         $this->renderJSON($data);
