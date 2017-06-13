@@ -375,6 +375,7 @@ class PlayerController extends BaseController {
 
     public function phoneRegAction() {
         $phone      = trim($this->request->post('phone'));
+        $nickname   = trim($this->request->post('nickname'));
         $password   = trim($this->request->post('password'));
         $password2  = trim($this->request->post('password2'));
         $deviceId   = trim($this->request->post('deviceId', 'deviceId'));
@@ -392,9 +393,17 @@ class PlayerController extends BaseController {
             $this->responseJSON($response);
         }
 
-        if(!$password) {
+        if(!$nickname) {
             $response = array(
                 'errcode' => 10001,
+                'errmsg'  => '请填写昵称'
+            );
+            $this->responseJSON($response);
+        }
+
+        if(!$password) {
+            $response = array(
+                'errcode' => 10002,
                 'errmsg'  => '请填写密码'
             );
             $this->responseJSON($response);
@@ -402,7 +411,7 @@ class PlayerController extends BaseController {
 
         if($password != $password2) {
             $response = array(
-                'errcode' => 10002,
+                'errcode' => 10003,
                 'errmsg' => '密码不一致，请重新输入'
             );
             $this->responseJSON($response);
@@ -412,13 +421,13 @@ class PlayerController extends BaseController {
         $user = $User->findOne($filters);
         if($user) {
             $response = array(
-                'errcode' => 10003,
+                'errcode' => 10004,
                 'errmsg'  => '此号码已注册，请直接登录'
             );
             $this->responseJSON($response);
         }
         $userInfo = array(
-            'nickname' => substr($phone, -4),
+            'nickname' => $nickname,
             'sex'      => 3,
             'phone'    => $phone,
             'pwd'      => md5($password),
