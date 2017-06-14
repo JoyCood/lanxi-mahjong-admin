@@ -29,7 +29,7 @@ class Config
             ),
             // 日志
             'log' => array(
-                    'dir'  => DOC_ROOT. '/logs/admin',
+                    'dir'  => '/var/log/lanxi-mahjong/admin',
                     'file' => 'log-'. date('Y-m-d'). '.log',
             ),
             // 免登录

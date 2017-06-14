@@ -37,7 +37,7 @@ class Config
                 ),
                 // 日志
                 'log' => array(
-                        'dir'  => DOC_ROOT. '/logs/region',
+                        'dir'  => '/var/log/lanxi-mahjong/region',
                         'file' => 'log-'. date('Y-m-d'). '.log',
                 ),
                 // 免登录

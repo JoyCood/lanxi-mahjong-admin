@@ -23,7 +23,12 @@ class Config {
 
 	//分配逻辑服IP的服务器地址
 	const GAME_IP_SERVER_HOST = '192.168.1.2';
-	const GAME_IP_SERVER_PORT = 6677;
+    const GAME_IP_SERVER_PORT = 6677;
+
+    const BROADCAST_ENABLED   = TRUE; //是否显示公告栏跑马灯
+    const PHONE_LOGIN_ENABLED = TRUE; //是否允许手机号登录
+    const PHONE_REG_ENABLED   = TRUE; //是否允许手机注册
+    const APPLE_PAY_ENABLED   = TRUE; //是否打开苹果内购支付
 
     static function init() {
         self::$Options = array(
@@ -55,18 +60,20 @@ class Config {
 				'/api/wxpay',
                 '/api/phone-reg',
                 '/api/phone-login',
-                '/api/notify/wechat'
+                '/api/notify/wechat',
+                '/api/toggle'
             ),
 
             //路由设置
 			'routes' => array(
-				'/api/notice'        => 'POST::NoticeController::broadcastAction',
+				'/api/notice'        => 'POST::SystemController::broadcastAction',
                 '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
                 '/api/card'          => 'POST::CardController::listAction',
-                '/api/wxpay'         => 'POST::PaymentController::wxPayAction',
+                '/api/wxpay'         => 'POST::CardController::wxPayAction',
                 '/api/phone-reg'     => 'POST::PlayerController::phoneRegAction',
                 '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction',
-                '/api/notify/wechat' => 'POST::PaymentController::wxPayNotifyAction'
+                '/api/notify/wechat' => 'POST::CardController::wxPayNotifyAction',
+                '/api/toggle'        => 'POST::SystemController::toggleAction',
             )
         ); 
     }

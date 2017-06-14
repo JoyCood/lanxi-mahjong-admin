@@ -27,7 +27,7 @@ class Config {
             ),
             //日志
             'log' => array(
-                'dir' => DOC_ROOT .  '/logs/wechat',
+                'dir' => '/var/log/lanxi-mahjong/wechat',
                 'file' => 'log-'. date('Y-m-d'). '.log',
             ),
 
