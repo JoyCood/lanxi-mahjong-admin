@@ -15,10 +15,12 @@ class PaymentController extends BaseController {
         $timestamp = $this->request->post('timestamp');
         $sign      = $this->request->post('sign');
 
+        $this->log->debug(json_encode($this->request->post()));
+
         $key = '9hK200FSCXZx_321/78F84ERxop2qbMT';
         
         $hash = md5("{$userId}{$key}{$cardId}{$nonceStr}{$timestamp}");
-        /*
+       /* 
         $userId = '10000';
         $cardId = '1';
         */
@@ -78,7 +80,7 @@ class PaymentController extends BaseController {
         $input->SetTrade_type('APP');
         $input->SetNotify_url(Config::get('core', 'wx.notify.url'));
         $prepay = WxPayApi::unifiedOrder($input);
-
+        $this->log->debug(json_encode($prepay));
         if(!isset($prepay['prepay_id'])) {
             $this->responseJSON(array(
                 'errcode' => 10002, 
@@ -173,7 +175,7 @@ class PaymentController extends BaseController {
 						'timestamp' => $time,
 						'key'       => $key
 					);
-					Helper::curl(Config::GAME_SERVER_HOST), json_encode($data), 'POST');
+					Helper::curl(Config::GAME_SERVER_HOST, json_encode($data), 'POST');
 				}
             }
         }

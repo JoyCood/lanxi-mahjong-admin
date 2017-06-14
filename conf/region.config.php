@@ -8,10 +8,6 @@ class Config
     const SESSION_USER  = 'lanxi-region-user';
     const SESSION_GROUP = 'lanxi-region-group';
 
-	//公众号
-	const MP_APP_ID = 'wxd70a955fe9efa1e8';
-	const MP_SECRET = 'be1934227f8fbbb34b630f70d83e9d42';
-
     static public function & get($key, $field) {
         return self::$Options[$key][$field];
     }
