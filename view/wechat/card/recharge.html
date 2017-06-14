@@ -105,7 +105,7 @@
                 </div>
                 <div class="form-action">
                     <input type="hidden" id="recharge-target-value" name="target" />
-                    <button id="recharge-submit-btn" type="submit" class="btn btn-success btn-disabled form-control" disabled="disabled">确定</button>
+                    <button id="recharge-submit-btn" type="submit" class="btn btn-success  form-control">确定</button>
                 </div>
             </form>
         </div>
@@ -191,11 +191,11 @@ $(document).ready(function() {
                 }
             },
             success: function(resp) {
-                if(resp && resp.data && resp.data.appid) {
-                    wxPay(resp.data);
+                if(resp && resp.appid) {
+                    wxPay(resp);
                 } else {
                     App.Notific.alert('操作异常，请稍候再试');
-                }
+                }  //用于登录<C-D-a>
             }
         });
         return false;

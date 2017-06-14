@@ -8,8 +8,27 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
-	const WEIXIN_APP_ID = 'wxa0f7643705d54733';
-	const WEIXIN_SECRET = '2046430fc5a9b9ea50ab89285d6d17c6';
+    //新注册用户赠送的房卡数量
+    const INIT_ROOM_CARD = 1000;
+
+    //微信支付下单key
+    const PAY_KEY = '9hK200FSCXZx_321/78F84ERxop2qbMT';
+
+	//逻辑服信息，购买房卡时用于通知游戏服务器发货结果
+	const GAME_SERVER_HOST = 'http://lanxi.yiiyu.cn:7229/roomcard';
+	const GAME_SERVER_SIGN = 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw';
+
+	const DEV_SERVER_HOST  = '120.77.175.1'; //测试环境游戏服务器IP
+	const GAME_SERVER_PORT = 8005; //游戏服务器端口
+
+	//分配逻辑服IP的服务器地址
+	const GAME_IP_SERVER_HOST = '192.168.1.2';
+    const GAME_IP_SERVER_PORT = 6677;
+
+    const BROADCAST_ENABLED   = TRUE; //是否显示公告栏跑马灯
+    const PHONE_LOGIN_ENABLED = TRUE; //是否允许手机号登录
+    const PHONE_REG_ENABLED   = TRUE; //是否允许手机注册
+    const APPLE_PAY_ENABLED   = TRUE; //是否打开苹果内购支付
 
     static function init() {
         self::$Options = array(
@@ -17,12 +36,8 @@ class Config {
             'db' => require('db.config.php'), 
             //房卡
             'card' => require('card.config.php'),
-            //支付
-            'payment' => require('pay.config.php'), 
-			//游戏服务器地址
-			'game-server-host' => 'http://lanxi.yiiyu.cn:7229/roomcard',
-            //游戏服务器通讯密钥
-			'game-server-sign' => 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw',
+            //支付、登录
+            'core' => require('core.config.php'), 
             //网站设置
             'settings' => array(
                 'slim' => array(
@@ -33,27 +48,32 @@ class Config {
             ),
             //日志
             'log' => array(
-                'dir' => DOC_ROOT .  '/logs/api',
+                'dir'  => '/var/log/lanxi-mahjong/api',
                 'file' => 'log-'. date('Y-m-d'). '.log',
             ),
 
             //免登录 
 			'notauth' => array(
 				'/api/notice',
-				'/api/ip',
                 '/api/card',
                 '/api/wechat-login',
 				'/api/wxpay',
-				'/api/wechat-test',
+                '/api/phone-reg',
+                '/api/phone-login',
+                '/api/notify/wechat',
+                '/api/toggle'
             ),
 
             //路由设置
 			'routes' => array(
-				'/api/notice' => 'POST::NoticeController::broadcastAction',
-				'/api/ip' => 'GET::PlayerController::ipTestAction',
+				'/api/notice'        => 'POST::SystemController::broadcastAction',
                 '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
-                '/api/card'  => 'GET::CardController::listAction',
-                '/api/wxpay' => 'GET::PaymentController::wxPayAction'
+                '/api/card'          => 'POST::CardController::listAction',
+                '/api/wxpay'         => 'POST::CardController::wxPayAction',
+                '/api/phone-reg'     => 'POST::PlayerController::phoneRegAction',
+                '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction',
+                '/api/notify/wechat' => 'POST::CardController::wxPayNotifyAction',
+                '/api/toggle'        => 'POST::SystemController::toggleAction',
             )
         ); 
     }

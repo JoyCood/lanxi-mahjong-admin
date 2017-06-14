@@ -1,21 +1,24 @@
 <?php
 return array(
     '1' => array(
-        'Title'   => '房卡',
+        'Id'      => '1',
+        'Title'   => '房卡10张',
         'CardNum' => 10,
         'Money'   => 0.01,
         'Default' => false,
     ),
     '2' => array(
-        'Title'   => '房卡',
+        'Id'      => '2',
+        'Title'   => '房卡30张',
         'CardNum' => 30,
-        'Money'   => 300,
+        'Money'   => 0.02,
         'Default' => true,
     ),
     '3' => array(
-        'Title'   => '房卡',
+        'Id'      => '3',
+        'Title'   => '房卡50张',
         'CardNum' => 50,
-        'Money'   => 500,
+        'Money'   => 0.03,
         'Default' => false,
     ),
 );

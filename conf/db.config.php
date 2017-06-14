@@ -1,7 +1,7 @@
 <?php
 return array(
-    // 'host' => '127.0.0.1',
     'host'        => '120.77.175.1',
+    //'host'        => '192.168.6.11',
     'name'        => 'lanxi_db',
     'port'        => 27017,
     'connect'     => true,

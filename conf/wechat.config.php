@@ -8,9 +8,6 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
-	//公众号
-	const MP_APP_ID = 'wxd70a955fe9efa1e8';
-	const MP_SECRET = 'be1934227f8fbbb34b630f70d83e9d42';
 
     static function init() {
         self::$Options = array(
@@ -18,8 +15,8 @@ class Config {
             'db' => require('db.config.php'), 
             //房卡
             'card' => require('card.config.php'),
-            //支付
-            'payment' => require('pay.config.php'), 
+            //支付、登录
+            'core' => require('core.config.php'), 
             //网站设置
             'settings' => array(
                 'slim' => array(
@@ -30,7 +27,7 @@ class Config {
             ),
             //日志
             'log' => array(
-                'dir' => DOC_ROOT .  '/logs/wechat',
+                'dir' => '/var/log/lanxi-mahjong/wechat',
                 'file' => 'log-'. date('Y-m-d'). '.log',
             ),
 

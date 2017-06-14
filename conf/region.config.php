@@ -8,10 +8,6 @@ class Config
     const SESSION_USER  = 'lanxi-region-user';
     const SESSION_GROUP = 'lanxi-region-group';
 
-	//公众号
-	const MP_APP_ID = 'wxd70a955fe9efa1e8';
-	const MP_SECRET = 'be1934227f8fbbb34b630f70d83e9d42';
-
     static public function & get($key, $field) {
         return self::$Options[$key][$field];
     }
@@ -24,6 +20,8 @@ class Config
         self::$Options = array(
                 // 数据库
                 'db' => require('db.config.php'),
+				//支付、登录
+				'core' => require('core.config.php'),
                 // 网站设置
                 'settings' => array(
                         'title'         => '区域管理',
@@ -39,7 +37,7 @@ class Config
                 ),
                 // 日志
                 'log' => array(
-                        'dir'  => DOC_ROOT. '/logs/region',
+                        'dir'  => '/var/log/lanxi-mahjong/region',
                         'file' => 'log-'. date('Y-m-d'). '.log',
                 ),
                 // 免登录

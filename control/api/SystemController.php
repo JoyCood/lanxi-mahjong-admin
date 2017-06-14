@@ -1,7 +1,19 @@
-<?php 
+<?php
 require(DOC_ROOT. '/control/BaseController.php');
 
-class NoticeController extends BaseController {
+class SystemController extends BaseController {
+    //一些开关设置
+    public function toggleAction() {
+        $data = array(
+            'broadcast'   => Config::BROADCAST_ENABLED,
+            'phone-login' => Config::PHONE_LOGIN_ENABLED,
+            'phone-reg'   => Config::PHONE_REG_ENABLED,
+            'apple-pay'   => Config::APPLE_PAY_ENABLED
+        );
+        $this->responseJSON($data);
+    }
+
+    //系统公告跑马灯
     public function broadcastAction() {
 	    $filters = array();
 		$projection = array('_id'=>0, 'Content'=>1);
