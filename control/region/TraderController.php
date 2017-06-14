@@ -25,7 +25,7 @@ class TraderController extends WechatController {
 					$this->registerAction();
 				}
 			} else { //非游戏玩家,todo:跳转到游戏下载页
-				header("Location:lanxi.cn/lanxi/wechat/download");
+				header("Location:http://lanxi.yiiyu.cn/wechat/download");
 			}
 		}
 	}
