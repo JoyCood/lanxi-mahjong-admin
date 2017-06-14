@@ -143,6 +143,7 @@ Responsive Utils
 	transition: transform .2s ease-in;
 	transform: translate3d(0, -100%, 0);
 	display: none;
+	user-select: none; -webkit-user-select: none;
 }
 .app-dialog.open {
 	transform: translate3d(0, 0, 0);
@@ -156,7 +157,7 @@ Responsive Utils
 	box-shadow: 0 0 6px #999;
 }
 .app-dialog-header {
-	position: relative;
+	position: relative; cursor: default;
 	height: 44px; line-height: 44px;
 	border-bottom: 1px solid #e5e5e5;
 }
@@ -173,6 +174,7 @@ Responsive Utils
 .app-dialog-body {
 	min-width: 280px; 
 	padding: 10px;
+	user-select: text; -webkit-user-select: text;
 }
 .app-dialog-content {
 	min-height: 40px; margin: 0 6px;
