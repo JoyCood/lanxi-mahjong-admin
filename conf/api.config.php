@@ -8,6 +8,9 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
+    //微信支付下单key
+    const PAY_KEY = '9hK200FSCXZx_321/78F84ERxop2qbMT';
+
 	//逻辑服信息，购买房卡时用于通知游戏服务器发货结果
 	const GAME_SERVER_HOST = 'http://lanxi.yiiyu.cn:7229/roomcard';
 	const GAME_SERVER_SIGN = 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw';

@@ -9,17 +9,21 @@ require_once('lib/wxpay/WxPay.Notify.php');
 class PaymentController extends BaseController {
     //下单
     public function wxPayAction() {
-        $userId    = $this->request->post('userId');         
-        $cardId    = $this->request->post('cardId');
-        $nonceStr  = $this->request->post('nonceStr');
-        $timestamp = $this->request->post('timestamp');
-        $sign      = $this->request->post('sign');
+        $userId    = trim($this->request->post('userId'));         
+        $cardId    = trim($this->request->post('cardId'));
+        $nonceStr  = trim($this->request->post('nonceStr'));
+        $timestamp = trim($this->request->post('timestamp'));
+        $sign      = trim($this->request->post('sign'));
 
-        $this->log->debug(json_encode($this->request->post()));
-
-        $key = '9hK200FSCXZx_321/78F84ERxop2qbMT';
+        $key = Config::PAY_KEY;
         
         $hash = md5("{$userId}{$key}{$cardId}{$nonceStr}{$timestamp}");
+        if($hash != $sign) {
+            $this->responseJSON(array(
+                'errcode' => 10000,
+                'errmsg'  => '非法请求'
+            ));
+        }
        /* 
         $userId = '10000';
         $cardId = '1';
@@ -30,7 +34,7 @@ class PaymentController extends BaseController {
 
         if(!$card) {
             $this->responseJSON(array(
-                'errcode' => 10000,
+                'errcode' => 10001,
                 'errmsg'  => '商品不存在',
             ));
         }
@@ -39,7 +43,7 @@ class PaymentController extends BaseController {
         $user = Admin::model('user.main')->findOne($filter);
         if(!$user) {
             $this->responseJSON(array(
-                'errcode' => 10001, 
+                'errcode' => 10002, 
                 'errmsg'  => '用户不存在'
             ));
         }
@@ -80,10 +84,11 @@ class PaymentController extends BaseController {
         $input->SetTrade_type('APP');
         $input->SetNotify_url(Config::get('core', 'wx.notify.url'));
         $prepay = WxPayApi::unifiedOrder($input);
-        $this->log->debug(json_encode($prepay));
         if(!isset($prepay['prepay_id'])) {
+            $this->log->debug(json_encode($prepay));
+
             $this->responseJSON(array(
-                'errcode' => 10002, 
+                'errcode' => 10003, 
                 'errmsg'  => '支付出错，请稍后重试'
             ));
         }
