@@ -1,0 +1,465 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"border-",
+				"border-bottom"
+			],
+			[
+				"utf",
+				"utf8_encode"
+			],
+			[
+				"mem",
+				"memberCourse"
+			],
+			[
+				"Book",
+				"BookmarkContent"
+			],
+			[
+				"repo",
+				"repository"
+			],
+			[
+				"re",
+				"reverse"
+			],
+			[
+				"bookmark-",
+				"bookmark-toaster"
+			],
+			[
+				"resize",
+				"nw-resize"
+			],
+			[
+				"tw",
+				"tweetId"
+			],
+			[
+				"tmpl",
+				"templatePath"
+			],
+			[
+				"backgrou",
+				"background-color"
+			],
+			[
+				"inlin",
+				"inline-block"
+			],
+			[
+				"trans",
+				"translate3d"
+			],
+			[
+				"defa",
+				"defaultValue"
+			],
+			[
+				"get",
+				"getSwitchMethod"
+			],
+			[
+				"border-r",
+				"border-radius"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 104.0,
+		"last_filter": "install",
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 520.0
+	},
+	"console":
+	{
+		"height": 146.0,
+		"history":
+		[
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen('http://sublime.wbond.net/' + pf.replace(' ','%20')).read())",
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)",
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen('http://sublime.wbond.net/' + pf.replace(' ','%20')).read())",
+			"import  urllib.request,os;pf='Package Control.sublime-package';ipp=sublime.installed_packages_path();urllib.request.install_opener(urllib.request.build_opener(urllib.request.ProxyHandler()));open(os.path.join(ipp,pf),'wb').write(urllib.request.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read())"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/afos/www/swim-admin/view/_base.html",
+		"/home/afos/www/swim.sublime-project",
+		"/home/afos/www/swim-admin/js/3rd/upyun-upload/lib/upyun-mu.js",
+		"/home/afos/www/swim-admin/view/interview/index.html",
+		"/home/afos/www/swim-admin/view/interview/form.html",
+		"/home/afos/www/swim-admin/js/3rd/upyun-upload/README.md",
+		"/home/afos/www/swim-admin/view/match/form.html",
+		"/home/afos/www/swim-admin/view/news/form.html",
+		"/home/afos/VMShare/zcmdbapirequest.py",
+		"/home/afos/www/ks/designer/js/3rd/zepto-fx.js",
+		"/home/afos/www/zcp/srv/js/src/fn.js",
+		"/home/afos/www/ks/designer/js/3rd/zepto/fx_methods.js",
+		"/home/afos/www/ks/designer/js/3rd/zepto/fx.js",
+		"/home/afos/www/swim-admin/model/model.course.order.php",
+		"/home/afos/www/zcp/srv/js/src/app.js",
+		"/home/afos/www/swim-admin/view/order/teacher-form.html",
+		"/home/afos/www/swim-admin/model/model.teacher.main.php",
+		"/home/afos/www/swim-admin/course.php",
+		"/home/afos/www/swim-admin/view/course/form.html",
+		"/home/afos/www/swim-admin/view/course/category-form.html",
+		"/home/afos/www/swim-admin/news.php",
+		"/home/afos/www/swim-admin/view/order/code-form.html",
+		"/home/afos/www/swim-admin/order.php",
+		"/home/afos/www/swim-admin/view/order/index.html",
+		"/home/afos/www/swim-admin/view/course/category.html",
+		"/home/afos/www/swim-admin/model/model.course.category.php",
+		"/home/afos/www/swim-admin/view/course/category-list.html",
+		"/home/afos/www/swim-admin/view/order/list.html",
+		"/home/afos/www/swim-admin/tweet.php",
+		"/home/afos/www/swim-admin/model/model.course.area.php",
+		"/home/afos/www/swim-admin/view/course/area-list.html",
+		"/home/afos/www/swim-admin/view/course/area-form.html",
+		"/home/afos/web.sublime-project",
+		"/home/afos/VMShare/www/ad.html",
+		"/home/afos/www/swim-admin/conf/config.php",
+		"/home/afos/www/libs/js/hs/hs-table.css",
+		"/etc/nginx/nginx.conf",
+		"/etc/nginx/conf.d/default.conf",
+		"/home/afos/www/htdoc/index.html",
+		"/home/afos/www/htdoc/web/app/view/front/table/index.html",
+		"/home/afos/www/libs/js/hs/hs-table.js",
+		"/home/afos/www/htdoc/web/app/control/front/default.control.php",
+		"/home/afos/zops.sh",
+		"/home/afos/www/htdoc/web/app/view/front/index.html",
+		"/home/afos/VMShare/test.htm",
+		"/home/afos/platform/git/zops/server/agent/bin/zops_agent.sh",
+		"/home/afos/zops-start.sh",
+		"/home/afos/zops-stop.sh",
+		"/home/afos/www/htdoc/web/app/view/front/table/doc.html",
+		"/home/afos/www/svnc/index.html",
+		"/home/afos/www/htdoc/test/test.php",
+		"/home/afos/www/libs/php/Slim/Http/Request.php",
+		"/home/afos/www/libs/php/Slim/Slim.php",
+		"/home/afos/www/libs/php/SlimEx.php",
+		"/home/afos/www/libs/php/Curl/Curl.php",
+		"/home/afos/www/libs/php/Slim/Http/Util.php",
+		"/home/afos/www/libs/php/MongoEx.php",
+		"/home/afos/www/libs/php/MongoEx.html",
+		"/home/afos/www/libs/php/smarty/COMPOSER_RELEASE_NOTES.txt",
+		"/home/afos/www/htdoc/web/index.php",
+		"/home/afos/www/libs/php/Slim/Views/Smarty.php",
+		"/home/afos/www/htdoc/web/config.php",
+		"/home/afos/www/libs/php/Slim/Environment.php",
+		"/home/afos/www/htdoc/web/log/front.log",
+		"/home/afos/www/libs/php/http.code.php",
+		"/home/afos/www/libs/php/smarty/libs/Smarty.class.php",
+		"/home/afos/www/htdoc/web/app/view/front/_error.html",
+		"/home/afos/www/htdoc/web/app/view/index.html",
+		"/home/afos/www/libs/php/Slim/Views/Twig.php",
+		"/etc/nginx/sites-available/default",
+		"/home/afos/www/libs/php/Slim/Middleware/SessionCookie.php",
+		"/home/afos/platform/ops/zops/web/application/controllers/zops/zops_release.php",
+		"/home/afos/www/search/web/lib/Slim/Helper/Set.php",
+		"/home/afos/www/search/web/lib/Slim/Slim.php",
+		"/home/afos/www/search/web/lib/SlimEx.php",
+		"/home/afos/www/search/web/lib/Slim/SlimLoader.php",
+		"/home/afos/VMShare/jjgd.pdf.php",
+		"/home/afos/桌面/pdf.txt",
+		"/tmp/fz3temp-1/pdf.setting.inc.php",
+		"/tmp/fz3temp-1/jjgd.pdf 2.php",
+		"/tmp/fz3temp-1/jjgd.pdf.php",
+		"/tmp/fz3temp-1/chinese.php",
+		"/tmp/fz3temp-1/fpdf.php",
+		"/home/afos/VMShare/jump.py",
+		"/home/afos/www/search/index.php",
+		"/home/afos/www/htdoc/wyy/src/SlimEx.php",
+		"/home/afos/www/search/web/lib/Slim/Views/Smarty.php",
+		"/home/afos/www/search/web/lib/Slim/Views/Twig.php",
+		"/home/afos/www/search/web/lib/Slim/View.php",
+		"/home/afos/www/htdoc/wyy/site/view/test.html",
+		"/home/afos/jssh.py",
+		"/home/afos/www/htdoc/wyy/paypal/readme.txt",
+		"/home/afos/www/htdoc/wyy/paypal/process.php",
+		"/home/afos/www/htdoc/wyy/conf/config.php",
+		"/home/afos/www/htdoc/wyy/site/view/member/order-list.html",
+		"/home/afos/www/htdoc/wyy/site/lang/zh.php",
+		"/home/afos/www/htdoc/wyy/site/lang/en.php",
+		"/home/afos/www/htdoc/wyy/site/control/control.course.php",
+		"/home/afos/www/htdoc/wyy/src/Helper.php",
+		"/home/afos/www/htdoc/wyy/src/TwigExt.php",
+		"/home/afos/www/htdoc/wyy/common.php",
+		"/home/afos/www/htdoc/wyy/nginx.conf.sample",
+		"/home/afos/www/htdoc/wyy/index.php",
+		"/home/afos/www/htdoc/wyy/src/MongoEx.php",
+		"/home/afos/www/htdoc/wyy/site/control/control.member.php",
+		"/home/afos/www/htdoc/wyy/admin/view/_base.html",
+		"/home/afos/www/htdoc/wyy/admin/view/_macro.html",
+		"/home/afos/www/htdoc/wyy/admin/model/model.course.assignment.php",
+		"/home/afos/www/htdoc/wyy/admin/view/member/assignment-list.html",
+		"/home/afos/www/htdoc/wyy/admin/view/member/assignment.html",
+		"/home/afos/www/htdoc/wyy/admin/control/control.member.php",
+		"/home/afos/www/htdoc/wyy/site/view/member/regist.html",
+		"/home/afos/www/htdoc/wyy/paypal/index.php",
+		"/home/afos/www/htdoc/wyy/site/view/home/cart.html",
+		"/home/afos/www/htdoc/wyy/paypal/paypal_standard.php",
+		"/home/afos/www/htdoc/wyy/css/default/main.css",
+		"/home/afos/www/htdoc/wyy/js/client.js",
+		"/home/afos/www/htdoc/wyy/site/lang.php",
+		"/home/afos/www/htdoc/wyy/site/control/control.home.php",
+		"/home/afos/www/htdoc/wyy/site/view/_base.html",
+		"/home/afos/下载/wyy-strong/common.php",
+		"/home/afos/www/htdoc/wyy/admin/model/model.member.main.php",
+		"/home/afos/.config/sublime-text-3/Packages/User/Default (Linux).sublime-keymap",
+		"/home/afos/VMShare/www/console.log",
+		"/home/afos/platform/opts/zops/web/application/controllers/zops/zops_release.php",
+		"/home/afos/platform/opts/zops/web/resources/zops/js/addModule.js",
+		"/tmp/fz3temp-1/co.pdf.php",
+		"/tmp/fz3temp-1/showco.php"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 96.0,
+		"where_history":
+		[
+			"/home/afos/www/swim-admin",
+			"/home/afos/www/swim-admin/js",
+			"/home/afos/www/libs/php/Slim",
+			"/home/afos/www/htdoc/phpMyAdmin"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"app-multipart-upload",
+			"UPYun",
+			"app-multipart-upload",
+			"video-media-up",
+			"dasherize",
+			"beginTrain",
+			"promotion",
+			"belong",
+			"9527",
+			"getScriptName",
+			"url",
+			"setDefaultTimeout",
+			"argument",
+			"getIp",
+			"ip",
+			"encodeSecureCookie",
+			"cookies.encrypt",
+			"function halt",
+			"halt",
+			"$this->Collection",
+			"OBJECT_ID",
+			"    ",
+			"getConfig",
+			"view",
+			"render",
+			"view()",
+			"getView",
+			"error",
+			"view",
+			"cache",
+			"view",
+			"models.path",
+			"$this->config",
+			"function config(",
+			"config(",
+			"config",
+			"status",
+			"render",
+			"slim.before",
+			"getLog",
+			"stage",
+			"group",
+			"getDefaultSettings",
+			"function error",
+			"defaultError",
+			"config",
+			"getDefaultSettings",
+			"	",
+			"paypal",
+			"is_video",
+			"login",
+			"login.css",
+			"    ",
+			"	",
+			"stage",
+			"state",
+			"1045",
+			"    ",
+			"translate3d",
+			"disabled",
+			"CurrentContent",
+			".pure-button",
+			",  ",
+			".pure-form",
+			",  ",
+			".pure-form",
+			"log",
+			"freshMsgCounter",
+			"member-yes-btn",
+			"getPageByUrl",
+			"updateProfile",
+			"chosen",
+			"allow",
+			"admin/",
+			"$_SESSION",
+			"autoload",
+			"getPageByUrl",
+			"man/",
+			"WS.load",
+			"countQuantity",
+			"App.page",
+			"run",
+			"/>\n",
+			"						\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"$this->CollectionObj",
+			"	",
+			"    ",
+			"	",
+			"BookmarkContent",
+			".btn",
+			" ",
+			", ",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "hs-table.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 271.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

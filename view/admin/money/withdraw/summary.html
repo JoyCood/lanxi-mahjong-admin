@@ -1,0 +1,71 @@
+<div id="money-container">
+    <ol class="breadcrumb">
+        <li><a href="admin/"><i class="fa fa-home"></i> 首页</a></li>
+        <li><a href="admin/money/">代理商</a></li>
+        <li class="active">返现汇总</li>
+    </ol>
+    {% set url = url_path() %}
+    {% set formUrl = url ~ '/#form/' %}
+    {% set listUrl = url ~ '/#list' %}
+    <div id="money-content" class="portlet hs-table">
+        <header class="portlet_header">
+            <h1>返现汇总</h1>
+            <nav id="money-bar">
+                <form id="money-search-form" class="input-group" role="search">
+                    <div class="input-group">
+                        <input id="money-search-start" name="start" size="16" type="text" value="{{start|date('Y-m-d')}}" placeholder="开始日期" readonly class="form-control" />
+                    </div>
+                    <span class="input-group-btn">
+                        <span class="input-group-addon">-</span>
+                    </span>
+                    <div class="input-group">
+                        <input id="money-search-end" name="end" size="16" type="text" value="{{end|date('Y-m-d')}}" placeholder="结束日期" readonly class="form-control" />
+                    </div>
+                    <span class="input-group-btn">
+                    </span>
+                    <div class="input-group">
+                        <input id="money-search-game-id" name="gameid" value="{{gameid}}" placeholder="游戏ID" class="form-control" />
+                    </div>
+                    <span class="input-group-btn">
+                        <button id="money-search-submit" class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                    </span>
+                </form>
+            </nav>
+        </header>
+        <main class="portlet_main">
+            <table app-check-rel="#money-bar">
+                <thead>
+                    <tr>
+                        <!--<th width="40" align="center"><input type="checkbox" app-check="all" /></th>-->
+                        <th width="60">游戏ID</th>
+                        <th>手机号</th>
+                        <th width="100" class="hidden-1024">微信号</th>
+                        <th width="100" align="right">提现金额</th>
+                        <th width="100" align="right" class="hidden-800">可提金额</th>
+                        <th width="160" class="hidden-800">提现时间</th>
+                    </tr>
+                </thead> 
+                <tbody>
+                    {#% for item in data.items %}
+                    <tr app-check="on">
+                        <!--<td align="center"><input type="checkbox" app-check="item" /></td>-->
+                        <td app-check="off">{{item.Gameid}}</td>
+                        <td>{{item.Phone}}</td>
+                        <td class="hidden-1024">{{item.Wechat}}</td>
+                        <td align="right">{{item.Money}}</td>
+                        <td align="right" class="hidden-800">{{item.MoneyTotal}}</td>
+                        <td align="center" class="hidden-800">{{item.Time|datetime}}</td>
+                    </tr>
+                    {% endfor %#}
+                </tbody>
+            </table>
+            {% include '_pagination.html' with {'url': listUrl} %}
+        </main>
+    </div>
+    <script>
+        $('#money-search-start, #money-search-end').datepicker({
+            language: 'zh-CN',
+            format: "yyyy-mm-dd"
+        });
+    </script>
+</div>

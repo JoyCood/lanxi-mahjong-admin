@@ -1,0 +1,269 @@
+html, body { 
+	background-color: #D1D4D9; 
+	font-size: 14px;
+	-webkit-tap-highlight-color: transparent;
+}
+a { color: #485a6a; text-decoration: none; outline: none; }
+a:hover { color: #5C9ACF; text-decoration: none; cursor: pointer; }
+input, button { outline: none; text-indent: 6px; }
+
+input[type="checkbox"] { display: none; }
+input[type="checkbox"] ~ label {
+	line-height: 44px;
+	padding: 0 10px;
+}
+input[type="checkbox"] ~ label:before {
+	float:left; padding: 0 8px 0 5px;
+	font-family: FontAwesome; font-size: 21px;
+	content: "\f096";
+}
+input[type="checkbox"]:checked ~ label {
+	color: #2e6da4;
+}
+input[type="checkbox"]:checked ~ label:before {
+	content: "\f046"; padding-right: 5px;
+}
+
+.w {
+	max-width: 1000px; margin: auto;
+}
+
+.form-row {
+	display: flex;
+	line-height: 44px;
+}
+.form-row .form-control { 
+	display: inline-block; flex: 1; 
+}
+.form-control {
+	display: block; padding: 0; margin: 0; border: 0;
+    width: 100%;
+    height: 36px;
+    font-size: 14px;
+    line-height: 1em;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc; border-radius: 0px;
+}
+.form-label.text-right {
+	text-align: right;
+}
+.form-label {
+	flex: initial;
+	min-width: 70px; line-height: inherit; text-align: left;
+	padding: 0 10px;
+}
+.form-label.xl {
+	min-width: 100px;
+}
+.form-row button { flex: initial; height: 38px; line-height: 38px; }
+.form-action {
+	margin-top: 10px;
+	text-align: center;
+}
+
+.btn {
+	display: inline-block;
+    margin: 0; padding: 0 18px; text-align: center;
+	height: 42px; line-height: 42px;
+	border: 1px solid #ccc; border-radius: 0px;
+	background-color: #fff; color: #333;
+	font-size: 14px;
+	min-width: 60px;
+	outline: none;
+}
+.btn-disabled {
+	border-color: #999!important; background-color: #ccc!important; color: #666!important;
+}
+.btn-success {
+	border-color: #4cae4c; background-color: #449d44; color: #fff!important;
+}
+.alert-success {
+    color: #3c763d; background-color: #dff0d8; border-color: #d6e9c6;
+}
+.text-success { color: #449d44; }
+.btn-primary {
+	border-color: #2e6da4; background-color: #337ab7; color: #fff;
+}
+.text-primary { color: #2e6da4; }
+.btn-info {
+	border-color: #46b8da; background-color: #5bc0de; color: #fff;
+}
+.alert-info {
+    color: #31708f; background-color: #d9edf7; border-color: #bce8f1;
+}
+.text-info { color: #46b8da; }
+.btn-warning {
+	border-color: #eea236; background-color: #eea236; color: #fff;
+}
+.alert-warning {
+    color: #8a6d3b; background-color: #fcf8e3; border-color: #faebcc;
+}
+.text-warning { color: #eea236; }
+.btn-danger {
+	border-color: #d43f3a; background-color: #d9534f; color: #fff;
+}
+.alert-danger {
+    color: #a94442; background-color: #f2dede; border-color: #ebccd1;
+}
+.text-danger {
+	color: #d43f3a;
+}
+
+.app-dialog {
+	position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+	transition: transform .2s ease-in;
+	transform: translate3d(0, -100%, 0);
+	display: none;
+}
+.app-dialog.open {
+	transform: translate3d(0, 0, 0);
+}
+.app-dialog-container {
+	position: absolute;
+	top: 40%; left: 50%;
+	transform: translate3d(-50%, -50%, 0);
+	border-radius: 4px;
+	background-color: #fff;
+	box-shadow: 0 0 6px #999;
+}
+.app-dialog-header {
+	position: relative;
+	height: 44px; line-height: 44px;
+	border-bottom: 1px solid #e5e5e5;
+}
+.app-dialog-title {
+	display: block; padding: 0 16px;
+	user-select: none; -webkit-user-select: none;
+}
+.app-dialog-close {
+	position: absolute; top: 0; right: 0; bottom: 0;
+	width: 44px; font-size: 14px;
+	text-align: center;
+	user-select: none; -webkit-user-select: none;
+}
+.app-dialog-body {
+	min-width: 280px; 
+	padding: 10px;
+}
+.app-dialog-content {
+	min-height: 40px; margin: 0 6px;
+	padding-bottom: 16px;
+}
+.app-dialog-footer {
+	text-align: center; padding: 5px 10px 10px;
+}
+.app-dialog-footer button.btn {
+	margin: 0 4px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    /*border-radius: 4px;*/
+}
+.alert-dismissible {
+    padding-right: 35px;
+}
+.alert-dismissible .close {
+    position: relative;
+    top: -4px;
+    right: -21px;
+    color: inherit;
+}
+.close {
+    float: right; -webkit-appearance: none;
+    padding: 0; border: 0;
+    color: #000; background: 0 0;
+    cursor: pointer; opacity: .2;
+    font-size: 21px; font-weight: 700; line-height: 1;
+    text-shadow: 0 1px 0 #fff;
+}
+.close:hover {
+	opacity: 1;
+}
+
+table.data-list {
+	width: 100%; border-collapse: collapse; border: 1px solid #333;
+}
+table.data-list  th, table.data-list  td { 
+	border: 1px solid #969696; padding: 5px; color: #333; overflow: hidden; 
+	line-height: 32px;
+}
+table.data-list tbody tr {
+	background-color: #fff;
+} 
+table.data-list thead th { 
+	line-height: 32px; background-color: #ddd; color: #666; 
+}
+
+#app-loading {
+	opacity: .75;
+	position: fixed;
+	top: 90px; left: 50%; margin-left: -25px; text-align: center;
+	padding-top: 11px; width: 50px; height: 50px;
+	color: #485a6a; background-color: rgba(99, 99, 99, .5);
+	border-radius: 4px;
+}
+
+#app-mask {
+	position: fixed;
+	top: 0; right: 0; bottom: 0; left: 0;
+	background-color: rgba(200, 200, 200, .2);
+	display: none;
+}
+
+#app-notify {
+	position: fixed;
+	top: 60px;
+	left: 50%;
+}
+#app-notify>div:first-child, #app-notify>div:hover { opacity: 1; }
+#app-notify>div {
+	opacity: .75;
+	transform: translate3d(-50%, -100%, 0);
+	transition-property: transform;
+    transition-timing-function: ease-in-out;
+    transition-duration: 80ms;
+	margin-bottom: 6px;
+}
+#app-notify>div.app-notify-item {
+	transform: translate3d(-50%, 0, 0);
+}
+
+#app-loading { z-index: 10600; }
+#app-notify { z-index: 10600; }
+.app-dialog { z-index: 100300; }
+.app-dialog-alert { z-index: 10390; }
+#app-mask { z-index: 10200; }
+
+
+/***
+Responsive Utils
+***/
+@media (max-width: 1280px) {
+	.hidden-1280 {
+		display: none;
+	}
+}
+@media (max-width: 1024px) {
+	.hidden-1024 {
+		display: none;
+	}
+}
+@media (max-width: 800px) {
+	.hidden-800 {
+		display: none;
+	}
+}
+@media (max-width: 480px) {
+	.hidden-480 {
+		display: none;
+	}
+}
+@media (max-width: 320px) {
+	.hidden-320 {
+		display: none;
+	}
+}

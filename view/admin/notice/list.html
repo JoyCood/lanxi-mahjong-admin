@@ -1,0 +1,58 @@
+<div id="notice-container">
+    <ol class="breadcrumb">
+        <li><a href="admin/"><i class="fa fa-home"></i> 首页</a></li>
+        <li><a href="admin/notice/">公告</a></li>
+        <li class="active">列表</li>
+    </ol>
+    <div id="notice-content" class="portlet hs-table">
+        <header class="portlet_header">
+            <h1>公告</h1>
+            <nav id="notice-bar">
+                <a href="admin/notice/#form" class="btn btn-default" app-check-rel="off">新建</a>
+            </nav>
+        </header>
+        <main class="portlet_main">
+            <table app-check-rel="#notice-bar">
+                <thead>
+                    <tr>
+                        <!--<th width="40" align="center"><input type="checkbox" app-check="all" /></th>-->
+                        <th>标题/内容</th>
+                        <th width="100" class="hidden-480">过期时间</th>
+                        <th width="100" class="hidden-1024">创建时间</th>
+                        <th width="108" align="center"></th>
+                    </tr>
+                </thead> 
+                <tbody>
+                    {% set formUrl = url_path() ~ '/#form/' %}
+                    {% for item in data.items %}
+                    <tr app-check="on" data-id="{{item._id}}">
+                        <!--<td align="center"><input type="checkbox" app-check="item" /></td>-->
+                        <td>
+                            <h2 class="notice-title"><a href="{{formUrl}}{{item._id}}">{{item.Title}}</a></h2>
+                            <p class="notice-content">{{item.Content|truncate(80)}}</p>
+                        </td>
+                        <td class="hidden-480">{{item.Expire|datetime}}</td>
+                        <td class="hidden-1024">{{item.Time|datetime}}</td>
+                        <td align="center">
+                            <a href="{{formUrl}}{{item._id}}" class="link fa fa-edit"></a>
+                            <a href="javascript:;" class="link fa fa-trash-o"></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% include '_pagination.html' with {'url': url_path() ~ '/#list'} %}
+        </main>
+    </div>
+    <script>
+        $('#notice-content').on('click', 'a.fa-trash-o', function() {
+            var id = $(this).closest('tr').attr('data-id');
+            Notice.remove(id);
+        });
+        $('#notice-search-form').on('submit', function() {
+            var form = $(this);
+            App.hash('list/1/' + form.serialize());
+            return false;
+        });
+    </script>
+</div>

@@ -1,0 +1,109 @@
+{% set TITLE="重置密码" %}
+{% extends "_base.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block menu %}
+{% endblock %}
+
+{% block body %}
+<div class="app nofooter">
+    <header class="app-header">
+        <a class="app-back" app-action="back"></a>
+        <h1>{{TITLE}}</h1>
+    </header>
+    <main class="app-main">
+        <div>
+            <form id="reset-form" class="w">
+                <div class="form-row">
+                    <label class="form-label">手机号:*</label>
+                    <input id="reset-phone" class="form-control" type="tel" value="" name="Phone" placeholder="请输入手机号" autocomplete="off" app-required="on" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">验证码:*</label>
+                    <input class="form-control" type="tel" name="Captcha" value="" placeholder="请输入验证码" autocomplete="off" app-required="on" />
+                    <button id="reset-captcha-btn" type="button" class="btn btn-info">获取验证码</button>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">密码:*</label>
+                    <input id="reset-password"  class="form-control" type="password" value="" name="Password" placeholder="请输入密码" app-required="on" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">确认密码:*</label>
+                    <input id="reset-confirm" class="form-control" type="password" value="" name="Confirm" placeholder="请再次输入密码" app-required="on" />
+                </div>
+                <div class="form-action">
+                    <button id="reset-submit-btn" type="submit" class="btn btn-success form-control">确定</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer class="app-footer">
+    </footer>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    $('#reset-captcha-btn').on('click', function() {
+        var btn = $(this);
+        var txt = btn.text();
+        var sec = "{{constant('ModelAuthMain::AUTHCODE_EXPIRE')}}" * 1;
+        var num = $.trim($('#reset-phone').val());
+        if(num == '') {
+            App.alert('请输入有效的手机号码');
+            return false;
+        }
+        btn.prop('disabled', 'true').addClass('btn-disabled');
+        App.ajax({
+            url: 'region/code',
+            type: 'post',
+            data: {'phone': num},
+            dataType: 'json',
+            success: function() {
+                btn.data('interval') || btn.data('interval', setInterval(function() {
+                    btn.text('验证码(' + sec + 's)');
+                    if(sec == 0) {
+                        clearInterval(btn.data('interval'));
+                        btn.removeData('interval');
+                        btn.prop('disabled', false).removeClass('btn-disabled').text(txt);
+                    }
+                    sec--;
+                }, 1000));
+            },
+            error: function(jqXHR) {
+                if(jqXHR.getResponseHeader('APP-CODE') == 10086) {
+                    clearInterval(btn.data('interval'));
+                    btn.removeData('interval');
+                    btn.prop('disabled', false).removeClass('btn-disabled').text(txt);
+                }
+                btn.prop('disabled', false).removeClass('btn-disabled').text(txt);
+            }
+        });
+    });
+    $('#reset-form').on('submit', function() {
+        App.submitForm(this, {
+            checkValidity: function() {
+                var rs = false;
+                if($('#reset-password').val() != $('#reset-confirm').val()) {
+                    App.alert('两次输入的密码不一致，请重新输入');
+                } else {
+                    rs = true;
+                }
+                return rs;
+            },
+            success: function() {
+                App.Notific.success('重置密码成功');
+                $('#reset-submit-btn, #reset-captcha-btn').prop('disabled', true);
+                setTimeout(function() {
+                    location.href = 'region/login';
+                }, 1 * 1000);
+            }
+        });
+        return false;
+    });
+});
+</script>
+{% endblock %}

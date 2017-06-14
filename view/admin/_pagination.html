@@ -1,0 +1,43 @@
+<nav class="pagination-container" aria-label="Page navigation">
+    {% set start = data.pn - 2 %}
+    {% if start < 1 %}{% set start = 1 %}{% endif %}
+    {% set end = start + 5 %}
+    {% if end > data.pages%}{% set end = data.pages%}{% endif %}
+    <ul class="pagination">
+        <li class="disabled">
+            <span style="cursor: default;" class="hidden-480">
+                第 {{data.pn|number_format}} / {{data.pages|number_format}} 页,&nbsp;
+                共 {{data.total|number_format}} 行</span>
+            </span>
+        </li>
+        {% if start > 1 %}
+        <li>
+            <a href="{{pagination_url(url, start - 1)}}" aria-label="上一页">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="disabled">
+            <span aria-label="上一页">
+                <span aria-hidden="true">&laquo;</span>
+            </span>
+        </li>
+        {% endif %}
+        {% for i in range(start, end > start? end: start) %}
+        <li{% if data.pn == i %} class="active"{% endif %}><a href="{{pagination_url(url, i)}}">{{i}}</a></li>
+        {% endfor %}
+        {% if end < data.pages %}
+        <li>
+            <a href="{{pagination_url(url, end + 1)}}" aria-label="下一页">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="disabled">
+            <span aria-label="下一页">
+                <span aria-hidden="true">&raquo;</span>
+            </span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>

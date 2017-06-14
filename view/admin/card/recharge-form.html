@@ -1,0 +1,77 @@
+<form id="recharge-form" method="POST" action="admin/card/recharge" class="form-horizontal">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">游戏ID:</label>
+                <div class="col-sm-9">
+                    <span style="line-height: 30px;">{{Id}}</span>
+                    <input id="card-recharge-target" name="target" value="{{Id}}" type="hidden" app-required="on" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">昵称:</label>
+                <div class="col-sm-9">
+                    <span style="line-height: 30px;">{{Nickname}}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">电话:</label>
+                <div class="col-sm-9">
+                    <span style="line-height: 30px;">{{Phone}}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">房卡数量:</label>
+                <div class="col-sm-9">
+                    <span style="line-height: 30px;">{{RoomCard|number_format(0)}}</span>
+                </div>
+            </div>
+            <div id="recharge-form-action">
+                <div class="form-group">
+                    <label for="recharge-quantity" class="col-sm-3 control-label">*充值数量:</label>
+                    <div class="col-sm-9">
+                        <input id="recharge-quantity" name="quantity" type="number" class="form-control" value="{{data.Phone}}" placeholder="请输入充值数量" autocomplete="off" app-required="on" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"></label>
+                    <div class="col-sm-9">
+                        <input type="hidden" name="{{CsrfName}}" value="{{CsrfCode}}" />
+                        <button type="submit" class="btn btn-primary">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="recharge-info" style="display: none; margin: 0 30px;" class="alert alert-success">
+        <p>充值成功，充值后房卡数量：<span id="card-num"></span></p>
+        <br />
+        <button id="recharge-continue" type="button" class="btn btn-primary">继续充值</button>
+    </div>
+    <script>
+        $('#recharge-form').on('submit', function() {
+            App.submitForm(this, {
+                checkValidity: function(form) {
+                    var qtyElement = $('#recharge-quantity');
+                    var qty = parseInt($.trim(qtyElement.val()), 10) || 0;
+                    qtyElement.val(qty);
+                    if(qty < 0) {
+                        App.alert('数量不能小于0', function() {
+                            qtyElement.val(qty).focus();
+                        });
+                        return false;
+                    }
+                },
+                success: function(json) {
+                    $('#card-num').text(json.data.RoomCard || 'N/A');
+                    $('#recharge-info').show();
+                    $('#recharge-form-action').hide();
+                }
+            });
+            return false;
+        });
+        $('#recharge-continue').on('click', function() {
+            $('#recharge-user-reset').trigger('click');
+        });
+    </script>
+</form>

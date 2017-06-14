@@ -1,0 +1,40 @@
+<!Doctype html>
+<html>
+<head>
+<title>{{TITLE}}{% if CONFIG.title%} - {{CONFIG.title}}{% endif %}</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<base href="{{BASE_URL}}" />
+<link rel="stylesheet" href="css/font-awesome-4.1.0/font-awesome.min.css?v={{CONFIG.res3rdVersion}}" />
+<link rel="stylesheet" href="css/region/global.css?v={{CONFIG.resVersion}}" />
+<link rel="stylesheet" href="css/region/layout.css?v={{CONFIG.resVersion}}" />
+<link rel="stylesheet" href="css/region/region.css?v={{CONFIG.resVersion}}" />
+<script src="js/3rd/jquery-1.11.1.min.js?v={{CONFIG.res3rdVersion}}"></script>
+<!--<script src="js/3rd/bootstrap.min.js?v={{CONFIG.res3rdVersion}}"></script>-->
+<script src="js/admin/app.js?v={{CONFIG.resVersion}}"></script>
+<script src="js/region/region.js?v={{CONFIG.resVersion}}"></script>
+{% block head %}{% endblock %}
+</head>
+<body>
+{% block body %}
+<div class="app">
+
+</div>
+{% endblock %}
+
+<!--
+{% block menu %}
+    {% include '_menu.html' %}
+{% endblock %}
+-->
+
+<div id="app-loading">
+    <i class="fa fa-cog fa-spin fa-2x"></i>
+</div>
+
+<!--<div id="to-top" title="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+</div>-->
+{% block js %}{% endblock %}
+</body>
+</html>

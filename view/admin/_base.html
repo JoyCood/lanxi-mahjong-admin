@@ -1,0 +1,106 @@
+<!Doctype html>
+<html>
+<head>
+<title>{{TITLE}} - {{CONFIG.title}}</title>
+<meta charset="UTF-8" />
+<base href="{{BASE_URL}}" />
+<link rel="stylesheet" href="css/3rd/bootstrap.min.css?v={{CONFIG.res3rdVersion}}" />
+<link rel="stylesheet" href="css/font-awesome-4.1.0/font-awesome.min.css?v={{CONFIG.res3rdVersion}}" />
+<link rel="stylesheet" href="css/admin/global.css?v={{CONFIG.resVersion}}" />
+<link rel="stylesheet" href="css/admin/layout.css?v={{CONFIG.resVersion}}" />
+<link rel="stylesheet" href="css/admin/admin.css?v={{CONFIG.resVersion}}" />
+<link rel="stylesheet" href="js/3rd/hs/hs-table.css?v={{CONFIG.res3rdVersion}}" />
+{% block css %}{% endblock %}
+<script src="js/3rd/jquery-1.11.1.min.js?v={{CONFIG.res3rdVersion}}"></script>
+<script src="js/3rd/bootstrap.min.js?v={{CONFIG.res3rdVersion}}"></script>
+<script src="js/3rd/hs/hs-table.js?v={{CONFIG.res3rdVersion}}"></script>
+<script src="js/admin/app.js?v={{CONFIG.resVersion}}"></script>
+<script src="js/admin/admin.js?v={{CONFIG.resVersion}}"></script>
+{% block javascript %}{% endblock %}
+</head>
+<body>
+{% block header %}
+<header id="main-header">
+    <a id="logo" href="admin/">{{CONFIG.title}}</a>
+    <nav>
+        <a id="main-user-icon" href="javascript:;">
+            <i class="fa fa-user"></i>
+            {{session(constant('CONFIG::SESSION_USER'))}}
+        </a>
+        <a id="main-menu-toggle" href="javascript:;"><i class="fa fa-bars"></i></a>
+    </nav>
+</header>
+{% endblock %}
+
+<div id="main">
+    <main id="main-body">
+    {% block main %}
+    {% endblock %}
+    </main>
+
+    {% block footer %}
+    <footer id="main-footer">
+        <div style="padding-top: 16px; text-align: center;">Lanxi Majiang</div>
+    </footer>
+    {% endblock %}
+</div>
+
+{% block aside %}
+<aside id="main-aside">
+    <i class="fa fa-sort-asc"></i>
+    <nav>
+        <a href="javascript:;" title="首页">
+            <i class="fa fa-home"></i>
+            <span>首页</span>
+        </a>
+    </nav>
+    <nav>
+        <a href="admin/trader/" title="代理商管理">
+            <i class="fa fa-adn"></i>
+            <span>代理商管理</span>
+        </a>
+        <a href="admin/notice/"{{MENU_ITEM=="notice"? ' class="active"': ''}} title="公告">
+            <i class="fa fa-comment-o"></i>
+            <span>公告</span>
+        </a>
+        <a href="admin/trader/"{{MENU_ITEM=="trader"? ' class="active"': ''}} title="代理商">
+            <i class="fa fa-adn"></i>
+            <span>代理商</span>
+        </a>
+        <a href="admin/money/inpour/"{{MENU_ITEM=="inpour"? ' class="active"': ''}} title="付费流水">
+            <i class="fa fa-list-ol"></i>
+            <span>付费流水</span>
+        </a>
+        <a href="admin/money/withdraw/"{{MENU_ITEM=="withdraw"? ' class="active"': ''}} title="返现申请">
+            <i class="fa fa-yen"></i>
+            <span>返现申请</span>
+        </a>
+        <a href="admin/money/withdraw/#summary"{{MENU_ITEM=="summary"? ' class="active"': ''}} title="返现汇总">
+            <i class="fa fa-list-alt"></i>
+            <span>返现汇总</span>
+        </a>
+    </nav>
+    <nav>
+        <a href="admin/card/recharge"{{MENU_ITEM=="card"? ' class="active"': ''}} title="房卡">
+            <i class="fa fa-credit-card"></i>
+            <span>房卡</span>
+        </a>
+        <!--<a href="admin/" title="充值">
+            <i class="fa fa-credit-card"></i>
+            <span>充值</span>
+        </a>-->
+    </nav>
+</aside>
+{% endblock %}
+
+<div id="app-loading">
+    <i class="fa fa-cog fa-spin fa-2x"></i>
+</div>
+
+<div id="to-top" title="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+</div>
+
+{% block js %}{% endblock %}
+</body>
+</html>
