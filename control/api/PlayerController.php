@@ -250,7 +250,7 @@ class PlayerController extends BaseController {
 			'Chenmi'          => 0,
 			'Sound'           => true,
 			'Robot'           => false,
-			'RoomCard'        => $User::INIT_ROOM_CARD,
+			'RoomCard'        => Config::INIT_ROOM_CARD,
 			'Build'           => '',
 			'BuildTime'       => 0,
 			'FyAccountId'     => '',

@@ -8,6 +8,9 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
+    //新注册用户赠送的房卡数量
+    const INIT_ROOM_CARD = 1000;
+
     //微信支付下单key
     const PAY_KEY = '9hK200FSCXZx_321/78F84ERxop2qbMT';
 
@@ -40,7 +43,7 @@ class Config {
             ),
             //日志
             'log' => array(
-                'dir' => DOC_ROOT .  '/logs/api',
+                'dir'  => '/var/log/lanxi-mahjong/api',
                 'file' => 'log-'. date('Y-m-d'). '.log',
             ),
 
