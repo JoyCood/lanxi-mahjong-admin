@@ -42,11 +42,11 @@ class BaseController {
         ));
     }
 
-	protected function responseJSON($data) {
+	protected function responseJSON($data, $statuCode=200) {
 		if(!is_array($data)) {
 			$data = json_decode($data, true);
 		}	
-        $this->app->halt(200, json_encode($data));
+        $this->app->halt($statuCode, json_encode($data));
 	}
 
     protected function addViewData($key, $val) {
