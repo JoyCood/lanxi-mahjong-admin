@@ -8,7 +8,7 @@ class TraderController extends WechatController {
 
 	//通过微信公众号登录
 	public function wechatLoginAction() {
-        $url = Helper::requestURI();
+        $url = Config::get('core', 'wx.mp.redirect.url') . '/region/wechat-login';
 	    $userinfo = $this->login($url);
 	    if(isset($userinfo['unionid'])) {
 		    $User = Admin::model('user.main');
@@ -25,7 +25,7 @@ class TraderController extends WechatController {
 					$this->registerAction();
 				}
 			} else { //非游戏玩家,todo:跳转到游戏下载页
-				header("Location:http://lanxi.yiiyu.cn/wechat/download");
+				header("Location:http://www.yiiyu.cn/lanxi/wechat/download");
 			}
 		}
 	}

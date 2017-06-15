@@ -8,7 +8,6 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
-
     static function init() {
         self::$Options = array(
             //数据库
