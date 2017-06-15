@@ -43,7 +43,7 @@ Phone::init();
 
 $sessionName = Config::get('settings', 'sessionName');
 if($sessionName) {
-    ini_set('session.name', $sessionName? $sessionName: 'LXSESSION');
+    ini_set('session.name', $sessionName);
     ini_set('session.cookie_httponly', 1);
     session_start();
 }

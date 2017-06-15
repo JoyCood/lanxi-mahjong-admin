@@ -94,7 +94,7 @@ class CardController extends WechatController {
 	}
 
 	protected function rechargeForm() {
-		$url = Config::get('core', 'wx.mp.redirect.url') . '/wechat/recharge';
+		$url = Helper::requestURI();
 		$userinfo = $this->login($url);
 		if(isset($userinfo['unionid'])) {
 		    $User = Admin::model('user.main');

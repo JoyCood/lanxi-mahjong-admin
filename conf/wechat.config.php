@@ -21,6 +21,7 @@ class Config {
                 'slim' => array(
                     'templates.path' => DOC_ROOT. '/view/wechat'
                 ),
+				'sessionName' => 'lanxi_wechat_session',
                 'resVersion' => 1,
                 'res3rdVersion' => 1
             ),
