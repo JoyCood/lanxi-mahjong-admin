@@ -42,9 +42,11 @@ Admin::init($app);
 Phone::init();
 
 $sessionName = Config::get('settings', 'sessionName');
-ini_set('session.name', $sessionName? $sessionName: 'LXSESSION');
-ini_set('session.cookie_httponly', 1);
-session_start();
+if($sessionName) {
+    ini_set('session.name', $sessionName? $sessionName: 'LXSESSION');
+    ini_set('session.cookie_httponly', 1);
+    session_start();
+}
 
 $app->hook('slim.before.router', function() use($app){
     $path   = $app->request->getPathInfo();
@@ -70,7 +72,7 @@ $app->hook('slim.before.router', function() use($app){
     if(!isset($_SESSION[Config::SESSION_USER]) || !$_SESSION[Config::SESSION_USER]) {
         if(!in_array($path, Config::getOptions('notauth'))) {
             $app->redirect(BASE_URL . "/{$dir}/login?from=" . urlencode($_SERVER['REQUEST_URI']));	
-	}
+	    }
     }
 });
 
