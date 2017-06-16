@@ -296,8 +296,10 @@ class PlayerController extends BaseController {
         $timestamp  = trim($this->request->post('timestamp', '')); 
         $createtime = trim($this->request->post('createtime', ''));
 
+        /*
         $userId = '10001';
         $trader = '10000';
+        */
 
         $sign  = Config::GAME_SERVER_SIGN;
         $hash  = md5("{$sign}{$userId}{$timestamp}{$createtime}");
