@@ -85,6 +85,60 @@ class CardController extends WechatController {
         $this->renderJSON($result);
     }
 
+	//绑定代理商
+	public function bindTraderAction() {
+		//未开启绑定代理商的功能，返回成功
+		if(!Config::BIND_TRADER_ENABLE) {
+		    $this->renderJSON(true);
+		}
+
+		if(!isset($_SESSION[self::MP_SESSION_OPENID) || $_SESSION[self::MP_SESSION_OPENID]=='') {
+		    $this->rechargeForm();
+		}
+
+		$trader = trim($this->request->post('trader'));
+		if(!$trader) {
+		    $this->error('请输入邀请码');
+		}
+
+		$Trader = Admin::model('trader.main');
+		$filters = array('Gameid' => $trader);
+		$trader = $Trader->findOne($filters);
+		//代理商不存在
+		if(!$trader) {
+		    $this->error('邀请码错误,请重新输入');
+		}
+
+		$User = Admin::model('user.main');
+		$filters = array('Wechat_unionid' => $_SESSION[self::MP_SESSION_UNIONID]);
+		$user = $User->findOne($filters);
+		//非微信登录用户
+		if(!$user) {
+		    $this->error('请用微信登录游戏后再输入邀请码');
+		}
+
+		//不能绑定自己
+		if($user['_id']==$trader) {
+		    $this->error('邀请码不能是自己的游戏ID');
+		}
+
+		//已经绑定过了，直接返回成功
+		if(isset($user['Build']) && $user['Build'] != '') {
+		    $this->renderJSON(true); 
+			exit();
+		}
+		$update = array(
+		    'Build' => $trader['Gameid'],
+			'BuildTime' => time()
+		);
+		$result = $user->update($filters, $update);
+		if($result['nModified']>0) {
+		    $this->renderJSON(true);
+		} else {
+		    $this->error('系统出错，请稍后重试');
+		}
+	} 
+
 	public function rechargeAction() {
 		if($this->request->isGet()) {
 		    $this->rechargeForm();
@@ -103,6 +157,7 @@ class CardController extends WechatController {
 		}
 		$this->render('card/recharge.html', array(
 			'userinfo' => $userinfo,
+			'bindTrader' => Config::BIND_TRADER_ENABLE,
 		    'options'  => require(DOC_ROOT. '/conf/card.config.php')
 		));
 	}

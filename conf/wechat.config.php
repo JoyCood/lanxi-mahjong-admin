@@ -8,6 +8,8 @@ class Config {
     const SESSION_USER = 'lanxi-api-user';
 	const SESSION_GROUP = 'lanxi-api-group';
 
+	const BIND_TRADER_ENABLE = TRUE; //是否打开绑定代理商功能
+
     static function init() {
         self::$Options = array(
             //数据库
@@ -38,6 +40,7 @@ class Config {
 				'/wechat/recharge',
 				'/wechat/recharge/user',
                 '/wechat/wxpay',
+				'/wechat/bind-trader'
             ),
 
             //路由设置
@@ -46,7 +49,8 @@ class Config {
 				'/wechat/login'         => 'GET::CardController::loginAction',
 				'/wechat/recharge'      => 'GET::CardController::rechargeAction',
                 '/wechat/recharge/user' => 'POST::CardController::userAction',
-                '/wechat/wxpay'         => 'POST::CardController::wxPayAction'
+                '/wechat/wxpay'         => 'POST::CardController::wxPayAction',
+				'/wechat/bind-trader'   => 'POST::CardController::bindTraderAction'
             )
         ); 
     }
