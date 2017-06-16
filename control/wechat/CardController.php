@@ -92,7 +92,7 @@ class CardController extends WechatController {
 		    $this->renderJSON(true);
 		}
 
-		if(!isset($_SESSION[self::MP_SESSION_OPENID) || $_SESSION[self::MP_SESSION_OPENID]=='') {
+		if(!isset($_SESSION[self::MP_SESSION_OPENID]) || $_SESSION[self::MP_SESSION_OPENID]=='') {
 		    $this->rechargeForm();
 		}
 
