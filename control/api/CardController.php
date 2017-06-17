@@ -23,7 +23,7 @@ class CardController extends BaseController {
         $timestamp = trim($this->request->post('timestamp'));
         $sign      = trim($this->request->post('sign'));
 
-        $key = Config::PAY_KEY;
+        $key = Config::CLIENT_KEY;
         
         $hash = md5("{$userId}{$key}{$cardId}{$nonceStr}{$timestamp}");
         if($hash != $sign) {

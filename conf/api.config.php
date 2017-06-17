@@ -11,8 +11,8 @@ class Config {
     //新注册用户赠送的房卡数量
     const INIT_ROOM_CARD = 1000;
 
-    //微信支付下单key
-    const PAY_KEY = '9hK200FSCXZx_321/78F84ERxop2qbMT';
+    //CLIENT-KEY
+    const CLIENT_KEY = '9hK200FSCXZx_321/78F84ERxop2qbMT';
 
 	//逻辑服信息，购买房卡时用于通知游戏服务器发货结果
 	const GAME_SERVER_HOST = 'http://lanxi.yiiyu.cn:7229/roomcard';

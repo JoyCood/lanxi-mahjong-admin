@@ -359,9 +359,12 @@ class PlayerController extends BaseController {
     }
 
     public function phoneLoginAction() {
-        $phone = trim($this->request->post('phone'));
-        $password = trim($this->request->post('password')); 
-        $deviceId = trim($this->request->post('deviceId', 'deviceId'));
+        $phone      = trim($this->request->post('phone'));
+        $password   = trim($this->request->post('password')); 
+		$nonceStr   = trim($this->request->post('nonceStr'));
+		$timestamp  = trim($this->request->post('timestamp'));
+		$sign       = trim($this->request->post('sign'));
+        $deviceId   = trim($this->request->post('deviceId', 'deviceId'));
         $deviceName = trim($this->request->post('deviceName', 'deviceName'));
 
         /*
@@ -384,19 +387,29 @@ class PlayerController extends BaseController {
             $this->responseJSON($response);
         }
 
+		$key = Config::CLIENT_KEY;
+		$hash = md5("{$phone}{$key}{$nonceStr}{$timestamp}{$password}");
+		if($hash != $sign) {
+		    $response = array(
+			    'errcode' => 10002,
+				'errmsg'  => '非法请求'
+			);
+			$this->responseJSON($response);
+		}
+
         $User = Admin::model('user.main');
         $filters = array('Phone' => $phone);
         $user = $User->findOne($filters);
         if(!$user) {
             $response = array(
-                'errcode' => 10002,
+                'errcode' => 10003,
                 'errmsg'  => '用户不存在，请先注册'
             );
             $this->responseJSON($response);
         }
         if($user['Pwd'] != md5($password)) {
             $response = array(
-                'errcode' => 10003,
+                'errcode' => 10004,
                 'errmsg'  => '密码错误'
             );
             $this->responseJSON($response);
@@ -452,6 +465,8 @@ class PlayerController extends BaseController {
         $nickname   = trim($this->request->post('nickname'));
         $password   = trim($this->request->post('password'));
         $password2  = trim($this->request->post('password2'));
+		$nonceStr   = trim($this->request->post('nonceStr'));
+		$timestamp  = trim($this->request->post('timestamp'));
         $deviceId   = trim($this->request->post('deviceId', 'deviceId'));
         $deviceName = trim($this->request->post('deviceName', 'deviceName'));
 /*
@@ -490,12 +505,21 @@ class PlayerController extends BaseController {
             );
             $this->responseJSON($response);
         }
+		$key = Config::CLIENT_KEY;
+		$hash = md5("{$phone}{$key}{$nonceStr}{$timestamp}{$password}");
+		if($hash != $sign) {
+		    $response = array(
+			    'errcode' => 10004,
+				'errmsg'  => '非法请求'
+			);
+			$this->responseJSON($response);
+		}
         $User = Admin::model('user.main'); 
         $filters = array('Phone'=>$phone);    
         $user = $User->findOne($filters);
         if($user) {
             $response = array(
-                'errcode' => 10004,
+                'errcode' => 10005,
                 'errmsg'  => '此号码已注册，请直接登录'
             );
             $this->responseJSON($response);
