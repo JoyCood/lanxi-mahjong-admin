@@ -1,0 +1,148 @@
+{% set TITLE="房卡充值" %}
+{% extends "_base.html" %}
+{% block head %}
+<style>
+#recharge-user-form button { min-width: 40px; padding: 0; }
+#recharge-user-form button>i { margin-left: -10px; }
+#recharge-user-form button[type="reset"] { display: none; }
+#recharge-user-form.actived button[type="submit"] { display: none; }
+#recharge-user-form.actived button[type="reset"] { display: block; }
+#recharge-user-form #recharge-user-info { display: none; }
+#recharge-user-form.actived #recharge-user-info { display: block; }
+#recharge-user-form div.form-control { line-height: 36px; text-indent: 5px; background-color: transparent; }
+
+#recharge-form { display: none; }
+
+#recharge-body { display: block; }
+#recharge-result { display: none; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="app nofooter">
+    <header class="app-header">
+        <a class="app-back" app-action="back"></a>
+        <h1>{{TITLE}}</h1>
+        <nav>
+            <a href="javascript:;" class="fa fa-bars" app-action="menu"></a>
+        </nav>
+    </header>
+    <main class="app-main">
+        <div id="recharge-body">
+            <form id="recharge-user-form" class="w" method="POST" action="region/recharge/user">
+                <div class="form-row">
+                    <label class="form-label xl">玩家游戏ID:*</label>
+                    <input class="form-control" id="recharge-target" type="number" name="target" value="16019" placeholder="请输入玩家游戏ID" autocomplete="off" app-required="on" />
+                    <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
+                    <button type="reset" class="btn btn-warning"><i class="fa fa-times"></i></button>
+                </div>
+            </form>
+            <form id="recharge-form" class="w" method="POST">
+                <div id="recharge-user-info">
+                    <div class="form-row">
+                        <label class="form-label xl">昵称：</label>
+                        <input type="text" class="form-control" id="recharge-user-name" readonly="readonly" style="background-color: #ddd;" />
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label xl">剩余房卡：</label>
+                        <input type="text" class="form-control" id="recharge-user-card" readonly="readonly" style="background-color: #ddd;" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label for="recharge-quantity" class="form-label xl">房卡数*：</label>
+                    <input type="number" name="quantity" class="form-control" id="recharge-quantity" placeholder="请输入房卡数" />
+                </div>
+                <div class="form-row">
+                    <label for="recharge-money" class="form-label xl">金额*：</label>
+                    <input type="number" name="money" class="form-control" id="recharge-money" placeholder="请输入金额" />
+                </div>
+                <div class="form-action">
+                    {{csrf_input()}}
+                    <input type="hidden" id="recharge-target-value" name="target" />
+                    <button id="recharge-submit-btn" type="submit" class="btn btn-success form-control">确定</button>
+                </div>
+            </form>
+        </div>
+        <div id="recharge-result">
+            <div class="alert alert-success">充值成功</div>
+            <p>昵称：<span id="recharge-result-name"></span></p>
+            <p>房卡：<span id="recharge-result-card"></span></p>
+            <div class="form-action">
+                <button id="recharge-result-btn" type="button" class="btn btn-primary form-control">继续充值</button>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    $('#recharge-user-form').on('submit', function() {
+        var targetValue = $.trim($('#recharge-target').val());
+        App.submitForm(this, {
+            success: function(resp) {
+                $('#recharge-user-form').addClass('actived');
+                $('#recharge-target-value').val(targetValue);
+                $('#recharge-user-name').val(resp.Nickname || '');
+                $('#recharge-user-card').val(resp.RoomCard || '');
+                $('#recharge-form').show();
+            }
+        });
+        return false;
+    }).on('click', 'button[type="reset"]', function() {
+        $('#recharge-user-form').removeClass('actived').get(0).reset();
+        $('#recharge-form').hide().get(0).reset();
+    });
+
+    var submitRecharge = function(from) {
+        App.submitForm(from, {
+            checkValidity: function(form) {
+                var qtyElement = $('#recharge-quantity');
+                var qty = parseInt($.trim(qtyElement.val()), 10) || 0;
+                qtyElement.val(qty);
+                if(qty < 0) {
+                    App.alert('充值数量不能小于0', function() {
+                        qtyElement.val(qty).focus();
+                    });
+                    return false;
+                }
+            },
+            success: function(resp) {
+                $('#recharge-body').css('display', 'none');
+                $('#recharge-result').css('display', 'block');
+
+                $('#recharge-result-name').text(resp.Nickname || '');
+                $('#recharge-result-card').text(resp.RoomCard || '');
+
+                $('#recharge-form').get(0).reset();
+                $('#recharge-user-form').removeClass('actived').get(0).reset();
+            }
+        });
+    }
+    $('#recharge-form').on('submit', function() {
+        var moneyElement = $('#recharge-money');
+        var money = parseFloat($.trim(moneyElement.val())) || 0;
+        var form  = this;
+        if(money < 0) {
+            App.alert('金额不能小于0');
+        } else if(money == 0) {
+            App.confirm('金额为0，是否继续充值？', function(state) {
+                if(state) {
+                    submitRecharge(form);
+                }
+            });
+        } else {
+            submitRecharge(form);
+        }
+        return false;
+    });
+    $('#recharge-result-btn').on('click', function() {
+        location.reload();
+        // $('#recharge-body').css('display', 'block');
+        // $('#recharge-result').css('display', 'none');
+        // $('#recharge-form').hide();
+    });
+});
+</script>
+{% endblock %}

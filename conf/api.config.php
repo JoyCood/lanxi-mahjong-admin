@@ -11,8 +11,8 @@ class Config {
     //新注册用户赠送的房卡数量
     const INIT_ROOM_CARD = 1000;
 
-    //微信支付下单key
-    const PAY_KEY = '9hK200FSCXZx_321/78F84ERxop2qbMT';
+    //CLIENT-KEY
+    const CLIENT_KEY = '9hK200FSCXZx_321/78F84ERxop2qbMT';
 
 	//逻辑服信息，购买房卡时用于通知游戏服务器发货结果
 	const GAME_SERVER_HOST = 'http://lanxi.yiiyu.cn:7229/roomcard';
@@ -29,6 +29,7 @@ class Config {
     const PHONE_LOGIN_ENABLED = TRUE; //是否允许手机号登录
     const PHONE_REG_ENABLED   = TRUE; //是否允许手机注册
     const APPLE_PAY_ENABLED   = TRUE; //是否打开苹果内购支付
+    const BIND_TRADER_ENABLE  = TRUE; //是否打开绑定代理商弹窗 
 
     static function init() {
         self::$Options = array(
@@ -61,7 +62,8 @@ class Config {
                 '/api/phone-reg',
                 '/api/phone-login',
                 '/api/notify/wechat',
-                '/api/toggle'
+                '/api/toggle',
+                '/api/bind-trader'
             ),
 
             //路由设置
@@ -74,6 +76,7 @@ class Config {
                 '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction',
                 '/api/notify/wechat' => 'POST::CardController::wxPayNotifyAction',
                 '/api/toggle'        => 'POST::SystemController::toggleAction',
+                '/api/bind-trader'   => 'POST::PlayerController::bindTraderAction'
             )
         ); 
     }

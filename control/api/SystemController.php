@@ -8,7 +8,8 @@ class SystemController extends BaseController {
             'broadcast'   => Config::BROADCAST_ENABLED,
             'phone-login' => Config::PHONE_LOGIN_ENABLED,
             'phone-reg'   => Config::PHONE_REG_ENABLED,
-            'apple-pay'   => Config::APPLE_PAY_ENABLED
+            'apple-pay'   => Config::APPLE_PAY_ENABLED,
+            'bind-trader' => Config::BIND_TRADER_ENABLE,
         );
         $this->responseJSON($data);
     }
@@ -23,7 +24,7 @@ class SystemController extends BaseController {
 		    $data[] = $item['Content'];
 		}
 		$data = array(
-			'亲们，如发现游戏bug或建议请联系微信号：70612568',
+			'乡亲们，如发现游戏bug或建议请联系微信号：lanxiqueshen168',
 			'拉上你的好友一起来玩吧'
 		);
 		$this->responseJSON($data);

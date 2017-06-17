@@ -47,12 +47,32 @@
 #recharge-user-form button[type="reset"] { display: none; }
 #recharge-user-form.actived button[type="submit"] { display: none; }
 #recharge-user-form.actived button[type="reset"] { display: block; }
-#recharge-user-form #recharge-user-info { display: block; }
-#recharge-user-form.actived #recharge-user-info { display: block; }
 #recharge-user-form div.form-control { line-height: 36px; text-indent: 5px; background-color: transparent; }
+#recharge-user-info input { background-color: transparent; }
 
 #recharge-body { display: block; }
 #recharge-result { display: none; }
+#recharge-form { display: none; }
+
+#invitation {
+    position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+    background-color: rgba(200, 200, 200, .75);
+}
+#invite-form {
+    position: absolute;
+    top: 160px; left: 50%;
+    border: 1px solid #4db3a5; border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #fff;
+    width: 50%;
+    max-width: 480px; min-width: 280px;
+    transform: translate3d(-50%, 0, 0);
+    padding: 26px 20px 32px;
+}
+#invite-form>h2 {
+    padding: 0 0 18px; margin: 0;
+    font-size: 16px; font-weight: normal;
+}
 </style>
 {% endblock %}
 
@@ -75,21 +95,21 @@
                 <div class="form-row">
                     <label class="form-label xl">玩家游戏ID:*</label>
 					<input class="form-control" id="recharge-target" type="number" name="target" value="{{userinfo._id}}" placeholder="请输入玩家游戏ID" autocomplete="off" app-required="on" />
-                    <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
+                    <button type="submit" class="btn btn-success"{{invite? ' disabled': ''}}><i class="fa fa-search"></i></button>
                     <button type="reset" class="btn btn-warning"><i class="fa fa-times"></i></button>
-                </div>
-                <div id="recharge-user-info">
-                    <div class="form-row">
-                        <label class="form-label xl">昵称：</label>
-						<div class="form-control" id="recharge-user-name">{{userinfo.Nickname}}</div>
-                    </div>
-                    <div class="form-row">
-                        <label class="form-label xl">房卡：</label>
-						<div class="form-control" id="recharge-user-card">{{userinfo.RoomCard}}</div>
-                    </div>
                 </div>
             </form>
             <form id="recharge-form" class="w" method="POST" action="wechat/wxpay">
+                <div id="recharge-user-info">
+                    <div class="form-row">
+                        <label class="form-label xl">昵称：</label>
+						<input type="text" class="form-control" id="recharge-user-name" readonly="readonly" />
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label xl">房卡：</label>
+						<input type="text" class="form-control" id="recharge-user-card" readonly="readonly" />
+                    </div>
+                </div>
                 <div class="form-row">
                     <div>
                         {% for id, opt in options %}
@@ -120,6 +140,17 @@
             </div>
         </div>
 	    <div id="debug"></div>
+        {% if invite %}
+        <div id="invitation">
+            <form id="invite-form" method="POST" action="wechat/bind-trader">
+                <h2>邀请码</h2>
+                <div class="form-row">
+                    <input type="text" id="invite-input" class="form-control" name="trader" placeholder="请输入邀请码" autocomplete="off" />
+                    <button type="submit" class="btn btn-success">确定</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
     </main>
 </div>
 {% endblock %}
@@ -167,13 +198,15 @@ $(document).ready(function() {
                 $('#recharge-target-value').val(targetValue);
                 $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', false);
                 $('#recharge-submit-btn').removeClass('btn-disabled').addClass('btn-success');
-                $('#recharge-user-name').text(resp.NickName || '');
-                $('#recharge-user-card').text(resp.RoomCard || '');
+                $('#recharge-user-name').val(resp.NickName || '');
+                $('#recharge-user-card').val(resp.RoomCard || '');
+                $('#recharge-form').show();
             }
         });
         return false;
     }).on('click', 'button[type="reset"]', function() {
         $('#recharge-user-form').removeClass('actived').get(0).reset();
+        $('#recharge-form').hide().get(0).reset();
         $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', true);
         $('#recharge-submit-btn').addClass('btn-disabled').removeClass('btn-success');
     });
@@ -203,6 +236,24 @@ $(document).ready(function() {
     $('#recharge-result-btn').on('click', function() {
         $('#recharge-body').css('display', 'block');
         $('#recharge-result').css('display', 'none');
+    });
+
+    $('#invite-form').on('submit', function() {
+        App.submitForm(this, {
+            checkValidity: function(form) {
+                var codeElement = $('#invite-input');
+                var code = $.trim(codeElement.val());
+                if(code.length == 0) {
+                    return false;
+                }
+            },
+            success: function(resp) {
+                $('#invitation').hide();
+                $('#invite-form').get(0).reset();
+                $('#recharge-user-form button[type="submit"]').prop('disabled', false);
+            }
+        });
+        return false;
     });
 });
 </script>

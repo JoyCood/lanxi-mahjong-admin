@@ -20,11 +20,13 @@ class Config
         self::$Options = array(
                 // 数据库
                 'db' => require('db.config.php'),
+                // 房卡
+                'card' => require('card.config.php'),
 				//支付、登录
 				'core' => require('core.config.php'),
                 // 网站设置
                 'settings' => array(
-                        'title'         => '区域管理',
+                        'title'         => '代理商系统',
                         'listRowsNum'   => 30,
                         'slim'          => array(
                             'templates.path' => DOC_ROOT. '/view/region'
@@ -60,12 +62,13 @@ class Config
                         '/region/code'                => 'POST::TraderController::getAuthcodeAction',  //获取验证码
                         '/region/register'            => '::TraderController::registerAction',         //注册
 			            '/region/trader/list'         => 'GET::TraderController::listAction',          //我的下级代理列表
-                        '/region/money/withdraw/form' => 'GET::MoneyController::withdrawFormAction',       //提现
-                        '/region/money/withdraw'      => 'POST::MoneyController::withdrawAction',       //提现
+                        '/region/money/withdraw/form' => 'GET::MoneyController::withdrawFormAction',   //提现
+                        '/region/money/withdraw'      => 'POST::MoneyController::withdrawAction',      //提现
 			            '/region/money/log'           => 'GET::MoneyController::withdrawLogAction',    //提现记录表列
 						'/region/pwd'                 => '::TraderController::resetPwdAction',         //重置密码
-						'/region/recharge'            => '::CardController::rechargeAction',         //代理商给玩家充房卡
-						'/region/recharge/user'       => '::CardController::userAction',         //代理商给玩家充房卡
+						'/region/recharge'            => '::CardController::rechargeAction',           //代理商给玩家充房卡
+						'/region/custom-recharge'     => '::CardController::customRechargeAction',     //代理商给玩家充房卡
+						'/region/recharge/user'       => '::CardController::userAction',               //充房卡查询用户信息
                 )
         );
     }

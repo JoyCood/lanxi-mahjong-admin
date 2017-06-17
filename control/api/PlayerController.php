@@ -184,7 +184,7 @@ class PlayerController extends BaseController {
 		$userData['address']    = $user['Address'];
 		$userData['createtime'] = $user['Create_time'];
 		$userData['sign']       = $user['Sign'];
-		$userData['birth']      = time();
+		$userData['birth']      = $user['Birth'];
 		$userData['terminal']   = $user['Terminal'];
 		$userData['coin']       = 0;
 		$userData['roomtype']   = 0;
@@ -204,7 +204,7 @@ class PlayerController extends BaseController {
 		$userData['build']      = '';
 		$userData['token']      = $token;
 		$userData['accessToken'] = $accessToken;
-		$userData['timestamp']   = time();
+		$userData['timestamp']   = $time;
 		$userData['serverIp']    = "{$result[0]}:{$gameServerPort}";
 
 		$this->renderJSON($userData);	
@@ -225,7 +225,7 @@ class PlayerController extends BaseController {
 			'Phone'           => isset($userInfo['phone'])? $userInfo['phone'] : '',
 			'Auth'            => '',
 			'Pwd'             => isset($userInfo['pwd'])? $userInfo['pwd'] : '',
-			'Birth'           => '',	
+			'Birth'           => time(),	
 			'Create_ip'       => $ip, 
 			'Create_time'     => time(),
 			'Coin'            => 0,
@@ -288,10 +288,83 @@ class PlayerController extends BaseController {
 		return explode("|", $recv);
 	}	
 
+    //绑定代理商
+    public function bindTraderAction() {
+        $token      = trim($this->request->post('token', ''));
+        $userId     = trim($this->request->post('userId', ''));
+        $trader     = trim($this->request->post('trader', ''));
+        $timestamp  = trim($this->request->post('timestamp', '')); 
+        $createtime = trim($this->request->post('createtime', ''));
+
+        /*
+        $userId = '10001';
+        $trader = '10000';
+        */
+
+        $sign  = Config::GAME_SERVER_SIGN;
+        $hash  = md5("{$sign}{$userId}{$timestamp}{$createtime}");
+        $hash  = md5("{$hash}{$trader}");
+        if($hash != $token) {
+            $response = array(
+                'errcode' => 10000,
+                'errmsg'  => '非法请求'
+            );
+            $this->responseJSON($response); 
+        }
+ 
+        if($userId == $trader) {
+            $response = array(
+                'errcode' => 10001,
+                'errmsg'  => '邀请码不能是自己的游戏id'
+            );
+            $this->responseJSON($response);
+        }
+ 
+        $Trader  = Admin::model('trader.main'); 
+        $filters = array('Gameid' => $trader);
+        $trader = $Trader->findOne($filters);
+        if(!$trader) {
+            $response = array(
+                'errcode' => 10002,
+                'errmsg'  => '邀请码错误，请重新输入'
+            );
+            $this->responseJSON($response);
+        }
+
+        $User = Admin::model('user.main');
+        $filters = array('_id' => $userId);
+        $user = $User->findOne($filters);
+        //如果已经绑定过了，直接返回成功
+        if(isset($user['Build']) && $user['Build'] != '') {
+            $response = array(
+                'errcode' => 0
+            );
+            $this->responseJSON($response);
+        }
+
+        $update = array(
+            'Build' => $trader['Gameid'],
+            'BuildTime' => time()
+        );
+        $result = $user->update($filters, $update);
+        if($result['nModified']>0) { 
+            $response = array('errcode' => 0);
+        } else {
+            $response = array(
+                'errcode' => 10003,
+                'errmsg'  => '系统出错，请稍后重试'
+            );
+        }
+        $this->responseJSON($response);
+    }
+
     public function phoneLoginAction() {
-        $phone = trim($this->request->post('phone'));
-        $password = trim($this->request->post('password')); 
-        $deviceId = trim($this->request->post('deviceId', 'deviceId'));
+        $phone      = trim($this->request->post('phone'));
+        $password   = trim($this->request->post('password')); 
+		$nonceStr   = trim($this->request->post('nonceStr'));
+		$timestamp  = trim($this->request->post('timestamp'));
+		$sign       = trim($this->request->post('sign'));
+        $deviceId   = trim($this->request->post('deviceId', 'deviceId'));
         $deviceName = trim($this->request->post('deviceName', 'deviceName'));
 
         /*
@@ -314,19 +387,29 @@ class PlayerController extends BaseController {
             $this->responseJSON($response);
         }
 
+		$key = Config::CLIENT_KEY;
+		$hash = md5("{$phone}{$key}{$nonceStr}{$timestamp}{$password}");
+		if($hash != $sign) {
+		    $response = array(
+			    'errcode' => 10002,
+				'errmsg'  => '非法请求'
+			);
+			$this->responseJSON($response);
+		}
+
         $User = Admin::model('user.main');
         $filters = array('Phone' => $phone);
         $user = $User->findOne($filters);
         if(!$user) {
             $response = array(
-                'errcode' => 10002,
+                'errcode' => 10003,
                 'errmsg'  => '用户不存在，请先注册'
             );
             $this->responseJSON($response);
         }
         if($user['Pwd'] != md5($password)) {
             $response = array(
-                'errcode' => 10003,
+                'errcode' => 10004,
                 'errmsg'  => '密码错误'
             );
             $this->responseJSON($response);
@@ -351,7 +434,7 @@ class PlayerController extends BaseController {
 		$userData['address']    = $user['Address'];
 		$userData['createtime'] = $user['Create_time'];
 		$userData['sign']       = $user['Sign'];
-		$userData['birth']      = time();
+		$userData['birth']      = $user['Birth'];
 		$userData['terminal']   = $user['Terminal'];
 		$userData['coin']       = 0;
 		$userData['roomtype']   = 0;
@@ -371,7 +454,7 @@ class PlayerController extends BaseController {
 		$userData['build']      = '';
 		$userData['token']      = $token;
 		$userData['accessToken'] = '';
-		$userData['timestamp']   = time();
+		$userData['timestamp']   = $time;
 		$userData['serverIp']    = "{$result[0]}:8005";
 
 		$this->renderJSON($userData);	
@@ -382,6 +465,8 @@ class PlayerController extends BaseController {
         $nickname   = trim($this->request->post('nickname'));
         $password   = trim($this->request->post('password'));
         $password2  = trim($this->request->post('password2'));
+		$nonceStr   = trim($this->request->post('nonceStr'));
+		$timestamp  = trim($this->request->post('timestamp'));
         $deviceId   = trim($this->request->post('deviceId', 'deviceId'));
         $deviceName = trim($this->request->post('deviceName', 'deviceName'));
 /*
@@ -420,12 +505,21 @@ class PlayerController extends BaseController {
             );
             $this->responseJSON($response);
         }
+		$key = Config::CLIENT_KEY;
+		$hash = md5("{$phone}{$key}{$nonceStr}{$timestamp}{$password}");
+		if($hash != $sign) {
+		    $response = array(
+			    'errcode' => 10004,
+				'errmsg'  => '非法请求'
+			);
+			$this->responseJSON($response);
+		}
         $User = Admin::model('user.main'); 
         $filters = array('Phone'=>$phone);    
         $user = $User->findOne($filters);
         if($user) {
             $response = array(
-                'errcode' => 10004,
+                'errcode' => 10005,
                 'errmsg'  => '此号码已注册，请直接登录'
             );
             $this->responseJSON($response);
@@ -458,7 +552,7 @@ class PlayerController extends BaseController {
 		$userData['address']    = $user['Address'];
 		$userData['createtime'] = $user['Create_time'];
 		$userData['sign']       = $user['Sign'];
-		$userData['birth']      = time();
+		$userData['birth']      = $user['Birth'];
 		$userData['terminal']   = $user['Terminal'];
 		$userData['coin']       = 0;
 		$userData['roomtype']   = 0;
@@ -478,7 +572,7 @@ class PlayerController extends BaseController {
 		$userData['build']      = '';
 		$userData['token']      = $token;
 		$userData['accessToken'] = '';
-		$userData['timestamp']   = time();
+		$userData['timestamp']   = $time;
 		$userData['serverIp']    = "{$result[0]}:8005";
 
 		$this->renderJSON($userData);	
