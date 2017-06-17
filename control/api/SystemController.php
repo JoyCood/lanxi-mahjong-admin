@@ -24,7 +24,7 @@ class SystemController extends BaseController {
 		    $data[] = $item['Content'];
 		}
 		$data = array(
-			'亲们，如发现游戏bug或建议请联系微信号：70612568',
+			'乡亲们，如发现游戏bug或建议请联系微信号：lanxiqueshen168',
 			'拉上你的好友一起来玩吧'
 		);
 		$this->responseJSON($data);
