@@ -149,23 +149,17 @@ class CardController extends WechatController {
 
 	protected function rechargeForm() {
 		$url = Helper::requestURI();
-		if(1) {
-			$userinfo = $this->login($url);
-			if(isset($userinfo['unionid'])) {
-			    $User     = Admin::model('user.main');
-			    $filter   = array('Wechat_unionid'=>$userinfo['unionid']);
-			    $userinfo = $User->findOne($filter);
-				$invite   = $user['Build'] == '' && $bindTrader == TRUE;
-			}
-		} else {
-			// 仅测试
-			$userinfo = array();
-			$invite   = true;
+		$userinfo = $this->login($url);
+		if(isset($userinfo['unionid'])) {
+			$User     = Admin::model('user.main');
+			$filter   = array('Wechat_unionid'=>$userinfo['unionid']);
+			$userinfo = $User->findOne($filter);
+			$bindTrader = Config::BIND_TRADER_ENABLE;
+			$invite   = $userinfo['Build'] == '' && $bindTrader == TRUE;
 		}
 
 		$this->render('card/recharge.html', array(
 			'userinfo'   => $userinfo,
-			'bindTrader' => Config::BIND_TRADER_ENABLE,
 		    'options'    => Config::getOptions('card'),
 			'invite'     => $invite,
 		));
