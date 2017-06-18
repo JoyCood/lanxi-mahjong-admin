@@ -83,7 +83,7 @@ class CardController extends BaseController {
 	protected function customRecharge() {
 		$target   = intval($this->request->post('target'));
 	    $quantity = intval($this->request->post('quantity'));
-	    $money    = floatval($this->request->post('money'));
+	    //$money    = floatval($this->request->post('money'));
 
 		$User    = Admin::model('user.main');
 		$filters = array('_id' => $_SESSION[Config::SESSION_UID]);
@@ -97,9 +97,11 @@ class CardController extends BaseController {
 		if($quantity<0) {
 		    $this->error('房卡请输入正整数');
 		}
+		/*
 		if($money<0) {
 		    $this->error('请输金额不能小于0');
 		}
+		*/
 		if($trader['RoomCard']<$quantity) {
 		    $this->error('房卡不足，请联系客服购买房卡');
 		}
