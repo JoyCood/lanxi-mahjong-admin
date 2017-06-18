@@ -52,10 +52,12 @@
                     <label for="recharge-quantity" class="form-label xl">房卡数*：</label>
                     <input type="number" name="quantity" class="form-control" id="recharge-quantity" placeholder="请输入房卡数" />
                 </div>
+				{#
                 <div class="form-row">
                     <label for="recharge-money" class="form-label xl">金额*：</label>
                     <input type="number" name="money" class="form-control" id="recharge-money" placeholder="请输入金额" />
                 </div>
+				#}
                 <div class="form-action">
                     {{csrf_input()}}
                     <input type="hidden" id="recharge-target-value" name="target" />
