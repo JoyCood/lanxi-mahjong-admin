@@ -15,7 +15,7 @@ class Config {
     const CLIENT_KEY = '9hK200FSCXZx_321/78F84ERxop2qbMT';
 
 	//逻辑服信息，购买房卡时用于通知游戏服务器发货结果
-	const GAME_SERVER_HOST = 'http://lanxi.yiiyu.cn:7229/roomcard';
+	const GAME_SERVER_HOST = 'http://yiiyu.cn:7229/roomcard';
 	const GAME_SERVER_SIGN = 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw';
 
 	const DEV_SERVER_HOST  = '120.77.175.1'; //测试环境游戏服务器IP
