@@ -61,15 +61,6 @@
 
 {% block js %}
 <script>
-var handleErr = function(errorMsg, url, lineNumber) {
-    var content = [
-        'url: ' + url,
-        'line number: ' + lineNumber,
-        errorMsg
-    ].join('<br />');
-    $('#debug-info').show().html(content);
-}
-window.onerror =handleErr;
 $(document).ready(function() {
     $('#register-captcha-btn').on('click', function() {
         var btn = $(this);
