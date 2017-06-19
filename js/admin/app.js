@@ -74,12 +74,12 @@ var App = function() {
 					default:
 						var err = {
 							'code': jqXHR.getResponseHeader('APP-CODE'),
-							'message': JSON.parse(jqXHR.getResponseHeader('APP-ERROR') || '')
+							'message': JSON.parse(jqXHR.getResponseHeader('APP-ERROR'))
 						}
 						if(err.message) {
 							app.Notific.alert(err.message);
 						} else {
-							app.Notific.alert((errorThrown? ('[' + errorThrown + ']: '): '') + textStatus);
+							app.Notific.alert(jqXHR.status + ':' + (errorThrown? ('[' + errorThrown + ']: '): '') + textStatus);
 						}
 						break;
 				}
