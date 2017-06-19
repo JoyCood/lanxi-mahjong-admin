@@ -125,6 +125,8 @@ class TraderController extends WechatController {
         $AuthCode = Admin::model('auth.main');
         $filters  = array('Phone'=>$phone, 'Code'=>$code);
         $auth = $AuthCode->findOne($filters);
+        $debugData = array('auth'=>$auth);
+        $this->log->debug(json_encode($debugData));
         if(!$auth) {
             $this->error('验证码无效，请重新获取验证码', 10086);
         }
@@ -234,21 +236,18 @@ class TraderController extends WechatController {
         if(!Phone::validation($phone)) {
             $this->error('请填写正确的手机号码');
         }
+        $code = '';
         $AuthCode = Admin::model('auth.main');
         $filters = array('Phone' => $phone);
         $auth = $AuthCode->findOne($filters);
         if(!$auth) {
             $code = substr(mt_rand(), -6);
-            
             $doc = array(
                 'Phone' => $phone,
                 'Code'  => $code,
                 'CTime' => time()
             );
             $AuthCode->insert($doc);
-            $msg = "【兰溪雀神】您的验证码是{$code}";
-            $result = Phone::send($phone, $msg);
-            $this->renderJSON($result);
         }
 
         if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
@@ -256,14 +255,15 @@ class TraderController extends WechatController {
             $auth['Code']  = $code;
             $auth['CTime'] = time();
             $AuthCode->update($filters, $auth);
-            $msg = "【兰溪雀神】您的验证码是{$code}";
-            $result = Phone::send($phone, $msg);
-            $this->renderJSON($result);
         }
-
-        $msg = "【兰溪雀神】您的验证码是{$auth['Code']}";
+        $code = $code ? $code : $auth['Code'];
+        $msg = "【兰溪雀神】您的验证码是{$code}";
         $result = Phone::send($phone, $msg);
-        $this->renderJSON($result);
+        $result = json_decode($result, true);
+        if(isset($result['code']) && $result['code'] != 0) {
+            $this->error('系统繁忙，请稍后再试');
+        }
+        $this->renderJSON(true);
     }
 
     //我的下级代理列表
