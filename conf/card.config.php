@@ -2,10 +2,9 @@
 return array(
     '1' => array(
         'Id'      => '1',
-        'Title'   => '房卡5张', 
-        'CardNum' => 5,
-        'Money'   => 15,
-        'iosMoney' => 6,
+        'Title'   => '房卡4张', 
+        'CardNum' => 4,
+        'Money'   => 12,
         'Default' => false,
     ),
     '2' => array(
@@ -13,15 +12,13 @@ return array(
         'Title'   => '房卡15张',
         'CardNum' => 15,         
         'Money'   => 40,
-        'iosMoney'=> 12,       
         'Default' => true,
     ),
     '3' => array(
         'Id'      => '3',
         'Title'   => '房卡30张',
         'CardNum' => 30,         
-        'Money'   => 72,
-        'iosMoney'=> 18,       
+        'Money'   => 73,
         'Default' => false,
     ),
 );
