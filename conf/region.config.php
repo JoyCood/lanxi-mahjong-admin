@@ -26,7 +26,7 @@ class Config
 				'core' => require('core.config.php'),
                 // 网站设置
                 'settings' => array(
-                        'title'         => '区域管理',
+                        'title'         => '代理商系统',
                         'listRowsNum'   => 30,
                         'slim'          => array(
                             'templates.path' => DOC_ROOT. '/view/region'
