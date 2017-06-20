@@ -22,10 +22,12 @@ class TraderController extends WechatController {
 					$this->userLogin($trader['Gameid'], $trader['Nickname']);
 					$this->listAction();
 				} else { //只是普通用户,跳到代理商注册页面
-					$this->registerAction();
+					$baseURL = Config::get('core', 'lx.base.url');
+                    header("Location:{$baseURL}/region/register");
 				}
 			} else { //非游戏玩家,todo:跳转到游戏下载页
-				header("Location:http://lanxi.yiiyu.cn/wechat/download");
+                $baseURL = Config::get('core', 'lx.base.url');
+				header("Location:{$baseURL}/wechat/download");
 			}
 		}
 	}
