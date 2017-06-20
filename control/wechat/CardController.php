@@ -93,7 +93,8 @@ class CardController extends WechatController {
 		}
 
 		if(!isset($_SESSION[self::MP_SESSION_OPENID]) || $_SESSION[self::MP_SESSION_OPENID]=='') {
-		    $this->rechargeForm();
+            $baseURL = Config::get('core', 'lx.base.url');
+            header("Location:{$baseURL}/wechat/recharge");
 		}
 
 		$trader = trim($this->request->post('trader'));
@@ -131,7 +132,7 @@ class CardController extends WechatController {
 		    'Build' => $trader['Gameid'],
 			'BuildTime' => time()
 		);
-		$result = $user->update($filters, $update);
+		$result = $User->update($filters, $update);
 		if($result['nModified']>0) {
 		    $this->renderJSON(true);
 		} else {
