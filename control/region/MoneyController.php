@@ -86,4 +86,14 @@ class MoneyController extends BaseController {
             'data' => $data
         ));
     }
+    
+	//提现到微信帐户
+    public function wechatWithdrawAction() {
+	
+	}
+    
+	//提现到支付宝
+	public function alipayWithdrawAction() {
+	
+	}
 }

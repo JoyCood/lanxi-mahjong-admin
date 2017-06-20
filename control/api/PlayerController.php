@@ -201,7 +201,7 @@ class PlayerController extends BaseController {
 		$userData['rupt']       = 0;
 		$userData['sound']      = false;
 		$userData['roomcard']   = $user['RoomCard'];
-		$userData['build']      = '';
+		$userData['build']      = $user['Build'];
 		$userData['token']      = $token;
 		$userData['accessToken'] = $accessToken;
 		$userData['timestamp']   = $time;
@@ -341,7 +341,7 @@ class PlayerController extends BaseController {
             'Build' => $trader['Gameid'],
             'BuildTime' => time()
         );
-        $result = $user->update($filters, $update);
+        $result = $User->update($filters, $update);
         if($result['nModified']>0) { 
             $response = array('errcode' => 0);
         } else {
