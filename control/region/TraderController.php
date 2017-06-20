@@ -263,6 +263,7 @@ class TraderController extends WechatController {
         $result = Phone::send($phone, $msg);
         $result = json_decode($result, true);
         if(isset($result['code']) && $result['code'] != 0) {
+			$this->log->debug(json_encode($result));
             $this->error('系统繁忙，请稍后再试');
         }
         $this->renderJSON(true);

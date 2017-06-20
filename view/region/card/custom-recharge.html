@@ -126,17 +126,7 @@ $(document).ready(function() {
         var moneyElement = $('#recharge-money');
         var money = parseFloat($.trim(moneyElement.val())) || 0;
         var form  = this;
-        if(money < 0) {
-            App.alert('金额不能小于0');
-        } else if(money == 0) {
-            App.confirm('金额为0，是否继续充值？', function(state) {
-                if(state) {
-                    submitRecharge(form);
-                }
-            });
-        } else {
-            submitRecharge(form);
-        }
+        submitRecharge(form);
         return false;
     });
     $('#recharge-result-btn').on('click', function() {
