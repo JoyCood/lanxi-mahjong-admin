@@ -32,12 +32,6 @@ class CardController extends BaseController {
                 'errmsg'  => '非法请求'
             ));
         }
-       /* 
-        $userId = '10000';
-        $cardId = '1';
-        */
-        $appid  = 'wxd32d25b2a43c0f93';
-        $mchid  = '1312998901';
         $card   = Config::get('card', $cardId);
 
         if(!$card) {
@@ -52,9 +46,16 @@ class CardController extends BaseController {
         if(!$user) {
             $this->responseJSON(array(
                 'errcode' => 10002, 
-                'errmsg'  => '用户不存在'
+                'errmsg'  => '玩家不存在'
             ));
         }
+        if(Config::BIND_TRADER_ENABLE) {
+            $rate = Config::get('core', 'lx.trader.rate');
+            $rebate = $card['Money'] * $rate;
+        } else {
+            $rebate = 0;
+        }
+
         $MoneyInpour = Admin::model('money.inpour');
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(
@@ -73,19 +74,16 @@ class CardController extends BaseController {
             'Parent'    => $user['Build'], //上级代理
             'Ctime'     => time(),
             'Lv'        => 0,
-            'Rebate'    => 0, //给上级代理商的返点
+            'Rebate'    => $rebate, //给上级代理商的返点
             'NotifyRes' => array(), //微信回调结果
         ); 
         $MoneyInpour->insert($doc);
 
         $nonceStr = md5(Helper::mkrand());
         $input = new WxPayUnifiedOrder();
-        //$input->SetAppid(Config::get('core', 'wx.app.id'));
-        //$input->SetMch_id(Config::get('core', 'wx.mch.id'));
-        $input->SetAppid($appid);
-        $input->SetMch_id($mchid);
-        //$input->SetBody($card['Title']);
-        $input->SetBody('培训课程');
+        $input->SetAppid(Config::get('core', 'wx.app.id'));
+        $input->SetMch_id(Config::get('core', 'wx.mch.id'));
+        $input->SetBody($card['Title']);
         $input->SetNonce_str($nonceStr);
         $input->SetOut_trade_no($transId);
         $input->SetTotal_fee($card['Money'] * 100);
@@ -94,7 +92,6 @@ class CardController extends BaseController {
         $prepay = WxPayApi::unifiedOrder($input);
         if(!isset($prepay['prepay_id'])) {
             $this->log->debug(json_encode($prepay));
-
             $this->responseJSON(array(
                 'errcode' => 10003, 
                 'errmsg'  => '支付出错，请稍后重试'
