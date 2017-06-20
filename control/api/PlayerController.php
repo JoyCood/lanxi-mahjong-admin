@@ -362,11 +362,6 @@ class PlayerController extends BaseController {
         $deviceId   = trim($this->request->post('deviceId', 'deviceId'));
         $deviceName = trim($this->request->post('deviceName', 'deviceName'));
 
-        /*
-        $phone = '13533332421';
-        $password = '123456';
-         */
-
         if(!$phone) {
             $response = array(
                 'errcode' => 10000,
