@@ -12,5 +12,6 @@ return array(
     'wx.curl.proxy.port' => '0',
     'wx.report.level' => 1,
     'wx.notify.url' => 'http://yiiyu.cn/lanxi/api/notify/wechat',
+    'lx.trader.rate' => 0.5, //给代理商的返现比例
     'lx.base.url' => 'http://yiiyu.cn/lanxi'
 );
