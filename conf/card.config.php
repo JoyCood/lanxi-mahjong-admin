@@ -6,7 +6,6 @@ return array(
         'CardNum' => 4,
         'Money'   => 12,
         'Default' => false,
-        'IAPMoney' => 12,
     ),
     '2' => array(
         'Id'      => '2',
@@ -14,7 +13,6 @@ return array(
         'CardNum' => 15,         
         'Money'   => 40,
         'Default' => true,
-        'IAPMoney' => 40
     ),
     '3' => array(
         'Id'      => '3',
@@ -22,6 +20,5 @@ return array(
         'CardNum' => 30,         
         'Money'   => 73,
         'Default' => false,
-        'IAPMoney' => 73
     ),
 );
