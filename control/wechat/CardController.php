@@ -190,7 +190,7 @@ class CardController extends WechatController {
 		$data   = $User->findOne($filter);
 		if($data) {
 			return array(
-				'NickName' => $data['Nickname'],
+				'Nickname' => $data['Nickname'],
 				'Phone'    => $data['Phone'],
 				'RoomCard' => number_format($data['RoomCard'], 0),
 			);
