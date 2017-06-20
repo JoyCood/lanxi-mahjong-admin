@@ -66,6 +66,10 @@ class ModelTraderMain
         return $this->collection()->update($filter, array('$set' => $data));
     }
 
+    public function findAndModify($filter, $data, $projection=null, $options=array('new'=>true)) {
+        return $this->collection()->findAndModify($filter, $data, $projection, $options);
+    }
+
     public function pagination($params, $pnValue=null) {
         $pn     = Helper::popValue($params, 'pn', 1); 
         $sort   = Helper::popValue($params, 'sort', 'CTime');

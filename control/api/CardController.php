@@ -156,15 +156,22 @@ class CardController extends BaseController {
 					$update  = array('$inc' => array('RoomCard' => $order['Quantity']));
 					$options = array('new' => true);
 					$user    = Admin::model('user.main')->findAndModify($filters, $update); //发货
-                    
+
 					$status = $user===NULL? $MoneyInpour::FAILURE : $MoneyInpour::SUCCESS; 
-					$update = array('Result' => $status);
 					$filters = array(
 						'Transid'=>$xmlarr['out_trade_no'], 
 						'Userid'=>$order['Userid'],
 						'Result'=>$MoneyInpour::DELIVER
 					);
+					$update = array('Result' => $status);
 					$MoneyInpour->update($filters, $update); //更新交易结果
+
+                    //给代理商返现
+                    if(isset($order['Rebate']) && $order['Rebate']>0 && isset($order['Parent']) && $order['Parent'] != '') {
+                        $filters = array('Gameid' => $order['Parent']);
+                        $update  = array('$inc' => array('Balance' => $order['Rebate']));
+                        Admin::model('trader.main')->findAndModify($filters, $update);    
+                    }
 
 					//通知游戏服务器发货结果
 					$sign     = Config::GAME_SERVER_SIGN;
