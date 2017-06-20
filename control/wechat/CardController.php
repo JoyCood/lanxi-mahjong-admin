@@ -9,13 +9,12 @@ class CardController extends WechatController {
 
     public function wxPayAction() {
         if(!isset($_SESSION[self::MP_SESSION_OPENID]) || $_SESSION[self::MP_SESSION_OPENID]=='') {
-            $this->rechargeForm();
+            $baseURL = Config::get('core', 'lx.base.url');
+            header("Location:{$baseURL}/wechat/recharge");
         }
-         
-        $userId = '10000';
-		$buyer  = $userId;
-        $cardId  = '1';
-
+        $userId = trim($this->request->post('target')); //充值对像
+        $cardId = trim($this->request->post('option')); //充值金额
+        
         $card = Config::get('card', $cardId);
         if(!$card) {
             $this->error('商品不存在');
@@ -23,14 +22,22 @@ class CardController extends WechatController {
         $filter = array('_id' => $userId);
         $user = Admin::model('user.main')->findOne($filter);
         if(!$user) {
-             $this->error('用户不存在');
+             $this->error('玩家不存在，请重新输入');
+        }
+
+        //开启绑定代理商的时候购买房卡才给代理商提成
+        if(Config::BIND_TRADER_ENABLE) {
+            $rate   = Config::get('core', 'lx.trader.rate');
+            $rebate = $card['Money'] * $rate;
+        } else {
+            $rebate = 0; 
         }
 
         $MoneyInpour = Admin::model('money.inpour');
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(
             'Transid'   => $transId,
-			'Buyer'     => $buyer,
+			'Buyer'     => $_SESSION[self::MP_SESSION_UNIONID],
             'Userid'    => $userId,
             'Itemid'    => $cardId,
             'Amount'    => 1,
@@ -44,7 +51,7 @@ class CardController extends WechatController {
             'Parent'    => $user['Build'],
             'Ctime'     => time(),
             'Lv'        => 0,
-            'Rebate'    => 0, //给上级代理商的返点
+            'Rebate'    => $rebate, //给上级代理商的返点
             'NotifyRes' => array(),
         ); 
         $MoneyInpour->insert($doc);
@@ -54,7 +61,7 @@ class CardController extends WechatController {
         $input->SetAppid(Config::get('core', 'wx.mp.id'));
         $input->SetMch_id(Config::get('core', 'wx.mch.id'));
         $input->SetOpenid($_SESSION[self::MP_SESSION_OPENID]);
-        $input->SetBody($card['Title']); //Bong 这是个炸弹，不要改这行
+        $input->SetBody($card['Title']); 
         $input->SetNonce_str($nonceStr);
         $input->SetOut_trade_no($transId);
         $input->SetTotal_fee($card['Money'] * 100);
@@ -93,7 +100,8 @@ class CardController extends WechatController {
 		}
 
 		if(!isset($_SESSION[self::MP_SESSION_OPENID]) || $_SESSION[self::MP_SESSION_OPENID]=='') {
-		    $this->rechargeForm();
+            $baseURL = Config::get('core', 'lx.base.url');
+            header("Location:{$baseURL}/wechat/recharge");
 		}
 
 		$trader = trim($this->request->post('trader'));
@@ -131,7 +139,7 @@ class CardController extends WechatController {
 		    'Build' => $trader['Gameid'],
 			'BuildTime' => time()
 		);
-		$result = $user->update($filters, $update);
+		$result = $User->update($filters, $update);
 		if($result['nModified']>0) {
 		    $this->renderJSON(true);
 		} else {
@@ -182,7 +190,7 @@ class CardController extends WechatController {
 		$data   = $User->findOne($filter);
 		if($data) {
 			return array(
-				'NickName' => $data['Nickname'],
+				'Nickname' => $data['Nickname'],
 				'Phone'    => $data['Phone'],
 				'RoomCard' => number_format($data['RoomCard'], 0),
 			);

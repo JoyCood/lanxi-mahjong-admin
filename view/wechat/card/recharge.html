@@ -52,7 +52,7 @@
 
 #recharge-body { display: block; }
 #recharge-result { display: none; }
-#recharge-form { display: none; }
+/*#recharge-form { display: none; }*/
 
 #invitation {
     position: fixed; top: 0; right: 0; bottom: 0; left: 0;
@@ -103,11 +103,11 @@
                 <div id="recharge-user-info">
                     <div class="form-row">
                         <label class="form-label xl">昵称：</label>
-						<input type="text" class="form-control" id="recharge-user-name" readonly="readonly" />
+                        <input type="text" value="{{userinfo.Nickname}}" class="form-control" id="recharge-user-name" readonly="readonly" />
                     </div>
                     <div class="form-row">
                         <label class="form-label xl">房卡：</label>
-						<input type="text" class="form-control" id="recharge-user-card" readonly="readonly" />
+                        <input type="text" value="{{userinfo.RoomCard}}" class="form-control" id="recharge-user-card" readonly="readonly" />
                     </div>
                 </div>
                 <div class="form-row">
@@ -124,7 +124,7 @@
                     </div>
                 </div>
                 <div class="form-action">
-                    <input type="hidden" id="recharge-target-value" name="target" />
+                    <input type="hidden" id="recharge-target-value" name="target" value="{{userinfo._id}}" />
                     <button id="recharge-submit-btn" type="submit" class="btn btn-success  form-control">确定</button>
                 </div>
             </form>
@@ -175,7 +175,7 @@ $(document).ready(function() {
                     $('#recharge-body').css('display', 'none');
                     $('#recharge-result').css('display', 'block');
 
-                    // $('#recharge-result-name').text(resp.NickName || '');
+                    // $('#recharge-result-name').text(resp.Nickname || '');
                     // $('#recharge-result-phone').text(resp.Phone || '');
                     // $('#recharge-result-card').text(resp.RoomCard || '');
 
@@ -198,7 +198,7 @@ $(document).ready(function() {
                 $('#recharge-target-value').val(targetValue);
                 $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', false);
                 $('#recharge-submit-btn').removeClass('btn-disabled').addClass('btn-success');
-                $('#recharge-user-name').val(resp.NickName || '');
+                $('#recharge-user-name').val(resp.Nickname || '');
                 $('#recharge-user-card').val(resp.RoomCard || '');
                 $('#recharge-form').show();
             }

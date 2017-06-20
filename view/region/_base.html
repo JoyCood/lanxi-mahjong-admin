@@ -29,10 +29,25 @@
 <div id="app-loading">
     <i class="fa fa-cog fa-spin fa-2x"></i>
 </div>
-
 <!--<div id="to-top" title="返回顶部">
     <i class="fa fa-arrow-up"></i>
 </div>-->
 {% block js %}{% endblock %}
+
+<div id="debug-info" style="position: fixed; padding: 10px; left: 0; bottom: 0; right: 0; background-color: #fff; border-top: 1px solid #369; z-index: 9999; display: none;"></div>
+<script>
+if(location.hash == '#debug') {
+    var handleErr = function(errorMsg, url, lineNumber) {
+        var content = [
+            'url: ' + url,
+            'line number: ' + lineNumber,
+            errorMsg
+        ].join('<br />');
+        $('#debug-info').show().html(content);
+    }
+    window.onerror =handleErr;
+}
+</script>
+
 </body>
 </html>
