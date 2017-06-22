@@ -8,6 +8,7 @@ class ModelMoneyInpour
 	const DELIVER = 3;    //发货中
 
 	const WEIXIN = 1;      //微信支付 
+	const IAP    = 2;
 
 	const GOODS_TYPE_ROOMCARD = 4; //商品类型：房卡
 
