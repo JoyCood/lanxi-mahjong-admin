@@ -13,6 +13,7 @@ class CardController extends WechatController {
             $baseURL = Config::get('core', 'lx.base.url');
             header("Location:{$baseURL}/region/wechatCR");
         }
+		$this->error('暂未开通支付功能.');
         $userId = trim($this->request->post('target')); //充值对像
         $cardId = trim($this->request->post('option')); //充值金额
         

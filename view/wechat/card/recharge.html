@@ -94,6 +94,10 @@
             <form id="recharge-form" class="w" method="POST" action="wechat/wxpay">
                 <div id="recharge-user-info">
                     <div class="form-row">
+                        <label class="form-label xl">游戏ID：</label>
+                        <input type="text" value="{{userinfo._id}}" class="form-control" id="recharge-user-name" readonly="readonly" />
+                    </div>
+                    <div class="form-row">
                         <label class="form-label xl">昵称：</label>
                         <input type="text" value="{{userinfo.Nickname}}" class="form-control" id="recharge-user-name" readonly="readonly" />
                     </div>
