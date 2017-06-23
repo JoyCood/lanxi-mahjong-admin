@@ -96,7 +96,7 @@
                     <div>
                         {% for id, opt in options %}
                         <span class="card-opt">
-                            <input id="card-opt-{{id}}" type="radio" name="option" value="{{id}}"{{opt.Default? ' checked': ''}} disabled="disabled" />
+                            <input id="card-opt-{{id}}" type="radio" name="option" value="{{id}}"{{opt.Default? ' checked': ''}} />
                             <label for="card-opt-{{id}}">
                                 <strong>房卡{{opt.CardNum}}</strong>
                                 ￥{{opt.Money|number_format(2)}}

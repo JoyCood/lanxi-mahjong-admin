@@ -169,7 +169,7 @@ class CardController extends WechatController {
             $userinfo = $User->findOne($filter);
         }
 
-        $this->render('card/customer-recharge.html', array(
+        $this->render('card/recharge.html', array(
             'options'  => Config::getOptions('card'),
             'userinfo' => $userinfo
         ));
