@@ -236,7 +236,6 @@ class CardController extends BaseController {
             );
             $this->responseJSON($response);
         }
-        $this->log->debug(json_encode($data));
 	    
 	    if(!isset($data['status']) || $data['status'] != 0) {	
             $response = array(
@@ -310,11 +309,8 @@ class CardController extends BaseController {
             'key'       => $key
         );
         $host = DEBUG ? (Config::DEV_GAME_SERVER_HOST): (Config::GAME_SERVER_HOST);  
-        $NotifyRes = Helper::curl($host, json_encode($data), 'POST');
+        Helper::curl($host, json_encode($data), 'POST');
         
-        $notifyData = array('notifyRes'=> $NotifyRes);
-        $this->log->debug(json_encode($notifyData));
-
 		$doc = array(
 			'Transid'   => $order['transaction_id'],
 			'Buyer'     => $userId,
@@ -335,7 +331,6 @@ class CardController extends BaseController {
 			'NotifyRes' => $data,
 		);
         $MoneyInpour->insert($doc);
-        //$this->log->debug(json_encode($doc));
 		$response = array('errcode' => 0);
 		$this->responseJSON($response);
     }

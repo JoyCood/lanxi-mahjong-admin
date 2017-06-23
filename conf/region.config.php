@@ -21,7 +21,29 @@ class Config
                 // 数据库
                 'db' => require('db.config.php'),
                 // 房卡
-                'card' => require('card.config.php'),
+				'card' => array(
+					'1' => array(
+						'Id' => '1',
+						'Title' => '房卡50张',
+						'Cardnum' => 50,
+						'Money' => 50,
+						'Default' => false,
+					),
+					'2' => array(
+						'Id' => '2',
+						'Title' => '房卡100张',
+						'Cardnum' => 100,
+						'Money' => 95,
+						'Default' => true,
+					),
+					'1' => array(
+						'Id' => '3',
+						'Title' => '房卡200张',
+						'Cardnum' => 200,
+						'Money' => 180,
+						'Default' => false,
+					),
+				),
 				//支付、登录
 				'core' => require('core.config.php'),
                 // 网站设置
