@@ -20,7 +20,7 @@ class CardController extends WechatController {
         if(!$user) {
              $this->error('玩家不存在，请重新输入');
         }
-
+/*
         //开启绑定代理商的时候购买房卡才给代理商提成
         if(Config::BIND_TRADER_ENABLE) {
             $rate   = Config::get('core', 'lx.trader.rate');
@@ -28,7 +28,7 @@ class CardController extends WechatController {
         } else {
             $rebate = 0; 
         }
-
+ */
         $MoneyInpour = Admin::model('money.inpour');
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(
@@ -47,7 +47,7 @@ class CardController extends WechatController {
             'Parent'    => $user['Build'],
             'Ctime'     => time(),
             'Lv'        => 0,
-            'Rebate'    => $rebate, //给上级代理商的返点
+            'Rebate'    => 0, //给上级代理商的返点
             'NotifyRes' => array(),
         ); 
         $MoneyInpour->insert($doc);

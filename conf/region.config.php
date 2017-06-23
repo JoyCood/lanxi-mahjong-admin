@@ -24,23 +24,23 @@ class Config
 				'card' => array(
 					'1' => array(
 						'Id' => '1',
-						'Title' => '房卡50张',
-						'CardNum' => 50,
-						'Money' => 50,
+						'Title' => '房卡150张',
+						'CardNum' => 150,
+						'Money' => 180,
 						'Default' => false,
 					),
 					'2' => array(
 						'Id' => '2',
-						'Title' => '房卡100张',
-						'CardNum' => 100,
-						'Money' => 95,
+						'Title' => '房卡330张',
+						'CardNum' => 330,
+						'Money' => 360,
 						'Default' => true,
 					),
 					'3' => array(
 						'Id' => '3',
-						'Title' => '房卡200张',
-						'CardNum' => 200,
-						'Money' => 180,
+						'Title' => '房卡900张',
+						'CardNum' => 900,
+						'Money' => 900,
 						'Default' => false,
 					),
                 ),
@@ -73,7 +73,8 @@ class Config
                         '/region/register',
                         '/region/agreement',
                         '/region/pwd',
-                        '/region/wechatCR'
+                        '/region/wechatCR',
+                        '/region/wxpay'
                 ),
                 // 路径设置
                 'routes' => array(
@@ -92,6 +93,7 @@ class Config
 						'/region/recharge'            => '::CardController::rechargeAction',           //代理商给玩家充房卡
 						'/region/custom-recharge'     => '::CardController::customRechargeAction',     //代理商批发购买房卡
                         '/region/wechatCR'            => 'GET::CardController::wechatCustomeRechargeAction', //从微信公众号批发购买房卡
+                        '/region/wxpay'               => 'POST::CardController::wxPayAction',                //微信支付批发房卡
 						'/region/recharge/user'       => '::CardController::userAction',               //充房卡查询用户信息
                 )
         );
