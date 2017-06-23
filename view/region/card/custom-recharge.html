@@ -11,7 +11,7 @@
 #recharge-user-form.actived #recharge-user-info { display: block; }
 #recharge-user-form div.form-control { line-height: 36px; text-indent: 5px; background-color: transparent; }
 
-#recharge-form { display: none; }
+/*#recharge-form { display: none; }*/
 
 #recharge-body { display: block; }
 #recharge-result { display: none; }
@@ -41,11 +41,11 @@
                 <div id="recharge-user-info">
                     <div class="form-row">
                         <label class="form-label xl">昵称：</label>
-                        <input type="text" class="form-control" id="recharge-user-name" readonly="readonly" style="background-color: #ddd;" />
+                        <input type="text" value="{{userinfo.Nickname}}" class="form-control" id="recharge-user-name" readonly="readonly" style="background-color: #ddd;" />
                     </div>
                     <div class="form-row">
                         <label class="form-label xl">剩余房卡：</label>
-                        <input type="text" class="form-control" id="recharge-user-card" readonly="readonly" style="background-color: #ddd;" />
+                        <input type="text" value="{{userinfo.RoomCard}}" class="form-control" id="recharge-user-card" readonly="readonly" style="background-color: #ddd;" />
                     </div>
                 </div>
                 <div class="form-row">

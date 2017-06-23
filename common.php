@@ -21,7 +21,7 @@ if(DEBUG) {
 
 	$logFile = Config::get('log', 'dir'). '/'. Config::get('log', 'file');
 	$setting = array(
-		'mode'       => 'production',
+		'mode'       => 'development',
 		'log.enable' => true, 
 		'debug'      => true,
 		'log.writer' => new \Slim\LogWriter(fopen($logFile, 'a')),
@@ -32,7 +32,9 @@ if(DEBUG) {
 
     $logFile = Config::get('log', 'dir'). '/'. Config::get('log', 'file');
     $setting = array(
+        'mode' => 'production',
 	    'log.enable' => true, 
+        'debug'      => false,
 	    'log.writer' => new \Slim\LogWriter(fopen($logFile, 'a')),
 	    'log.level'  => \Slim\Log::DEBUG,
     );

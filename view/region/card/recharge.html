@@ -47,7 +47,7 @@
 #recharge-user-form button[type="reset"] { display: none; }
 #recharge-user-form.actived button[type="submit"] { display: none; }
 #recharge-user-form.actived button[type="reset"] { display: block; }
-#recharge-user-form #recharge-user-info { display: none; }
+/*#recharge-user-form #recharge-user-info { display: none; }*/
 #recharge-user-form.actived #recharge-user-info { display: block; }
 #recharge-user-form div.form-control { line-height: 36px; text-indent: 5px; background-color: transparent; }
 
@@ -70,14 +70,14 @@
             <form id="recharge-user-form" class="w" method="POST" action="region/recharge/user">
                 <div class="form-row">
                     <label class="form-label xl">玩家游戏ID:*</label>
-                    <input class="form-control" id="recharge-target" type="number" name="target" value="" placeholder="请输入玩家游戏ID" autocomplete="off" app-required="on" />
+                    <input class="form-control" id="recharge-target" type="number" name="target" value="{{userinfo._id}}" placeholder="请输入玩家游戏ID" autocomplete="off" app-required="on" />
                     <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
                     <button type="reset" class="btn btn-warning"><i class="fa fa-times"></i></button>
                 </div>
                 <div id="recharge-user-info">
                     <div class="form-row">
                         <label class="form-label xl">昵称：</label>
-                        <div class="form-control" id="recharge-user-name"></div>
+                        <div class="form-control" id="recharge-user-name">{{userinfo.Nickname}}</div>
                     </div>
 					<!--
                     <div class="form-row">
@@ -87,16 +87,16 @@
 					-->
                     <div class="form-row">
                         <label class="form-label xl">房卡：</label>
-                        <div class="form-control" id="recharge-user-card">j</div>
+                        <div class="form-control" id="recharge-user-card">{{userinfo.RoomCard}}</div>
                     </div>
                 </div>
             </form>
-            <form id="recharge-form" class="w" method="POST">
+            <form id="recharge-form" class="w" method="POST" action="region/wxpay">
                 <div class="form-row">
                     <div>
                         {% for id, opt in options %}
                         <span class="card-opt">
-                            <input id="card-opt-{{id}}" type="radio" name="option" value="{{id}}"{{opt.Default? ' checked': ''}} disabled="disabled" />
+                            <input id="card-opt-{{id}}" type="radio" name="option" value="{{id}}"{{opt.Default? ' checked': ''}} />
                             <label for="card-opt-{{id}}">
                                 <strong>房卡{{opt.CardNum}}</strong>
                                 ￥{{opt.Money|number_format(2)}}
@@ -107,8 +107,8 @@
                 </div>
                 <div class="form-action">
                     {{csrf_input()}}
-                    <input type="hidden" id="recharge-target-value" name="target" />
-                    <button id="recharge-submit-btn" type="submit" class="btn btn-disabled form-control" disabled>确定</button>
+                    <input type="hidden" id="recharge-target-value" name="target" value="{{userinfo._id}}"/>
+                    <button id="recharge-submit-btn" type="submit" class="btn btn-success form-control" disabled>确定</button>
                 </div>
             </form>
         </div>
@@ -128,6 +128,37 @@
 {% block js %}
 <script>
 $(document).ready(function() {
+    function wxPay(data){
+        var json = {
+            "appId"    : data.appid,     
+            "timeStamp": data.timestamp + '',    
+            "nonceStr" : data.noncestr,   
+            "package"  : "prepay_id=" + data.prepayid,    
+            "signType" : "MD5",     
+            "paySign"  : data.sign
+        }
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', 
+            json,
+            function(res){     
+                if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                    $('#recharge-body').css('display', 'none');
+                    $('#recharge-result').css('display', 'block');
+
+                    // $('#recharge-result-name').text(resp.Nickname || '');
+                    // $('#recharge-result-phone').text(resp.Phone || '');
+                    // $('#recharge-result-card').text(resp.RoomCard || '');
+
+                    $('#recharge-form').get(0).reset();
+                    $('#recharge-user-form').removeClass('actived').get(0).reset();
+                    $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', true);
+                    $('#recharge-submit-btn').addClass('btn-disabled').removeClass('btn-success');
+                } else {
+                    app.Notific.alert('充值失败，请稍候再试');
+                } 
+            }
+        ); 
+    }
     $('#recharge-user-form').on('submit', function() {
         var targetValue = $.trim($('#recharge-target').val());
         App.submitForm(this, {
