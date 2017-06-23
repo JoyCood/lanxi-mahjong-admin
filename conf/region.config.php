@@ -30,6 +30,7 @@ class Config
 						'Default' => false,
 					),
 					'2' => array(
+						'Id' => '2',
 						'Title' => '房卡330张',
 						'CardNum' => 330,
 						'Money' => 360,

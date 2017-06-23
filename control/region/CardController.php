@@ -1,10 +1,15 @@
 <?php
 require(DOC_ROOT. '/control/WechatController.php');
+require_once('lib/wxpay/WxPay.Api.php');
+require_once('lib/wxpay/WxPay.Data.php');
+require_once('lib/wxpay/WxPay.Exception.php');
+require_once('lib/wxpay/WxPay.Notify.php');
 
 class CardController extends WechatController {
 
     public function wxPayAction() {
         if(!isset($_SESSION[self::MP_SESSION_OPENID]) || $_SESSION[self::MP_SESSION_OPENID]=='') {
+			$this->error('please login');
             $baseURL = Config::get('core', 'lx.base.url');
             header("Location:{$baseURL}/region/wechatCR");
         }
@@ -20,15 +25,6 @@ class CardController extends WechatController {
         if(!$user) {
              $this->error('玩家不存在，请重新输入');
         }
-/*
-        //开启绑定代理商的时候购买房卡才给代理商提成
-        if(Config::BIND_TRADER_ENABLE) {
-            $rate   = Config::get('core', 'lx.trader.rate');
-            $rebate = $card['Money'] * $rate;
-        } else {
-            $rebate = 0; 
-        }
- */
         $MoneyInpour = Admin::model('money.inpour');
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(

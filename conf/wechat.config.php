@@ -10,7 +10,7 @@ class Config {
 
 	const BIND_TRADER_ENABLE = TRUE; //是否打开绑定代理商功能
     //安桌下载地址
-    const ANDROID_DOWNLOAD_URL = 'http://cdn.yiiyu.cn/apk/lxqs_r1.0.0.apk';
+    const ANDROID_DOWNLOAD_URL = 'http://cdn.yiiyu.cn/apk/lxqs_v1.0.0.apk';
     //IOS下载地址
     const IOS_DOWNLOAD_URL = 'https://fir.im/LXQS';
 
