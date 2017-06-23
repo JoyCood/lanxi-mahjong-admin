@@ -20,9 +20,7 @@ class Config
         self::$Options = array(
                 // 数据库
                 'db' => require('db.config.php'),
-                // 房卡
-                'card' => require('card.config.php'),
-				//支付、登录
+                //房卡(批发价)
 				'card' => array(
 					'1' => array(
 						'Id' => '1',
@@ -45,7 +43,9 @@ class Config
 						'Money' => 180,
 						'Default' => false,
 					),
-				),
+                ),
+                //支付，登录
+                'core' => require('core.config.php'),
                 // 网站设置
                 'settings' => array(
                         'title'         => '代理商系统',
