@@ -156,7 +156,7 @@ class CardController extends WechatController {
 	}
 
 	protected function rechargeForm() {
-		$url = Helper::requestURI();
+		$url      = Helper::requestURI();
 		$userinfo = $this->login($url);
 		if(isset($userinfo['unionid'])) {
 			$User     = Admin::model('user.main');
