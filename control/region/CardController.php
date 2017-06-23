@@ -1,5 +1,5 @@
 <?php
-require(DOC_ROOT. '/control/BaseController.php');
+require(DOC_ROOT. '/control/WechatController.php');
 
 class CardController extends WechatController {
 
@@ -145,7 +145,7 @@ class CardController extends WechatController {
 			$User->findAndModify($filters, $update, null, $options);
 		}
 
-		$data = $this->getUserInfo($target);
+		$data = $this->getTargetInfo($target);
 		$this->renderJSON($data? $data: array());
 	}
 
@@ -212,13 +212,13 @@ class CardController extends WechatController {
 			$User->findAndModify($filters, $update, null, $options);
 		}
 
-		$data = $this->getUserInfo($target);
+		$data = $this->getTargetInfo($target);
 		$this->renderJSON($data? $data: array());
 	}
  */
 	public function userAction() {
 		$target = intval($this->request->post('target'));
-		$data   = $this->getUserInfo($target);
+		$data   = $this->getTargetInfo($target);
 		if($data) {
 			$this->renderJSON($data);
 		} else {
@@ -226,7 +226,7 @@ class CardController extends WechatController {
 		}
 	}
 
-	protected function getUserInfo($target) {
+	protected function getTargetInfo($target) {
 		$User   = Admin::model('user.main');
 		$filter = array('_id' => strval($target));
 		$data   = $User->findOne($filter);
