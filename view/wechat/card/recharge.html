@@ -91,14 +91,6 @@
     </header>
     <main class="app-main">
         <div id="recharge-body">
-            <form id="recharge-user-form" class="w" method="POST" action="wechat/recharge/user">
-                <div class="form-row">
-                    <label class="form-label xl">玩家游戏ID:*</label>
-					<input class="form-control" id="recharge-target" type="number" name="target" value="{{userinfo._id}}" placeholder="请输入玩家游戏ID" autocomplete="off" app-required="on" />
-                    <button type="submit" class="btn btn-success"{{invite? ' disabled': ''}}><i class="fa fa-search"></i></button>
-                    <button type="reset" class="btn btn-warning"><i class="fa fa-times"></i></button>
-                </div>
-            </form>
             <form id="recharge-form" class="w" method="POST" action="wechat/wxpay">
                 <div id="recharge-user-info">
                     <div class="form-row">
@@ -158,6 +150,14 @@
 {% block js %}
 <script>
 $(document).ready(function() {
+    var success = function() {
+        $('#recharge-body').css('display', 'none');
+        $('#recharge-result').css('display', 'block');
+
+        $('#recharge-form').get(0).reset();
+        $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', true);
+        $('#recharge-submit-btn').addClass('btn-disabled').removeClass('btn-success');
+    }
     function wxPay(data){
         var json = {
             "appId"    : data.appid,     
@@ -172,17 +172,7 @@ $(document).ready(function() {
             json,
             function(res){     
                 if(res.err_msg == "get_brand_wcpay_request:ok" ) {
-                    $('#recharge-body').css('display', 'none');
-                    $('#recharge-result').css('display', 'block');
-
-                    // $('#recharge-result-name').text(resp.Nickname || '');
-                    // $('#recharge-result-phone').text(resp.Phone || '');
-                    // $('#recharge-result-card').text(resp.RoomCard || '');
-
-                    $('#recharge-form').get(0).reset();
-                    $('#recharge-user-form').removeClass('actived').get(0).reset();
-                    $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', true);
-                    $('#recharge-submit-btn').addClass('btn-disabled').removeClass('btn-success');
+                    success();
                 } else {
                     app.Notific.alert('充值失败，请稍候再试');
                 } 
@@ -190,52 +180,22 @@ $(document).ready(function() {
         ); 
     }
 
-    $('#recharge-user-form').on('submit', function() {
-        var targetValue = $.trim($('#recharge-target').val());
-        App.submitForm(this, {
-            success: function(resp) {
-                $('#recharge-user-form').addClass('actived');
-                $('#recharge-target-value').val(targetValue);
-                $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', false);
-                $('#recharge-submit-btn').removeClass('btn-disabled').addClass('btn-success');
-                $('#recharge-user-name').val(resp.Nickname || '');
-                $('#recharge-user-card').val(resp.RoomCard || '');
-                $('#recharge-form').show();
-            }
-        });
-        return false;
-    }).on('click', 'button[type="reset"]', function() {
-        $('#recharge-user-form').removeClass('actived').get(0).reset();
-        $('#recharge-form').hide().get(0).reset();
-        $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', true);
-        $('#recharge-submit-btn').addClass('btn-disabled').removeClass('btn-success');
-    });
     $('#recharge-form').on('submit', function() {
         App.submitForm(this, {
             checkValidity: function(form) {
-                var qtyElement = $('#recharge-quantity');
-                var qty = parseInt($.trim(qtyElement.val()), 10) || 0;
-                qtyElement.val(qty);
-                if(qty < 0) {
-                    App.alert('充值数量不能小于0', function() {
-                        qtyElement.val(qty).focus();
-                    });
-                    return false;
-                }
             },
             success: function(resp) {
                 if(resp && resp.appid) {
                     wxPay(resp);
                 } else {
                     App.Notific.alert('操作异常，请稍候再试');
-                }  //用于登录<C-D-a>
+                } 
             }
         });
         return false;
     });
     $('#recharge-result-btn').on('click', function() {
-        $('#recharge-body').css('display', 'block');
-        $('#recharge-result').css('display', 'none');
+        location.reload();
     });
 
     $('#invite-form').on('submit', function() {
@@ -250,7 +210,6 @@ $(document).ready(function() {
             success: function(resp) {
                 $('#invitation').hide();
                 $('#invite-form').get(0).reset();
-                $('#recharge-user-form button[type="submit"]').prop('disabled', false);
             }
         });
         return false;
