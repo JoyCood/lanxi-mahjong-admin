@@ -9,6 +9,10 @@ class Config {
 	const SESSION_GROUP = 'lanxi-api-group';
 
 	const BIND_TRADER_ENABLE = TRUE; //是否打开绑定代理商功能
+    //安桌下载地址
+    const ANDROID_DOWNLOAD_URL = 'http://cdn.yiiyu.cn/apk/lxqs_r1.0.0.apk';
+    //IOS下载地址
+    const IOS_DOWNLOAD_URL = 'https://fir.im/LXQS';
 
     static function init() {
         self::$Options = array(
