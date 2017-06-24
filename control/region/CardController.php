@@ -84,67 +84,6 @@ class CardController extends WechatController {
         $result['out_trade_no'] = $transId;
         $this->renderJSON($result);
     }
-	//代理商给其它玩家充房卡
-	public function rechargeAction() {
-		if($this->request->isGet()) {
-			$this->setCsrfToken();
-			$this->rechargeForm();
-		} else if($this->request->isPost()) {
-			$this->checkCsrfToken();
-			$this->recharge();
-		}
-	}
-
-	protected function rechargeForm() {
-		$this->render('card/recharge.html', array(
-			'options' => Config::getOptions('card')
-		));
-	}
-
-	protected function recharge() {
-		$target   = intval($this->request->post('target'));
-	    $optValue = trim($this->request->post('option'));
-		$options  = Config::getOptions('card');
-	    $quantity = 0;
-	    $money    = 0;
-
-		if(empty($options[$optValue])) {
-			$this->error('请选择房卡数量');
-		} else {
-			$quantity = $options[$optValue]['CardNum'];
-			$money    = $options[$optValue]['Money'];
-		}
-
-		$User    = Admin::model('user.main');
-		$filters = array('_id' => $_SESSION[Config::SESSION_UID]);
-		$trader  = $User->findOne($filters);
-		if(!$trader) {
-		    $this->error('请重新登录');
-		}
-		if(!$target) {
-		    $this->error('请输入玩家游戏ID');
-		}
-		if($quantity<0) {
-		    $this->error('请输入正整数');
-		}
-		if($trader['RoomCard']<$quantity) {
-		    $this->error('房卡不足，请联系客服购买房卡');
-		}
-		//先给玩家充值成功后再扣除代理商的房卡
-		$filters = array('_id' => strval($target));
-		$update  = array('$inc'=>array('RoomCard'=>$quantity));
-		$result  = $User->findAndModify($filters, $update);
-		if($result) { //扣除代理商的对应数量的房卡
-			$quantity *= -1;
-			$filters = array('_id' => $_SESSION[Config::SESSION_UID]);
-			$update = array('$inc'=>array('RoomCard'=>$quantity));
-			$options = array('new' => true);
-			$User->findAndModify($filters, $update, null, $options);
-		}
-
-		$data = $this->getTargetInfo($target);
-		$this->renderJSON($data? $data: array());
-	}
 
 	public function customRechargeAction() {
 		if($this->request->isGet()) {
@@ -177,9 +116,9 @@ class CardController extends WechatController {
             'options' => Config::getOptions('card')
 		));
 	}
-/*
+
 	protected function customRecharge() {
-		$target   = intval($this->request->post('target'));
+		$target   = trim($this->request->post('target');
 	    $quantity = intval($this->request->post('quantity'));
 
 		$User    = Admin::model('user.main');
@@ -198,7 +137,7 @@ class CardController extends WechatController {
 		    $this->error('房卡不足，请联系客服购买房卡');
 		}
 		//先给房家充值成功后再扣除代理商的房卡
-		$filters = array('_id' => strval($target));
+		$filters = array('_id' => $target);
 		$update  = array('$inc'=>array('RoomCard'=>$quantity));
 		$result  = $User->findAndModify($filters, $update);
 		if($result) { //扣除代理商的对应数量的房卡
@@ -212,7 +151,7 @@ class CardController extends WechatController {
 		$data = $this->getTargetInfo($target);
 		$this->renderJSON($data? $data: array());
 	}
- */
+
 	public function userAction() {
 		$target = intval($this->request->post('target'));
 		$data   = $this->getTargetInfo($target);
