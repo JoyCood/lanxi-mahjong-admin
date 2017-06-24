@@ -118,7 +118,7 @@ class CardController extends WechatController {
 	}
 
 	protected function customRecharge() {
-		$target   = trim($this->request->post('target');
+		$target   = trim($this->request->post('target'));
 	    $quantity = intval($this->request->post('quantity'));
 
 		$User    = Admin::model('user.main');
