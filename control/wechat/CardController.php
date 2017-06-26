@@ -12,6 +12,7 @@ class CardController extends WechatController {
             $baseURL = Config::get('core', 'lx.base.url');
             header("Location:{$baseURL}/wechat/recharge");
         }
+		$this->error('暂未开通支付功能.');
         $userId = trim($this->request->post('target')); //充值对像
         $cardId = trim($this->request->post('option')); //充值金额
         
@@ -156,7 +157,7 @@ class CardController extends WechatController {
 	}
 
 	protected function rechargeForm() {
-		$url = Helper::requestURI();
+		$url      = Helper::requestURI();
 		$userinfo = $this->login($url);
 		if(isset($userinfo['unionid'])) {
 			$User     = Admin::model('user.main');

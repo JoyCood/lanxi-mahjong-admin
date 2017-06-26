@@ -52,12 +52,6 @@
                     <label for="recharge-quantity" class="form-label xl">房卡数*：</label>
                     <input type="number" name="quantity" class="form-control" id="recharge-quantity" placeholder="请输入房卡数" />
                 </div>
-				{#
-                <div class="form-row">
-                    <label for="recharge-money" class="form-label xl">金额*：</label>
-                    <input type="number" name="money" class="form-control" id="recharge-money" placeholder="请输入金额" />
-                </div>
-				#}
                 <div class="form-action">
                     {{csrf_input()}}
                     <input type="hidden" id="recharge-target-value" name="target" />
@@ -103,8 +97,8 @@ $(document).ready(function() {
                 var qtyElement = $('#recharge-quantity');
                 var qty = parseInt($.trim(qtyElement.val()), 10) || 0;
                 qtyElement.val(qty);
-                if(qty < 0) {
-                    App.alert('充值数量不能小于0', function() {
+                if(qty < 1) {
+                    App.alert('房卡数不能小于0', function() {
                         qtyElement.val(qty).focus();
                     });
                     return false;
@@ -123,20 +117,7 @@ $(document).ready(function() {
         });
     }
     $('#recharge-form').on('submit', function() {
-        var moneyElement = $('#recharge-money');
-        var money = parseFloat($.trim(moneyElement.val())) || 0;
-        var form  = this;
-        if(money < 0) {
-            App.alert('金额不能小于0');
-        } else if(money == 0) {
-            App.confirm('金额为0，是否继续充值？', function(state) {
-                if(state) {
-                    submitRecharge(form);
-                }
-            });
-        } else {
-            submitRecharge(form);
-        }
+        submitRecharge(this);
         return false;
     });
     $('#recharge-result-btn').on('click', function() {

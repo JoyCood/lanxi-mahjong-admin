@@ -94,15 +94,15 @@ class CardController extends BaseController {
             $this->log->debug(json_encode($prepay));
             $this->responseJSON(array(
                 'errcode' => 10003, 
-                'errmsg'  => '支付出错，请稍后重试'
+                'errmsg'  => '暂未开通支付功能，请联系客服'
             ));
         }
 
         $paramters = array(
-            'appid'     => $appid, //Config::get('core', 'wx.app.id'),
+            'appid'     => Config::get('core', 'wx.app.id'),
             'noncestr'  => $nonceStr,
             'package'   => 'Sign=WXPay',
-            'partnerid' => $mchid, //Config::get('core', 'wx.mch.id'),
+            'partnerid' => Config::get('core', 'wx.mch.id'),
             'prepayid'  => $prepay['prepay_id'],
             'timestamp' => time(),
         );
@@ -118,7 +118,6 @@ class CardController extends BaseController {
         );
         $this->renderJSON($data);
     }
-
 
     //支付回调
     public function wxPayNotifyAction() {
@@ -159,9 +158,9 @@ class CardController extends BaseController {
 
 					$status = $user===NULL? $MoneyInpour::FAILURE : $MoneyInpour::SUCCESS; 
 					$filters = array(
-						'Transid'=>$xmlarr['out_trade_no'], 
-						'Userid'=>$order['Userid'],
-						'Result'=>$MoneyInpour::DELIVER
+						'Transid' => $xmlarr['out_trade_no'], 
+						'Userid'  => $order['Userid'],
+						'Result'  => $status
 					);
 					$update = array('Result' => $status);
 					$MoneyInpour->update($filters, $update); //更新交易结果
@@ -201,5 +200,138 @@ class CardController extends BaseController {
         {
             echo '<xml><return_code><![CDATA[FAILURE]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>';
         }
+    }
+
+    //苹果支付发货
+    public function IAPNotifyAction() {
+        $userId    = trim($this->request->post('userId'));     
+        $nonceStr  = trim($this->request->post('nonceStr'));
+        $timestamp = trim($this->request->post('timestamp'));
+		$token     = trim($this->request->post('token'));
+        $receipt   = trim($this->request->post('receipt'));
+
+		$key  = Config::CLIENT_KEY; 
+        $sign = md5($receipt);
+        $hash = md5("{$key}{$userId}{$nonceStr}{$sign}{$timestamp}");
+        
+        if($hash != $token) {
+            $response = array(
+                'errcode' => 10000,
+                'errmsg'  => '非法请求'
+            );
+            $this->responseJSON($response);
+        }
+        $sandbox = 'https://sandbox.itunes.apple.com/verifyReceipt';
+        $release = 'https://buy.itunes.apple.com/verifyReceipt';
+        $URL = DEBUG ? $sandbox : $release;
+        $data = json_encode(array('receipt-data' => $receipt)); 
+
+        $response = Helper::curl($URL, $data, 'POST', 30);
+
+        $data = json_decode($response, true);
+        if(!$data) {
+            $response = array(
+                'errcode' => 10001,
+                'errmsg'  => '请求超时，请重试'
+            );
+            $this->responseJSON($response);
+        }
+	    
+	    if(!isset($data['status']) || $data['status'] != 0) {	
+            $response = array(
+                'errcode' => isset($data['status']) ? $data['status'] : 10002,
+                'errmsg'  => '支付凭证无效'
+            );
+            $this->responseJSON($response);
+        }
+
+		$order  = $data['receipt']['in_app'][0];
+		$cardId = $order['product_id']; 
+		$card   = Config::get('card', $cardId);
+		if(!$card) {
+			$response = array(
+				'errcode' => 10002,
+				'errmsg'  => '商品不存在'
+			);
+			$this->responseJSON($response);
+		} 
+        
+		$MoneyInpour = Admin::model('money.inpour');
+        $filters = array(
+            'Transid' => $order['transaction_id'],
+            'Result'  => $MoneyInpour::SUCCESS
+        );
+        $mi = $MoneyInpour->findOne($filters);
+        if($mi) {
+            $response = array(
+                'errcode' => 10003,
+                'errmsg'  => '此订单已发货，请勿重复下单'
+            ); 
+
+            $this->responseJSON($response);
+        }
+
+		$User = Admin::model('user.main');
+		$filters  = array('_id' => $userId);
+		$update   = array('$inc' => array('RoomCard' => $card['CardNum']));         
+		$user = $User->findAndModify($filters, $update);
+
+		if(!$user) {
+			$response = array(
+				'errcode' => 10003,
+				'errmsg'  => '找不到玩家信息'
+			);
+			$this->responseJSON($response);
+		}
+
+		if(Config::BIND_TRADER_ENABLE) {
+			$rate = Config::get('core', 'lx.trader.rate');
+			$rebate = $card['Money'] * $rate;
+		} else {
+			$rebate = 0;
+		}
+		$sign     = Config::GAME_SERVER_SIGN;
+        $time     = time();
+        $userid   = (string)$userId;
+		$transid  = (string)$order['transaction_id'];
+		$kind     = intval($MoneyInpour::GOODS_TYPE_ROOMCARD);
+        $count    = intval($card['CardNum']);
+        $curcount = intval($user['RoomCard']); 
+
+        $key = md5("{$sign}{$time}{$userid}{$transid}{$kind}{$count}{$curcount}");
+        $data = array(
+            'transid'   => $transid,
+            'userid'    => $userid,
+            'kind'      => $kind,
+            'count'     => $count,
+            'curcount'  => $curcount,
+            'timestamp' => $time,
+            'key'       => $key
+        );
+        $host = DEBUG ? (Config::DEV_GAME_SERVER_HOST): (Config::GAME_SERVER_HOST);  
+        Helper::curl($host, json_encode($data), 'POST');
+        
+		$doc = array(
+			'Transid'   => $order['transaction_id'],
+			'Buyer'     => $userId,
+			'Userid'    => $userId,
+			'Itemid'    => $cardId,
+			'Amount'    => $order['quantity'], //商品数量
+			'Quantity'  => $card['CardNum'], //获得的房卡数
+			'Money'     => $card['Money'],
+			'Transtime' => time(),
+			'Result'    => $MoneyInpour::SUCCESS,
+			'Currency'  => 'CNY',
+			'Paytype'   => $MoneyInpour::IAP,
+			'Clientip'  => Admin::getRemoteIP(),
+			'Parent'    => $user['Build'], //上级代理
+			'Ctime'     => time(),
+			'Lv'        => 0,
+			'Rebate'    => $rebate, 
+			'NotifyRes' => $data,
+		);
+        $MoneyInpour->insert($doc);
+		$response = array('errcode' => 0);
+		$this->responseJSON($response);
     }
 }

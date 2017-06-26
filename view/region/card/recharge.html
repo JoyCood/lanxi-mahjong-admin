@@ -47,56 +47,70 @@
 #recharge-user-form button[type="reset"] { display: none; }
 #recharge-user-form.actived button[type="submit"] { display: none; }
 #recharge-user-form.actived button[type="reset"] { display: block; }
-#recharge-user-form #recharge-user-info { display: none; }
-#recharge-user-form.actived #recharge-user-info { display: block; }
 #recharge-user-form div.form-control { line-height: 36px; text-indent: 5px; background-color: transparent; }
+#recharge-user-info input { background-color: transparent; }
 
 #recharge-body { display: block; }
 #recharge-result { display: none; }
+/*#recharge-form { display: none; }*/
+
+#invitation {
+    position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+    background-color: rgba(200, 200, 200, .75);
+}
+#invite-form {
+    position: absolute;
+    top: 160px; left: 50%;
+    border: 1px solid #4db3a5; border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #fff;
+    width: 50%;
+    max-width: 480px; min-width: 280px;
+    transform: translate3d(-50%, 0, 0);
+    padding: 26px 20px 32px;
+}
+#invite-form>h2 {
+    padding: 0 0 18px; margin: 0;
+    font-size: 16px; font-weight: normal;
+}
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="app nofooter">
     <header class="app-header">
+		<!--
         <a class="app-back" app-action="back"></a>
+		-->
         <h1>{{TITLE}}</h1>
-        <nav>
+        <!--
+		<nav>
             <a href="javascript:;" class="fa fa-bars" app-action="menu"></a>
         </nav>
+		-->
     </header>
     <main class="app-main">
         <div id="recharge-body">
-            <form id="recharge-user-form" class="w" method="POST" action="region/recharge/user">
-                <div class="form-row">
-                    <label class="form-label xl">玩家游戏ID:*</label>
-                    <input class="form-control" id="recharge-target" type="number" name="target" value="" placeholder="请输入玩家游戏ID" autocomplete="off" app-required="on" />
-                    <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
-                    <button type="reset" class="btn btn-warning"><i class="fa fa-times"></i></button>
-                </div>
+            <form id="recharge-form" class="w" method="POST" action="region/wxpay">
                 <div id="recharge-user-info">
                     <div class="form-row">
-                        <label class="form-label xl">昵称：</label>
-                        <div class="form-control" id="recharge-user-name"></div>
+                        <label class="form-label xl">游戏ID：</label>
+                        <input type="text" value="{{userinfo._id}}" class="form-control" id="recharge-user-name" readonly="readonly" />
                     </div>
-					<!--
                     <div class="form-row">
-                        <label class="form-label xl">电话：</label>
-                        <div class="form-control" id="recharge-user-phone"></div>
+                        <label class="form-label xl">昵称：</label>
+                        <input type="text" value="{{userinfo.Nickname}}" class="form-control" id="recharge-user-name" readonly="readonly" />
                     </div>
-					-->
                     <div class="form-row">
                         <label class="form-label xl">房卡：</label>
-                        <div class="form-control" id="recharge-user-card">j</div>
+                        <input type="text" value="{{userinfo.RoomCard}}" class="form-control" id="recharge-user-card" readonly="readonly" />
                     </div>
                 </div>
-            </form>
-            <form id="recharge-form" class="w" method="POST">
                 <div class="form-row">
                     <div>
                         {% for id, opt in options %}
                         <span class="card-opt">
-                            <input id="card-opt-{{id}}" type="radio" name="option" value="{{id}}"{{opt.Default? ' checked': ''}} disabled="disabled" />
+                            <input id="card-opt-{{id}}" type="radio" name="option" value="{{id}}"{{opt.Default? ' checked': ''}}  />
                             <label for="card-opt-{{id}}">
                                 <strong>房卡{{opt.CardNum}}</strong>
                                 ￥{{opt.Money|number_format(2)}}
@@ -106,21 +120,33 @@
                     </div>
                 </div>
                 <div class="form-action">
-                    {{csrf_input()}}
-                    <input type="hidden" id="recharge-target-value" name="target" />
-                    <button id="recharge-submit-btn" type="submit" class="btn btn-disabled form-control" disabled>确定</button>
+                    <input type="hidden" id="recharge-target-value" name="target" value="{{userinfo._id}}" />
+                    <button id="recharge-submit-btn" type="submit" class="btn btn-success  form-control">确定</button>
                 </div>
             </form>
         </div>
         <div id="recharge-result">
             <div class="alert alert-success">充值成功</div>
+            {#
             <p>昵称：<span id="recharge-result-name"></span></p>
-			<!--<p>电话：<span id="recharge-result-phone"></span></p>-->
             <p>房卡：<span id="recharge-result-card"></span></p>
+            #}
             <div class="form-action">
                 <button id="recharge-result-btn" type="button" class="btn btn-primary form-control">继续充值</button>
             </div>
         </div>
+	    <div id="debug"></div>
+        {% if invite %}
+        <div id="invitation">
+            <form id="invite-form" method="POST" action="wechat/bind-trader">
+                <h2>邀请码</h2>
+                <div class="form-row">
+                    <input type="text" id="invite-input" class="form-control" name="trader" placeholder="请输入邀请码" autocomplete="off" />
+                    <button type="submit" class="btn btn-success">确定</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
     </main>
 </div>
 {% endblock %}
@@ -128,57 +154,68 @@
 {% block js %}
 <script>
 $(document).ready(function() {
-    $('#recharge-user-form').on('submit', function() {
-        var targetValue = $.trim($('#recharge-target').val());
-        App.submitForm(this, {
-            success: function(resp) {
-                $('#recharge-user-form').addClass('actived');
-                $('#recharge-target-value').val(targetValue);
-                $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', false);
-                $('#recharge-submit-btn').removeClass('btn-disabled').addClass('btn-success');
-                $('#recharge-user-name').text(resp.Nickname || '');
-                //$('#recharge-user-phone').text(resp.Phone || '');
-                $('#recharge-user-card').text(resp.RoomCard || '');
-            }
-        });
-        return false;
-    }).on('click', 'button[type="reset"]', function() {
-        $('#recharge-user-form').removeClass('actived').get(0).reset();
+    var success = function() {
+        $('#recharge-body').css('display', 'none');
+        $('#recharge-result').css('display', 'block');
+
+        $('#recharge-form').get(0).reset();
         $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', true);
         $('#recharge-submit-btn').addClass('btn-disabled').removeClass('btn-success');
-    });
+    }
+    function wxPay(data){
+        var json = {
+            "appId"    : data.appid,     
+            "timeStamp": data.timestamp + '',    
+            "nonceStr" : data.noncestr,   
+            "package"  : "prepay_id=" + data.prepayid,    
+            "signType" : "MD5",     
+            "paySign"  : data.sign
+        }
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', 
+            json,
+            function(res){     
+                if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                    success();
+                } else {
+                    app.Notific.alert('充值失败，请稍候再试');
+                } 
+            }
+        ); 
+    }
     $('#recharge-form').on('submit', function() {
         App.submitForm(this, {
             checkValidity: function(form) {
-                var qtyElement = $('#recharge-quantity');
-                var qty = parseInt($.trim(qtyElement.val()), 10) || 0;
-                qtyElement.val(qty);
-                if(qty < 0) {
-                    App.alert('充值数量不能小于0', function() {
-                        qtyElement.val(qty).focus();
-                    });
-                    return false;
-                }
             },
             success: function(resp) {
-                $('#recharge-body').css('display', 'none');
-                $('#recharge-result').css('display', 'block');
-
-                $('#recharge-result-name').text(resp.Nickname || '');
-                //$('#recharge-result-phone').text(resp.Phone || '');
-                $('#recharge-result-card').text(resp.RoomCard || '');
-
-                $('#recharge-form').get(0).reset();
-                $('#recharge-user-form').removeClass('actived').get(0).reset();
-                $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', true);
-                $('#recharge-submit-btn').addClass('btn-disabled').removeClass('btn-success');
+                if(resp && resp.appid) {
+                    wxPay(resp);
+                } else {
+                    App.Notific.alert('操作异常，请稍候再试');
+                } 
             }
         });
         return false;
     });
     $('#recharge-result-btn').on('click', function() {
-        $('#recharge-body').css('display', 'block');
-        $('#recharge-result').css('display', 'none');
+        location.reload();
+    });
+
+    $('#invite-form').on('submit', function() {
+        App.submitForm(this, {
+            checkValidity: function(form) {
+                var codeElement = $('#invite-input');
+                var code = $.trim(codeElement.val());
+                if(code.length == 0) {
+                    return false;
+                }
+            },
+            success: function(resp) {
+                $('#invitation').hide();
+                $('#invite-form').get(0).reset();
+            }
+        });
+        return false;
     });
 });
 </script>

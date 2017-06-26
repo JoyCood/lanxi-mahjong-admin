@@ -20,10 +20,32 @@ class Config
         self::$Options = array(
                 // 数据库
                 'db' => require('db.config.php'),
-                // 房卡
-                'card' => require('card.config.php'),
-				//支付、登录
-				'core' => require('core.config.php'),
+                //房卡(批发价)
+				'card' => array(
+					'1' => array(
+						'Id' => '1',
+						'Title' => '房卡150张',
+						'CardNum' => 150,
+						'Money' => 180,
+						'Default' => false,
+					),
+					'2' => array(
+						'Id' => '2',
+						'Title' => '房卡330张',
+						'CardNum' => 330,
+						'Money' => 360,
+						'Default' => true,
+					),
+					'3' => array(
+						'Id' => '3',
+						'Title' => '房卡900张',
+						'CardNum' => 900,
+						'Money' => 900,
+						'Default' => false,
+					)
+                ),
+                //支付，登录
+                'core' => require('core.config.php'),
                 // 网站设置
                 'settings' => array(
                         'title'         => '代理商系统',
@@ -50,7 +72,9 @@ class Config
                         '/region/code',
                         '/region/register',
                         '/region/agreement',
-						'/region/pwd',
+                        '/region/pwd',
+                        '/region/wechatCR',
+                        '/region/wxpay'
                 ),
                 // 路径设置
                 'routes' => array(
@@ -67,7 +91,9 @@ class Config
 			            '/region/money/log'           => 'GET::MoneyController::withdrawLogAction',    //提现记录表列
 						'/region/pwd'                 => '::TraderController::resetPwdAction',         //重置密码
 						'/region/recharge'            => '::CardController::rechargeAction',           //代理商给玩家充房卡
-						'/region/custom-recharge'     => '::CardController::customRechargeAction',     //代理商给玩家充房卡
+						'/region/custom-recharge'     => '::CardController::customRechargeAction',     //代理商批发购买房卡
+                        '/region/wechatCR'            => 'GET::CardController::wechatCustomeRechargeAction', //从微信公众号批发购买房卡
+                        '/region/wxpay'               => 'POST::CardController::wxPayAction',                //微信支付批发房卡
 						'/region/recharge/user'       => '::CardController::userAction',               //充房卡查询用户信息
                 )
         );

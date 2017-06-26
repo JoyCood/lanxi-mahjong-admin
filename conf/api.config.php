@@ -18,8 +18,11 @@ class Config {
 	const GAME_SERVER_HOST = 'http://101.37.97.86:7229/roomcard';
 	const GAME_SERVER_SIGN = 'XG0e2Ye/KAUJRXaMNnJ5UH1haBvh2FXOoAggE6f2Utw';
 
-	const DEV_SERVER_HOST  = '120.77.175.1'; //测试环境游戏服务器IP
-	const GAME_SERVER_PORT = 8005; //游戏服务器端口
+    //开发服信息，购买房卡时用于通知游戏服务器发货结果
+    const DEV_GAME_SERVER_HOST = 'http://120.77.175.1:7229/roomcard';
+	const DEV_SERVER_HOST      = '120.77.175.1'; //测试环境游戏服务器IP
+
+	const GAME_SERVER_PORT     = 8005; //游戏服务器端口
 
 	//分配逻辑服IP的服务器地址
 	const GAME_IP_SERVER_HOST = '192.168.1.2';
@@ -62,6 +65,7 @@ class Config {
                 '/api/phone-reg',
                 '/api/phone-login',
                 '/api/notify/wechat',
+                '/api/notify/iap',
                 '/api/toggle',
                 '/api/bind-trader'
             ),
@@ -75,6 +79,7 @@ class Config {
                 '/api/phone-reg'     => 'POST::PlayerController::phoneRegAction',
                 '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction',
                 '/api/notify/wechat' => 'POST::CardController::wxPayNotifyAction',
+                '/api/notify/iap'    => 'POST::CardController::IAPNotifyAction',
                 '/api/toggle'        => 'POST::SystemController::toggleAction',
                 '/api/bind-trader'   => 'POST::PlayerController::bindTraderAction'
             )
