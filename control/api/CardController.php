@@ -224,23 +224,26 @@ class CardController extends BaseController {
         $sandbox = 'https://sandbox.itunes.apple.com/verifyReceipt';
         $release = 'https://buy.itunes.apple.com/verifyReceipt';
         $URL = DEBUG ? $sandbox : $release;
-        $data = json_encode(array('receipt-data' => $receipt)); 
+        $receiptData = json_encode(array('receipt-data' => $receipt)); 
 
-        $response = Helper::curl($URL, $data, 'POST', 30);
+        $response = Helper::curl($URL, $receiptData, 'POST', 30);
 
         $data = json_decode($response, true);
-        if(!$data) {
-            $response = array(
-                'errcode' => 10001,
-                'errmsg'  => '请求超时，请重试'
-            );
-            $this->responseJSON($response);
+        
+        //来自沙盒的支付凭证
+        if(isset($data['status']) && $data['status']==21007) {
+            $response = Helper::curl($sandbox, $receiptData, 'POST', 30); 
+            $data = json_decode($response);
+        } //来自生产环境的支付凭证
+        else if(isset($data['status']) && $data['status']==21008) {
+            $response = Helper::curl($release, $receiptData, 'POST', 30); 
+            $data = json_decode($response);
         }
 	    
 	    if(!isset($data['status']) || $data['status'] != 0) {	
             $response = array(
-                'errcode' => isset($data['status']) ? $data['status'] : 10002,
-                'errmsg'  => '支付凭证无效'
+                'errcode' => isset($data['status']) ? $data['status'] : 10001,
+                'errmsg'  => '验证超时或支付凭证无效'
             );
             $this->responseJSON($response);
         }
@@ -278,7 +281,7 @@ class CardController extends BaseController {
 
 		if(!$user) {
 			$response = array(
-				'errcode' => 10003,
+				'errcode' => 10004,
 				'errmsg'  => '找不到玩家信息'
 			);
 			$this->responseJSON($response);
