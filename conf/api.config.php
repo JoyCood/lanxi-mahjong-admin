@@ -22,8 +22,6 @@ class Config {
 
 	const DEV_SERVER_HOST  = '120.77.175.1'; //测试环境游戏服务器IP
 
-    //开发服信息，购买房卡时用于通知游戏服务器发货结果
-
 	//分配逻辑服IP的服务器地址
 	const GAME_IP_SERVER_HOST = '192.168.1.2';
     const GAME_IP_SERVER_PORT = 6677;

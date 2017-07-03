@@ -90,8 +90,7 @@ class Config
                         '/region/money/withdraw'      => 'POST::MoneyController::withdrawAction',      //提现
 			            '/region/money/log'           => 'GET::MoneyController::withdrawLogAction',    //提现记录表列
 						'/region/pwd'                 => '::TraderController::resetPwdAction',         //重置密码
-						'/region/recharge'            => '::CardController::rechargeAction',           //代理商给玩家充房卡
-						'/region/custom-recharge'     => '::CardController::customRechargeAction',     //代理商批发购买房卡
+						'/region/custom-recharge'     => '::CardController::customRechargeAction',     //代理商给玩家充房卡
                         '/region/wechatCR'            => 'GET::CardController::wechatCustomeRechargeAction', //从微信公众号批发购买房卡
                         '/region/wxpay'               => 'POST::CardController::wxPayAction',                //微信支付批发房卡
 						'/region/recharge/user'       => '::CardController::userAction',               //充房卡查询用户信息
