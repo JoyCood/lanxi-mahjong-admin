@@ -4,11 +4,12 @@ require(DOC_ROOT. '/control/BaseController.php');
 class SystemController extends BaseController {
     //一些开关设置
     public function toggleAction() {
+		$num = intval($this->request->post('release-num', 0));
         $data = array(
             'broadcast'   => Config::BROADCAST_ENABLED,
             'phone-login' => Config::PHONE_LOGIN_ENABLED,
             'phone-reg'   => Config::PHONE_REG_ENABLED,
-            'apple-pay'   => Config::APPLE_PAY_ENABLED,
+            'apple-pay'   => ($num>0 && $num>=Config::RELEASE_NUMBER),
             'bind-trader' => Config::BIND_TRADER_ENABLE,
         );
         $this->responseJSON($data);

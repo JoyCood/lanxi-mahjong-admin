@@ -28,11 +28,12 @@ class Config {
 	const GAME_IP_SERVER_HOST = '192.168.1.2';
     const GAME_IP_SERVER_PORT = 6677;
 
-    const BROADCAST_ENABLED   = TRUE; //是否显示公告栏跑马灯
-    const PHONE_LOGIN_ENABLED = TRUE; //是否允许手机号登录
-    const PHONE_REG_ENABLED   = TRUE; //是否允许手机注册
-    const APPLE_PAY_ENABLED   = TRUE; //是否打开苹果内购支付
-    const BIND_TRADER_ENABLE  = TRUE; //是否打开绑定代理商弹窗 
+	const RELEASE_NUMBER = 0;
+    const BROADCAST_ENABLED    = TRUE; //是否显示公告栏跑马灯
+    const PHONE_LOGIN_ENABLED  = TRUE; //是否允许手机号登录
+    const PHONE_REG_ENABLED    = TRUE; //是否允许手机注册
+    //const APPLE_PAY_ENABLED    = TRUE; //是否打开苹果内购支付
+    const BIND_TRADER_ENABLE   = TRUE; //是否打开绑定代理商弹窗 
 
     static function init() {
         self::$Options = array(
