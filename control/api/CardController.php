@@ -248,7 +248,6 @@ class CardController extends BaseController {
             $this->responseJSON($response);
         }
 
-        $this->log->debug(json_encode($data));
 		$order  = $data['receipt']['in_app'][0];
 		$cardId = $order['product_id']; 
 		$card   = Config::get('card', $cardId);
