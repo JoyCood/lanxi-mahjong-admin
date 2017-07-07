@@ -9,10 +9,6 @@ class Config {
 	const SESSION_GROUP = 'lanxi-api-group';
 
 	const BIND_TRADER_ENABLE = TRUE; //是否打开绑定代理商功能
-    //安桌下载地址
-    const ANDROID_DOWNLOAD_URL = 'http://cdn.yiiyu.cn/apk/lxqs_v1.0.0.apk';
-    //IOS下载地址
-    const IOS_DOWNLOAD_URL = 'https://fir.im/LXQS';
 
     static function init() {
         self::$Options = array(
@@ -36,7 +32,8 @@ class Config {
                 'dir' => '/var/log/lanxi-mahjong/wechat',
                 'file' => 'log-'. date('Y-m-d'). '.log',
             ),
-
+            //版本更新
+            'release' => require('release.config.php'),
             //免登录 
             'notauth' => array(
 				'/wechat/download',

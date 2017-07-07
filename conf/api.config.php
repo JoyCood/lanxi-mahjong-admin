@@ -53,7 +53,8 @@ class Config {
                 'dir'  => '/var/log/lanxi-mahjong/api',
                 'file' => 'log-'. date('Y-m-d'). '.log',
             ),
-
+            //版本
+            'release' => require('release.config.php'),
             //免登录 
 			'notauth' => array(
 				'/api/notice',
@@ -65,7 +66,8 @@ class Config {
                 '/api/notify/wechat',
                 '/api/notify/iap',
                 '/api/toggle',
-                '/api/bind-trader'
+                '/api/bind-trader',
+                '/api/version-check'
             ),
 
             //路由设置
@@ -79,7 +81,8 @@ class Config {
                 '/api/notify/wechat' => 'POST::CardController::wxPayNotifyAction',
                 '/api/notify/iap'    => 'POST::CardController::IAPNotifyAction',
                 '/api/toggle'        => 'POST::SystemController::toggleAction',
-                '/api/bind-trader'   => 'POST::PlayerController::bindTraderAction'
+                '/api/bind-trader'   => 'POST::PlayerController::bindTraderAction',
+                '/api/version-check' => 'POST::SystemController::versionCheckAction'
             )
         ); 
     }

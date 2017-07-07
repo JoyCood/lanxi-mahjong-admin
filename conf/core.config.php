@@ -20,8 +20,8 @@ define('PRO_WX_NOTIFY_URL', PRO_BASE_URL. '/api/notify/wechat');
 return array(
     'wx.mp.id'           => DEBUG ? DEV_MP_ID: PRO_MP_ID, 
     'wx.mp.secret'       => DEBUG ? DEV_MP_SECRET: PRO_MP_SECRET, 
-    'wx.app.id'          => 'wxa0f7643705d54733', //app id
-    'wx.app.secret'      => '2046430fc5a9b9ea50ab89285d6d17c6', //app secret
+    'wx.app.id'          => 'wxa0f7643705d54733', 
+    'wx.app.secret'      => '2046430fc5a9b9ea50ab89285d6d17c6',
     'wx.app.key'         => '343d8b263c2aea31250a6907785bd128', 
     'wx.mch.id'          => '1312998901', 
     'wx.sslcert.path'    => '/usr/local/paykey/wxpay/apiclient_cert.pem',
@@ -29,7 +29,7 @@ return array(
     'wx.curl.proxy.host' => '0.0.0.0',
     'wx.curl.proxy.port' => '0',
     'wx.report.level'    => 1,
-    'wx.notify.url'      => DEBUG ?  DEV_WX_NOTIFY_URL: PRO_WX_NOTIFY_URL,
+    'wx.notify.url'      => DEBUG ? DEV_WX_NOTIFY_URL: PRO_WX_NOTIFY_URL,
     'lx.trader.rate'     => 0.5, //给代理商的返现比例
     'lx.base.url'        => DEBUG ? DEV_BASE_URL: PRO_BASE_URL
 );
