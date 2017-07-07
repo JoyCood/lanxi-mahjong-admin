@@ -233,11 +233,11 @@ class CardController extends BaseController {
         //来自沙盒的支付凭证
         if(isset($data['status']) && $data['status']==21007) {
             $response = Helper::curl($sandbox, $receiptData, 'POST', 30); 
-            $data = json_decode($response);
+            $data = json_decode($response, true);
         } //来自生产环境的支付凭证
         else if(isset($data['status']) && $data['status']==21008) {
             $response = Helper::curl($release, $receiptData, 'POST', 30); 
-            $data = json_decode($response);
+            $data = json_decode($response, true);
         }
 	    
 	    if(!isset($data['status']) || $data['status'] != 0) {	
@@ -248,6 +248,7 @@ class CardController extends BaseController {
             $this->responseJSON($response);
         }
 
+        $this->log->debug(json_encode($data));
 		$order  = $data['receipt']['in_app'][0];
 		$cardId = $order['product_id']; 
 		$card   = Config::get('card', $cardId);
