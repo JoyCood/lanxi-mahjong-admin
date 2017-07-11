@@ -57,32 +57,32 @@ class Config {
             'release' => require('release.config.php'),
             //免登录 
 			'notauth' => array(
-				'/api/notice',
-                '/api/card',
-                '/api/wechat-login',
-				'/api/wxpay',
-                '/api/phone-reg',
-                '/api/phone-login',
-                '/api/notify/wechat',
-                '/api/notify/iap',
-                '/api/toggle',
-                '/api/bind-trader',
-                '/api/version-check'
+				'/api/notice',        # 跑马灯公告
+                '/api/card',          # 房卡列表
+                '/api/wechat-login',  # 微信登录
+				'/api/wxpay',         # 微信下单
+                '/api/phone-reg',     # 手机注册
+                '/api/phone-login',   # 手机登录
+                '/api/notify/wechat', # 微信支付回调发货
+                '/api/notify/iap',    # 苹果支付发货
+                '/api/toggle',        # 开关控制
+                '/api/bind-trader',   # 绑定代理商
+                '/api/version-check'  # 版本检测
             ),
 
             //路由设置
 			'routes' => array(
-				'/api/notice'        => 'POST::SystemController::broadcastAction',
-                '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction',
-                '/api/card'          => 'POST::CardController::listAction',
-                '/api/wxpay'         => 'POST::CardController::wxPayAction',
-                '/api/phone-reg'     => 'POST::PlayerController::phoneRegAction',
-                '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction',
-                '/api/notify/wechat' => 'POST::CardController::wxPayNotifyAction',
-                '/api/notify/iap'    => 'POST::CardController::IAPNotifyAction',
-                '/api/toggle'        => 'POST::SystemController::toggleAction',
-                '/api/bind-trader'   => 'POST::PlayerController::bindTraderAction',
-                '/api/version-check' => 'POST::SystemController::versionCheckAction'
+				'/api/notice'        => 'POST::SystemController::broadcastAction',   # 跑马灯公告
+                '/api/card'          => 'POST::CardController::listAction',          # 房卡列表
+                '/api/wechat-login'  => 'POST::PlayerController::wechatLoginAction', # 微信登录
+                '/api/wxpay'         => 'POST::CardController::wxPayAction',         # 微信下单
+                '/api/phone-reg'     => 'POST::PlayerController::phoneRegAction',    # 手机注册
+                '/api/phone-login'   => 'POST::PlayerController::phoneLoginAction',  # 手机登录
+                '/api/notify/wechat' => 'POST::CardController::wxPayNotifyAction',   # 微信支付回调发货
+                '/api/notify/iap'    => 'POST::CardController::IAPNotifyAction',     # 苹果支付发货
+                '/api/toggle'        => 'POST::SystemController::toggleAction',      # 开关控制
+                '/api/bind-trader'   => 'POST::PlayerController::bindTraderAction',  # 绑定代理商
+                '/api/version-check' => 'POST::SystemController::versionCheckAction' # 版本检测
             )
         ); 
     }
