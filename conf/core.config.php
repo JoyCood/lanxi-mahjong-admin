@@ -20,10 +20,11 @@ define('PRO_WX_NOTIFY_URL', PRO_BASE_URL. '/api/notify/wechat');
 return array(
     'wx.mp.id'           => DEBUG ? DEV_MP_ID: PRO_MP_ID, 
     'wx.mp.secret'       => DEBUG ? DEV_MP_SECRET: PRO_MP_SECRET, 
+	'wx.mp.mch.id'       => '1480206112', //公众号支付商户号
     'wx.app.id'          => 'wxa0f7643705d54733', 
     'wx.app.secret'      => '2046430fc5a9b9ea50ab89285d6d17c6',
-    'wx.app.key'         => '343d8b263c2aea31250a6907785bd128', 
-    'wx.mch.id'          => '1312998901', 
+    'wx.app.key'         => 'aY842DgklmhwvHIOnze860HnxziiM412', 
+    'wx.mch.id'          => '1476411702', //APP支付商户号 
     'wx.sslcert.path'    => '/usr/local/paykey/wxpay/apiclient_cert.pem',
     'wx.sslkey.path'     => '/usr/local/paykey/wxpay/apiclient_key.pem',
     'wx.curl.proxy.host' => '0.0.0.0',
