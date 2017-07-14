@@ -135,7 +135,7 @@
                 <button id="recharge-result-btn" type="button" class="btn btn-primary form-control">继续充值</button>
             </div>
         </div>
-	    <div id="debug"></div>
+	    
         {% if invite %}
         <div id="invitation">
             <form id="invite-form" method="POST" action="wechat/bind-trader">
@@ -178,7 +178,7 @@ $(document).ready(function() {
                 if(res.err_msg == "get_brand_wcpay_request:ok" ) {
                     success();
                 } else {
-                    app.Notific.alert('充值失败，请稍候再试');
+                    App.Notific.alert('充值失败，请稍候再试');
                 } 
             }
         ); 

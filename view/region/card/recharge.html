@@ -152,7 +152,7 @@ $(document).ready(function() {
                 if(res.err_msg == "get_brand_wcpay_request:ok" ) {
                     success();
                 } else {
-                    app.Notific.alert('充值失败，请稍候再试');
+                    App.Notific.alert('充值失败，请稍候再试');
                 } 
             }
         ); 
@@ -162,7 +162,7 @@ $(document).ready(function() {
             checkValidity: function(form) {
             },
             success: function(resp) {
-                if(resp && resp.appid) {
+                if(resp && resp.appId) {
                     wxPay(resp);
                 } else {
                     App.Notific.alert('操作异常，请稍候再试');
