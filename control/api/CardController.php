@@ -127,9 +127,8 @@ class CardController extends BaseController {
         
         $xmlobj = simplexml_load_string($xmlstr);
         $xmlarr = get_object_vars($xmlobj);
-        $this->log->debug(json_encode($xmlarr));
 
-        if($xmlarr['result_code'] == 'SUCCESS' OR $xmlarr['return _code'])
+        if($xmlarr['result_code'] == 'SUCCESS' OR $xmlarr['return _code']=='SUCCESS')
         {
             $wxPayDataBase = new WxPayResults();
             $wxPayDataBase->FromArray($xmlarr);
@@ -139,6 +138,7 @@ class CardController extends BaseController {
             {
                 echo '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
                 unset($xmlarr['sign'], $xmlarr['mch_id'], $xmlarr['openid'], $xmlarr['appid']);
+		        $MoneyInpour = Admin::model('money.inpour');
                 $filters = array(
 					'Transid' => $xmlarr['out_trade_no'],
 					'Result'  => $MoneyInpour::PROCESSING
@@ -149,7 +149,7 @@ class CardController extends BaseController {
 				));
 				$options = array('new' => true);
 				//状态更新为发货中，用于锁定
-				$order = Admin::model('money.inpour')->findAndModify($filters, $update, null, $options);
+				$order = $MoneyInpour->findAndModify($filters, $update, null, $options);
 				if(isset($order['Result']) && $order['Result']==$MoneyInpour::DELIVER) {
 					$filters = array('_id'=>$order['Userid']);
 					$update  = array('$inc' => array('RoomCard' => $order['Quantity']));
