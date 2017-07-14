@@ -52,7 +52,7 @@ class CardController extends WechatController {
         $nonceStr = md5(Helper::mkrand());
         $input = new WxPayUnifiedOrder();
         $input->SetAppid(Config::get('core', 'wx.mp.id'));
-        $input->SetMch_id(Config::get('core', 'wx.mch.id'));
+        $input->SetMch_id(Config::get('core', 'wx.mp.mch.id'));
         $input->SetOpenid($_SESSION[self::MP_SESSION_OPENID]);
         $input->SetBody($card['Title']); 
         $input->SetNonce_str($nonceStr);

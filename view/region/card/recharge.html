@@ -58,21 +58,6 @@
     position: fixed; top: 0; right: 0; bottom: 0; left: 0;
     background-color: rgba(200, 200, 200, .75);
 }
-#invite-form {
-    position: absolute;
-    top: 160px; left: 50%;
-    border: 1px solid #4db3a5; border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #fff;
-    width: 50%;
-    max-width: 480px; min-width: 280px;
-    transform: translate3d(-50%, 0, 0);
-    padding: 26px 20px 32px;
-}
-#invite-form>h2 {
-    padding: 0 0 18px; margin: 0;
-    font-size: 16px; font-weight: normal;
-}
 </style>
 {% endblock %}
 
@@ -136,17 +121,6 @@
             </div>
         </div>
 	    <div id="debug"></div>
-        {% if invite %}
-        <div id="invitation">
-            <form id="invite-form" method="POST" action="wechat/bind-trader">
-                <h2>邀请码</h2>
-                <div class="form-row">
-                    <input type="text" id="invite-input" class="form-control" name="trader" placeholder="请输入邀请码" autocomplete="off" />
-                    <button type="submit" class="btn btn-success">确定</button>
-                </div>
-            </form>
-        </div>
-        {% endif %}
     </main>
 </div>
 {% endblock %}
@@ -199,23 +173,6 @@ $(document).ready(function() {
     });
     $('#recharge-result-btn').on('click', function() {
         location.reload();
-    });
-
-    $('#invite-form').on('submit', function() {
-        App.submitForm(this, {
-            checkValidity: function(form) {
-                var codeElement = $('#invite-input');
-                var code = $.trim(codeElement.val());
-                if(code.length == 0) {
-                    return false;
-                }
-            },
-            success: function(resp) {
-                $('#invitation').hide();
-                $('#invite-form').get(0).reset();
-            }
-        });
-        return false;
     });
 });
 </script>
