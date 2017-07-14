@@ -9,7 +9,7 @@ class SystemController extends BaseController {
             'broadcast'   => Config::BROADCAST_ENABLED,
             'phone-login' => Config::PHONE_LOGIN_ENABLED,
             'phone-reg'   => Config::PHONE_REG_ENABLED,
-            'apple-pay'   => ($num>0 && $num>=Config::RELEASE_NUMBER),
+            'apple-pay'   => ($num>0 && $num>Config::RELEASE_NUMBER),
             'bind-trader' => Config::BIND_TRADER_ENABLE,
         );
         $this->responseJSON($data);
