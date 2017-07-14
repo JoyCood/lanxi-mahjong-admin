@@ -26,7 +26,7 @@ class Config {
 	const GAME_IP_SERVER_HOST = '192.168.1.2';
     const GAME_IP_SERVER_PORT = 6677;
 
-	const RELEASE_NUMBER = 0;
+	const RELEASE_NUMBER = 1;
     const BROADCAST_ENABLED    = TRUE; //是否显示公告栏跑马灯
     const PHONE_LOGIN_ENABLED  = TRUE; //是否允许手机号登录
     const PHONE_REG_ENABLED    = TRUE; //是否允许手机注册
