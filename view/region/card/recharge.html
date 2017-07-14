@@ -164,12 +164,12 @@ $(document).ready(function() {
     }
     function wxPay(data){
         var json = {
-            "appId"    : data.appid,     
-            "timeStamp": data.timestamp + '',    
-            "nonceStr" : data.noncestr,   
-            "package"  : "prepay_id=" + data.prepayid,    
+            "appId"    : data.appId,     
+            "timeStamp": data.timeStamp,    
+            "nonceStr" : data.nonceStr,   
+            "package"  : data.package,    
             "signType" : "MD5",     
-            "paySign"  : data.sign
+            "paySign"  : data.paySign
         }
         WeixinJSBridge.invoke(
             'getBrandWCPayRequest', 

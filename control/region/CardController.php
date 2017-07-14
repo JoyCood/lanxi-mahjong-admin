@@ -68,20 +68,15 @@ class CardController extends WechatController {
             $this->error('支付出错，请稍后重试');
         }
 
-        $paramters = array(
-            'appid'     => Config::get('core', 'wx.mp.id'),
-            'noncestr'  => $nonceStr,
-            'package'   => 'Sign=WXPay',
-            'partnerid' => Config::get('core', 'wx.mch.id'),
-            'prepayid'  => $prepay['prepay_id'],
-            'timestamp' => time(),
-        );
-
-        $wxPayDataBase = new WxPayResults();
-        $wxPayDataBase->FromArray($paramters);
-        $wxPayDataBase->SetSign();
-        $result = $wxPayDataBase->getValues();
-        $result['out_trade_no'] = $transId;
+        $time = time();
+        $wxPayJsApiPay = new WxPayJsApiPay();
+		$wxPayJsApiPay->SetAppid(Config::get('core', 'wx.mp.id'));
+        $wxPayJsApiPay->SetTimeStamp("{$time}");
+		$wxPayJsApiPay->SetNonceStr($nonceStr);
+		$wxPayJsApiPay->SetPackage("prepay_id={$prepay['prepay_id']}");
+		$wxPayJsApiPay->SetSignType('MD5');
+		$wxPayJsApiPay->SetPaySign($wxPayJsApiPay->MakeSign());
+        $result = $wxPayJsApiPay->getValues();
         $this->renderJSON($result);
     }
 
