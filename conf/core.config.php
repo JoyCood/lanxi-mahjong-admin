@@ -17,6 +17,7 @@ define('PRO_BASE_URL', 'http://yiiyu.cn/lanxi');
 define('DEV_WX_NOTIFY_URL', DEV_BASE_URL. '/api/notify/wechat');
 define('PRO_WX_NOTIFY_URL', PRO_BASE_URL. '/api/notify/wechat');
 
+//支付宝支付回调URL
 define('DEV_ALIPAY_NOTIFY_URL', DEV_BASE_URL. '/api/notify/alipay');
 define('PRO_ALIPAY_NOTIFY_URL', PRO_BASE_URL. '/api/notify/alipay');
 
