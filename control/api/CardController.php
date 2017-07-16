@@ -212,7 +212,7 @@ class CardController extends BaseController {
 		$aop->gatewayUrl         = $core['alipay.gateway.url'];
 		$aop->appId              = $core['alipay.app.id'];
 		$aop->format             = $core['alipay.format'];
-		$aop->charset            = $core['alipay.charset'];
+		$aop->postCharset        = $core['alipay.charset'];
 		$aop->signType           = $core['alipay.sign.type'];
 		$aop->rsaPrivateKey      = $core['alipay.private.key'];
 		$aop->alipayrsaPublicKey = $core['alipay.public.key'];
@@ -229,7 +229,7 @@ class CardController extends BaseController {
 		);
 		$request->setBizContent(json_encode($bizcontent));
 		$response = $aop->sdkExecute($request);
-        echo htmlspecialchars($response);
+		echo htmlspecialchars($response);
 	}
 
     //苹果支付发货

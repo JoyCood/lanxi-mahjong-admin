@@ -5,6 +5,8 @@ require_once('lib/wxpay/WxPay.Data.php');
 require_once('lib/wxpay/WxPay.Exception.php');
 require_once('lib/wxpay/WxPay.Notify.php');
 
+require_once('lib/alipay/AopSdk.php');
+
 class CardController extends WechatController {
 
     public function wxPayAction() {
@@ -79,6 +81,34 @@ class CardController extends WechatController {
         $result = $wxPayJsApiPay->getValues();
         $this->renderJSON($result);
     }
+
+	//支付宝wap支付
+	public function alipayAction() {
+		$aop  = new AopClient();
+		$core = Config::getOptions('core');
+
+		$aop->gatewayUrl         = $core['alipay.gateway.url'];
+		$aop->appId              = $core['alipay.app.id'];
+	    $aop->format             = $core['alipay.format'];
+		$aop->postCharset        = $core['alipay.charset'];
+	    $aop->signType           = $core['alipay.sign.type'];	
+		$aop->rsaPrivateKey      = $core['alipay.private.key'];
+		$aop->alipayrsaPublicKey = $core['alipay.public.key'];
+		
+		$request = new AlipayTradeWapPayRequest();
+		$request->setNotifyUrl($core['alipay.notify.url']);
+		$request->setReturnUrl($core['alipay.return.url']);
+		$bizcontent = array(
+		    'body' => '我是测试数据',
+			'subject' => 'App支付测试',
+			'out_trade_no' => time(),
+			'timeout_express' => $core['alipay.timeout.express'],
+			'total_amount' => '0.01',
+			'product_code' => 'QUICK_WAP_PAY'
+		);
+		$request->setBizContent(json_encode($bizcontent));
+		echo $aop->pageExecute($request);
+	}
 
 	//代理商给玩家充房卡
 	public function customRechargeAction() {
