@@ -80,6 +80,7 @@ class CardController extends WechatController {
         $this->renderJSON($result);
     }
 
+	//代理商给玩家充房卡
 	public function customRechargeAction() {
 		if($this->request->isGet()) {
 			$this->setCsrfToken();
@@ -112,6 +113,7 @@ class CardController extends WechatController {
 		));
 	}
 
+	//给玩家充值房卡
 	protected function customRecharge() {
 		$target   = trim($this->request->post('target'));
 	    $quantity = intval($this->request->post('quantity'));

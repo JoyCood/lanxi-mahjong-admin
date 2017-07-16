@@ -143,14 +143,6 @@ class CardController extends WechatController {
 	} 
 
 	public function rechargeAction() {
-		if($this->request->isGet()) {
-		    $this->rechargeForm();
-		} else if($this->request->isPost()) {
-		    $this->recharge();
-		}
-	}
-
-	protected function rechargeForm() {
 		$url      = Helper::requestURI();
 		$userinfo = $this->login($url);
 		if(isset($userinfo['unionid'])) {

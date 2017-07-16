@@ -6,6 +6,8 @@ require_once('lib/wxpay/WxPay.Data.php');
 require_once('lib/wxpay/WxPay.Exception.php');
 require_once('lib/wxpay/WxPay.Notify.php');
 
+require_once('lib/alipay/AopSdk.php');
+
 class CardController extends BaseController {
     //商品列表
 	public function listAction() {
@@ -201,6 +203,34 @@ class CardController extends BaseController {
             echo '<xml><return_code><![CDATA[FAILURE]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>';
         }
     }
+
+	//支付宝APP支付
+	public function alipayAction() {
+        $aop  = new AopClient();	
+		$core = Config::getOptions('core');
+
+		$aop->gatewayUrl         = $core['alipay.gateway.url'];
+		$aop->appId              = $core['alipay.app.id'];
+		$aop->format             = $core['alipay.format'];
+		$aop->charset            = $core['alipay.charset'];
+		$aop->signType           = $core['alipay.sign.type'];
+		$aop->rsaPrivateKey      = $core['alipay.private.key'];
+		$aop->alipayrsaPublicKey = $core['alipay.public.key'];
+
+		$request = new AlipayTradeAppPayRequest();
+		$request->setNotifyUrl($core['alipay.notify.url']);
+		$bizcontent = array(
+		    'body' => '我是测试数据',
+			'subject' => 'App支付测试',
+			'out_trade_no' => time(),
+			'timeout_express' => $core['alipay.timeout.express'],
+			'total_amount' => '0.01',
+			'product_code' => 'QUICK_MSECURITY_PAY'
+		);
+		$request->setBizContent(json_encode($bizcontent));
+		$response = $aop->sdkExecute($request);
+        echo htmlspecialchars($response);
+	}
 
     //苹果支付发货
     public function IAPNotifyAction() {

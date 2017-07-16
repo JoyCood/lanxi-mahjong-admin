@@ -67,7 +67,9 @@ class Config {
                 '/api/notify/iap',    # 苹果支付发货
                 '/api/toggle',        # 开关控制
                 '/api/bind-trader',   # 绑定代理商
-                '/api/version-check'  # 版本检测
+                '/api/version-check', # 版本检测
+				'/api/alipay',        # 支付宝下单
+
             ),
 
             //路由设置
@@ -82,7 +84,8 @@ class Config {
                 '/api/notify/iap'    => 'POST::CardController::IAPNotifyAction',     # 苹果支付发货
                 '/api/toggle'        => 'POST::SystemController::toggleAction',      # 开关控制
                 '/api/bind-trader'   => 'POST::PlayerController::bindTraderAction',  # 绑定代理商
-                '/api/version-check' => 'POST::SystemController::versionCheckAction' # 版本检测
+                '/api/version-check' => 'POST::SystemController::versionCheckAction',# 版本检测
+				'/api/alipay'        => 'GET::CardController::alipayAction'
             )
         ); 
     }
