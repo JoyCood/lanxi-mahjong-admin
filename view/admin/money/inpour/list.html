@@ -35,25 +35,36 @@
                     <tr>
                         <!--<th width="40" align="center"><input type="checkbox" app-check="all" /></th>-->
                         <th width="100">交易流水号</th>
-                        <th>手机号</th>
-                        <th width="100" class="hidden-1024">微信号</th>
-                        <th width="100" align="right">提现金额</th>
-                        <th width="100" align="right" class="hidden-800">可提金额</th>
-                        <th width="160" class="hidden-800">提现时间</th>
+                        <th width="100">用户ID</th>
+                        <th width="100">用户昵称</th>
+                        <th width="100" align="right">充值金额</th>
+                        <th width="100" align="right">房卡数量</th>
+                        <th width="100" align="right" class="hidden-800">交易状态</th>
+                        <th width="160" class="hidden-800">交易时间</th>
                     </tr>
                 </thead> 
                 <tbody>
-                    {#% for item in data.items %}
+                    {% for item in data.items %}
                     <tr app-check="on">
-                        <!--<td align="center"><input type="checkbox" app-check="item" /></td>-->
-                        <td app-check="off">{{item.Gameid}}</td>
-                        <td>{{item.Phone}}</td>
-                        <td class="hidden-1024">{{item.Wechat}}</td>
+                        <td app-check="off">{{item.Transid}}</td>
+                        <td align="right">{{item.Userid}}</td>
+                        <td align="right">{{item.Nickname}}</td>
                         <td align="right">{{item.Money}}</td>
-                        <td align="right" class="hidden-800">{{item.MoneyTotal}}</td>
-                        <td align="center" class="hidden-800">{{item.Time|datetime}}</td>
+                        <td align="right" class="hidden-800">{{item.Quantity}}</td>
+                        <td align="right" class="hidden-800">
+                            {% if item.Result == constant('ModelMoneyInpour::SUCCESS') %}
+                            成功
+                            {% elseif item.Result == constant('ModelMoneyInpour::FAILURE') %}
+                            失败
+                            {% elseif item.Result == constant('ModelMoneyInpour::PROCESSING') %}
+                            交易中
+                            {% elseif item.Result == constant('ModelMoneyInpour::DELIVER') %}
+                            发货中
+                            {% endif %}
+                        </td>
+                        <td align="center" class="hidden-800">{{item.Transtime|datetime}}</td>
                     </tr>
-                    {% endfor %#}
+                    {% endfor %}
                 </tbody>
             </table>
             {% include '_pagination.html' with {'url': listUrl} %}

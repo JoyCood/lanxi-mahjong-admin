@@ -75,7 +75,6 @@ class Config
                         '/region/pwd',
                         '/region/wechatCR',
 						'/region/wxpay',
-						'/region/alipay'
                 ),
                 // 路径设置
                 'routes' => array(
@@ -95,6 +94,7 @@ class Config
                         '/region/wechatCR'            => 'GET::CardController::wechatCustomeRechargeAction', //从微信公众号批发购买房卡
                         '/region/wxpay'               => 'POST::CardController::wxPayAction',                //微信支付批发房卡
 						'/region/recharge/user'       => '::CardController::userAction',               //充房卡查询用户信息
+                        '/region/alipayCR'            => 'GET::CardController::alipayCustomeRecargeAction', //通过浏览器批发房卡
 						'/region/alipay'              => 'POST::CardController::alipayAction'          //支付宝wap支付
                 )
         );

@@ -48,7 +48,7 @@ class CardController extends BaseController {
         if(!$user) {
             $this->responseJSON(array(
                 'errcode' => 10002, 
-                'errmsg'  => '玩家不存在'
+                'errmsg'  => '找不到玩信息'
             ));
         }
         if(Config::BIND_TRADER_ENABLE) {
@@ -71,7 +71,7 @@ class CardController extends BaseController {
             'Transtime' => time(),
             'Result'    => $MoneyInpour::PROCESSING,
             'Currency'  => 'CNY',
-            'Paytype'   => $MoneyInpour::WEIXIN,
+            'Paytype'   => $MoneyInpour::WEIXIN_APP,
             'Clientip'  => Admin::getRemoteIP(),
             'Parent'    => $user['Build'], //上级代理
             'Ctime'     => time(),
@@ -158,7 +158,7 @@ class CardController extends BaseController {
 					$options = array('new' => true);
 					$user    = Admin::model('user.main')->findAndModify($filters, $update); //发货
 
-					$status = $user===NULL? $MoneyInpour::FAILURE : $MoneyInpour::SUCCESS; 
+					$status = $user===NULL? ($MoneyInpour::FAILURE) : ($MoneyInpour::SUCCESS); 
 					$filters = array(
 						'Transid' => $xmlarr['out_trade_no'], 
 						'Userid'  => $order['Userid'],
@@ -206,6 +206,65 @@ class CardController extends BaseController {
 
 	//支付宝APP支付
 	public function alipayAction() {
+        $userId    = trim($this->request->post('userId'));
+        $cardId    = trim($this->request->post('cardId'));
+        $nonceStr  = trim($this->request->post('nonceStr'));
+        $timestamp = trim($this->request->post('timestamp'));
+        $sign      = trim($this->request->post('sign'));
+
+        $key = Config::CLIENT_KEY;
+        $hash = md5("{$userId}{$key}{$cardId}{$nonceStr}{$timestamp}");
+        if($hash != $sign) {
+            $this->responseJSON(array(
+                'errcode' => 10000,
+                'errmsg'  => '非法请求'
+            ));
+        }
+        $card = Config::get('card', $cardId);
+        if(!$card) {
+            $this->responseJSON(array(
+                'errcode' => 10001,
+                'errmsg'  => '商品不存在'
+            ));
+        }
+        $filter = array('_id' => $userId);
+        $user = Admin::model()->findOne($filter);
+        if(!$user) {
+            $this->responseJSON(array(
+                'errcode' => 10002,
+                'errmsg'  => '找不到玩家信息'
+            ));
+        }
+        if(Config::BIND_TRADER_ENABLE) {
+            $rate   = Config::get('core', 'lx.trader.rate');
+            $rebate = $card['Money'] * $rate;
+        } else {
+            $rebate = 0;
+        }
+
+        $MoneyInpour = Admin::model('money.inpour');
+        $transId = date('YmdHis'). Helper::mkrand();
+        $doc = array(
+            'Transid'   => $transId,
+            'Buyer'     => $userId,
+            'Userid'    => $userId,
+            'Itemid'    => $cardId,
+            'Amount'    => 1,
+            'Quantity'  => $card['CardNum'],
+            'Money'     => $card['Money'],
+            'Transtime' => time(),
+            'Result'    => $MoneyInpour::PROCESSING,
+            'Currency'  => 'CNY',
+            'Paytype'   => $MoneyInpour::ALIPAY_APP,
+            'Clientip'  => Admin::getRemoteIP(),
+            'Parent'    => $user['Build'],
+            'Ctime'     => time(),
+            'Lv'        => 0,
+            'Rebate'    => $rebate,
+            'NotifyRes' => array(),
+        );
+        $MoneyInpour->insert($doc);
+
         $aop  = new AopClient();	
 		$core = Config::getOptions('core');
 
@@ -220,11 +279,11 @@ class CardController extends BaseController {
 		$request = new AlipayTradeAppPayRequest();
 		$request->setNotifyUrl($core['alipay.notify.url']);
 		$bizcontent = array(
-		    'body' => '我是测试数据',
-			'subject' => 'App支付测试',
-			'out_trade_no' => time(),
+		    'body' => $card['Title'],
+			'subject' => $card['Title'],
+			'out_trade_no' => $transId,
 			'timeout_express' => $core['alipay.timeout.express'],
-			'total_amount' => '0.01',
+			'total_amount' => $card['Money'],
 			'product_code' => 'QUICK_MSECURITY_PAY'
 		);
 		$request->setBizContent(json_encode($bizcontent));

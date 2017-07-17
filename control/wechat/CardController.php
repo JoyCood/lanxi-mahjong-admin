@@ -47,7 +47,7 @@ class CardController extends WechatController {
             'Transtime' => time(),
             'Result'    => $MoneyInpour::PROCESSING,
             'Currency'  => 'CNY',
-            'Paytype'   => $MoneyInpour::WEIXIN,
+            'Paytype'   => $MoneyInpour::WEIXIN_WAP,
             'Clientip'  => Admin::getRemoteIP(),
             'Parent'    => $user['Build'],
             'Ctime'     => time(),

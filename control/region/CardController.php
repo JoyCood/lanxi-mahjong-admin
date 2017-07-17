@@ -41,7 +41,7 @@ class CardController extends WechatController {
             'Transtime' => time(),
             'Result'    => $MoneyInpour::PROCESSING,
             'Currency'  => 'CNY',
-            'Paytype'   => $MoneyInpour::WEIXIN,
+            'Paytype'   => $MoneyInpour::WEIXIN_WAP,
             'Clientip'  => Admin::getRemoteIP(),
             'Parent'    => $user['Build'],
             'Ctime'     => time(),
@@ -84,6 +84,41 @@ class CardController extends WechatController {
 
 	//支付宝wap支付
 	public function alipayAction() {
+        $cardId = trim($this->request->post('option'));
+
+        $card = Config::get('card', $cardId);
+        if(!$card) {
+            $this->error('您选择的房卡不存在');
+        }
+        $filter = array('_id' => $_SESSION[Config::SESSION_UID]);
+        $user = Admin::model('user.main')->findOne($filter);
+        if(!$user) {
+            $this->error('请重新登录或到微信公众号联系客服');
+        }
+        
+        $MoneyInpour = Admin::model('money.inpour');
+        $transId = date('YmdHis'). Helper::mkrand();
+        $doc = array(
+            'Transid'   => $transId,
+            'Buyer'     => $_SESSION[Config::SESSION_UID],
+            'Userid'    => $_SESSION[Config::SESSION_UID],
+            'Itemid'    => $cardId,
+            'Amount'    => 1,
+            'Quantity'  => $card['CardNum'],
+            'Money'     => $card['Money'],
+            'Transtime' => time(),
+            'Result'    => $MoneyInpour::PROCESSING,
+            'Currency'  => 'CNY',
+            'Paytype'   => $MoneyInpour::ALIPAY_WAP,
+            'Clientip'  => Admin::getRemoteIP(),
+            'Parent'    => $user['Build'],
+            'Ctime'     => time(),
+            'Lv'        => 0,
+            'Rebate'    => 0,
+            'NotifyRes' => array(),
+        );
+        $MoneyInpour->insert($doc);
+
 		$aop  = new AopClient();
 		$core = Config::getOptions('core');
 
@@ -99,11 +134,11 @@ class CardController extends WechatController {
 		$request->setNotifyUrl($core['alipay.notify.url']);
 		$request->setReturnUrl($core['alipay.return.url']);
 		$bizcontent = array(
-		    'body' => '我是测试数据',
-			'subject' => 'App支付测试',
-			'out_trade_no' => time(),
+		    'body' => $card['Title'],
+			'subject' => $card['Title'],
+			'out_trade_no' => $transId,
 			'timeout_express' => $core['alipay.timeout.express'],
-			'total_amount' => '0.01',
+			'total_amount' => $card['Money'],
 			'product_code' => 'QUICK_WAP_PAY'
 		);
 		$request->setBizContent(json_encode($bizcontent));
@@ -131,6 +166,16 @@ class CardController extends WechatController {
             $userinfo = $User->findOne($filter);
         }
 
+        $this->render('card/recharge.html', array(
+            'options'  => Config::getOptions('card'),
+            'userinfo' => $userinfo
+        ));
+    }
+
+    //从浏览器批发房卡
+    public function alipayCustomeRecargeAction() {
+        $filter = array('_id' => $_SESSION[Config::SESSION_UID]);
+        $userinfo = Admin::model('user.main')->findOne($filter);
         $this->render('card/recharge.html', array(
             'options'  => Config::getOptions('card'),
             'userinfo' => $userinfo

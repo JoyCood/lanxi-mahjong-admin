@@ -7,8 +7,11 @@ class ModelMoneyInpour
 	const PROCESSING = 2; //交易中
 	const DELIVER = 3;    //发货中
 
-	const WEIXIN = 1;   //微信支付 
-	const IAP    = 2;   //苹果内购
+	const WEIXIN_WAP = 1; //微信公众号支付 
+    const WEIXIN_APP = 2; //微信app支付
+    const ALIPAY_WAP = 3; //支付宝wap支付
+    const ALIPAY_APP = 4; //支付宝app支付
+	const IAP        = 5; //苹果内购
 
 	const GOODS_TYPE_ROOMCARD = 4; //商品类型：房卡
 
