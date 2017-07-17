@@ -45,7 +45,7 @@ class ModelMoneyInpour
     }
 
     public function update($filter, $data) {
-        $data = Helper::allowed($data, $this->allowed);
+        $data = Helper::allowed($data, $this->fields);
         return $this->collection()->update($filter, array('$set'=>$data)); 
     }
 
