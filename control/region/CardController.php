@@ -85,7 +85,6 @@ class CardController extends WechatController {
 	//支付宝wap支付
 	public function alipayAction() {
         $cardId = trim($this->request->post('option'));
-
         $card = Config::get('card', $cardId);
         if(!$card) {
             $this->error('您选择的房卡不存在');
@@ -95,7 +94,6 @@ class CardController extends WechatController {
         if(!$user) {
             $this->error('请重新登录或到微信公众号联系客服');
         }
-        
         $MoneyInpour = Admin::model('money.inpour');
         $transId = date('YmdHis'). Helper::mkrand();
         $doc = array(
@@ -172,11 +170,11 @@ class CardController extends WechatController {
         ));
     }
 
-    //从浏览器批发房卡
+    //从浏览器通过支付宝wap支付批发房卡
     public function alipayCustomeRecargeAction() {
         $filter = array('_id' => $_SESSION[Config::SESSION_UID]);
         $userinfo = Admin::model('user.main')->findOne($filter);
-        $this->render('card/recharge.html', array(
+        $this->render('card/alipay-recharge.html', array(
             'options'  => Config::getOptions('card'),
             'userinfo' => $userinfo
         ));

@@ -1,0 +1,144 @@
+{% set TITLE="房卡充值" %}
+{% extends "_base.html" %}
+{% block head %}
+<style>
+.card-opt>label {
+    display: inline-block;
+    padding: 3px; margin: 6px 4px 4px;
+    border-radius: 4px;
+    border: 1px solid #369;
+    background-color: #fff; color: #888;
+    line-height: 22px;
+    text-align: center;
+    min-width: 76px;
+    -webkit-user-select: none;
+}
+.card-opt input[type="radio"] {
+    display: none;
+}
+.card-opt strong {
+    display: block; padding: 0;
+    color: #333;
+    line-height: 26px; font-size: 14px;
+}
+.card-opt input:checked ~ label {
+    font-size: 12px;
+    background-color: #2e6da4;
+    color: #ddd;
+    cursor: pointer;
+}
+.card-opt input:checked ~ label strong {
+    color: #fff;
+}
+.card-opt input[disabled] ~ label strong {
+    color: #333;
+}
+.card-opt input[disabled] ~ label {
+    background-color: #dfdfdf;
+    border: 1px solid #999;
+    opacity: .75;
+    cursor: default;
+}
+.card-opt input[disabled]:checked ~ label {
+    color: #888;
+}
+#recharge-user-form button { min-width: 40px; padding: 0; }
+#recharge-user-form button>i { margin-left: -10px; }
+#recharge-user-form button[type="reset"] { display: none; }
+#recharge-user-form.actived button[type="submit"] { display: none; }
+#recharge-user-form.actived button[type="reset"] { display: block; }
+#recharge-user-form div.form-control { line-height: 36px; text-indent: 5px; background-color: transparent; }
+#recharge-user-info input { background-color: transparent; }
+
+#recharge-body { display: block; }
+#recharge-result { display: none; }
+/*#recharge-form { display: none; }*/
+
+#invitation {
+    position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+    background-color: rgba(200, 200, 200, .75);
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="app nofooter">
+    <header class="app-header">
+		<!--
+        <a class="app-back" app-action="back"></a>
+		-->
+        <h1>{{TITLE}}</h1>
+        <!--
+		<nav>
+            <a href="javascript:;" class="fa fa-bars" app-action="menu"></a>
+        </nav>
+		-->
+    </header>
+    <main class="app-main">
+        <div id="recharge-body">
+            <form id="recharge-form" class="w" method="POST" action="region/alipay">
+                <div id="recharge-user-info">
+                    <div class="form-row">
+                        <label class="form-label xl">游戏ID：</label>
+                        <input type="text" value="{{userinfo._id}}" class="form-control" id="recharge-user-name" readonly="readonly" />
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label xl">昵称：</label>
+                        <input type="text" value="{{userinfo.Nickname}}" class="form-control" id="recharge-user-name" readonly="readonly" />
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label xl">房卡：</label>
+                        <input type="text" value="{{userinfo.RoomCard}}" class="form-control" id="recharge-user-card" readonly="readonly" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        {% for id, opt in options %}
+                        <span class="card-opt">
+                            <input id="card-opt-{{id}}" type="radio" name="option" value="{{id}}"{{opt.Default? ' checked': ''}}  />
+                            <label for="card-opt-{{id}}">
+                                <strong>房卡{{opt.CardNum}}</strong>
+                                ￥{{opt.Money|number_format(2)}}
+                            </label>
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-action">
+                    <input type="hidden" id="recharge-target-value" name="target" value="{{userinfo._id}}" />
+                    <button id="recharge-submit-btn" type="submit" class="btn btn-success  form-control">确定</button>
+                </div>
+            </form>
+        </div>
+        <div id="recharge-result">
+            <div class="alert alert-success">充值成功</div>
+            {#
+            <p>昵称：<span id="recharge-result-name"></span></p>
+            <p>房卡：<span id="recharge-result-card"></span></p>
+            #}
+            <div class="form-action">
+                <button id="recharge-result-btn" type="button" class="btn btn-primary form-control">继续充值</button>
+            </div>
+        </div>
+	    <div id="debug"></div>
+    </main>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    var success = function() {
+        $('#recharge-body').css('display', 'none');
+        $('#recharge-result').css('display', 'block');
+
+        $('#recharge-form').get(0).reset();
+        $('#recharge-form input[type="radio"], #recharge-submit-btn').prop('disabled', true);
+        $('#recharge-submit-btn').addClass('btn-disabled').removeClass('btn-success');
+    }
+    $('#recharge-result-btn').on('click', function() {
+        location.reload();
+    });
+});
+</script>
+{% endblock %}

@@ -295,7 +295,7 @@ class CardController extends BaseController {
         $aop  = new AopClient();        
         $core = Config::getOptions('core');
         $aop->alipayrsaPublicKey = $core['alipay.public.key'];
-        $result = $aop->rsaCheckV1($_POST, $core['alipay.public.key'], $core['alipay.sign.typ']);
+        $result = $aop->rsaCheckV1($_POST, $core['alipay.public.key'], $core['alipay.sign.type']);
 
         if($result) {
             if($_POST['trade_status'] == 'TRADE_SUCCESS') {
