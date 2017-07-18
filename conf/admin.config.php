@@ -69,6 +69,13 @@ class Config
 					//房卡
 					'/admin/card/recharge' => '::CardController::rechargeAction',
 					'/admin/card/user'     => 'POST::CardController::userAction',
+
+					//玩家
+					'/admin/user/'       => 'GET::UserController::indexAction',
+					'/admin/user/list'   => 'POST::UserController::listAction',
+					'/admin/user/form'   => 'GET::UserController::formAction',
+					'/admin/user/save'   => 'POST::UserController::formSaveAction',
+					'/admin/user/delete' => 'POST::UserController::deleteAction',
             )
         );
     }
