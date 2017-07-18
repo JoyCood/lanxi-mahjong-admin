@@ -138,8 +138,15 @@ class PlayerController extends BaseController {
             $params['accessToken'] = trim($params['accessToken']);
 			$userInfo = $this->getUserByToken($params['accessToken']);
         }
-
-		$accessToken = $userInfo['access_token'];
+        /*
+        //日活跃用户统计
+        Statistics::DAU($userInfo['openid']);
+        //周活跃用户统计
+        Statistics::WAU($userInfo['openid']);
+        //月活跃用户统计
+        Statistics::MAU($userInfo['openid']);
+         */
+        $accessToken = $userInfo['access_token'];
 		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
 		$ip *= 1;
 		$User = Admin::model('user.main');
@@ -160,6 +167,8 @@ class PlayerController extends BaseController {
 		$user = $User->findAndModify($filters, $update, null, $options);
 	    if($user===null) {
 			$user = $this->registerAction($userInfo);
+            //Statistics::DAR(); //日注册用户数统计
+            //Statistics::userCount(); //总用户数统计
 		}
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;

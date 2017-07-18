@@ -16,5 +16,6 @@ return array(
         'user_relate', //绑定关系
 	    'agent_rebate_record', //提现记录
 		'sequence', //自增ID
+        'statics', //统计数据
     )
 );

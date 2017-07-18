@@ -217,4 +217,9 @@ class Helper
 		curl_close($ch);
 		return $size;
     }
+
+    static public function today() 
+    {
+        return strtotime('today');
+    }
 }
