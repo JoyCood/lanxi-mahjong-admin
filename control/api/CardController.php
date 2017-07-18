@@ -291,7 +291,7 @@ class CardController extends BaseController {
 		echo htmlspecialchars($response);
 	}
 
-    public funciton alipayNotifyAction() {
+    public function alipayNotifyAction() {
         $aop  = new AopClient();        
         $core = Config::getOptions('core');
         $aop->alipayrsaPublicKey = $core['alipay.public.key'];
@@ -309,7 +309,7 @@ class CardController extends BaseController {
                    'Result' => $MoneyInpour::DELIVER,
                    'notify_data' => $_POST 
                ));
-               $options = array('new') => true);
+               $options = array('new' => true);
                $order = $MoneyInpour->findAndModify($filters, $update, null, $options);
                if(isset($order['Result']) && $order['Result'] == $MoneyInpour::DELIVER) {
                    $filters = array('_id' => $order['Userid']);
@@ -325,7 +325,7 @@ class CardController extends BaseController {
                    $update = array('Result' => $status);
                    $MoneyInpour->update($filters, $update);
 
-                   if(isset($order['Rebate']) && $order['Rebate']>0 && isset($order['Parent'] && $order['Parent'] != '')) {
+                   if(isset($order['Rebate']) && $order['Rebate']>0 && isset($order['Parent']) && $order['Parent'] != '') {
                        $filters = array('Gameid' => $order['Parent']);
                        $update  = array('$inc' => array('Balance' => $order['Rebate'])); 
                        Admin::model('trader.main')->findAndModify($filters, $update);
