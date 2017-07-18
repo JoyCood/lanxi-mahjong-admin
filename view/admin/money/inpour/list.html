@@ -47,11 +47,11 @@
                     {% for item in data.items %}
                     <tr app-check="on">
                         <td app-check="off">{{item.Transid}}</td>
-                        <td align="right">{{item.Userid}}</td>
-                        <td align="right">{{item.Nickname}}</td>
-                        <td align="right">{{item.Money}}</td>
-                        <td align="right" class="hidden-800">{{item.Quantity}}</td>
-                        <td align="right" class="hidden-800">
+                        <td align="center">{{item.Userid}}</td>
+                        <td align="center">{{item.Nickname}}</td>
+                        <td align="center">{{item.Money}}</td>
+                        <td align="center" class="hidden-800">{{item.Quantity}}</td>
+                        <td align="center" class="hidden-800">
                             {% if item.Result == constant('ModelMoneyInpour::SUCCESS') %}
                             成功
                             {% elseif item.Result == constant('ModelMoneyInpour::FAILURE') %}

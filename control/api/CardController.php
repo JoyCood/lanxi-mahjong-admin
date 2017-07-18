@@ -162,7 +162,7 @@ class CardController extends BaseController {
 					$filters = array(
 						'Transid' => $xmlarr['out_trade_no'], 
 						'Userid'  => $order['Userid'],
-						'Result'  => $status
+						'Result'  => $MoneyInpour::DELIVER
 					);
 					$update = array('Result' => $status);
 					$MoneyInpour->update($filters, $update); //更新交易结果
@@ -290,6 +290,71 @@ class CardController extends BaseController {
 		$response = $aop->sdkExecute($request);
 		echo htmlspecialchars($response);
 	}
+
+    public funciton alipayNotifyAction() {
+        $aop  = new AopClient();        
+        $core = Config::getOptions('core');
+        $aop->alipayrsaPublicKey = $core['alipay.public.key'];
+        $result = $aop->rsaCheckV1($_POST, $core['alipay.public.key'], $core['alipay.sign.typ']);
+
+        if($result) {
+            if($_POST['trade_status'] == 'TRADE_SUCCESS') {
+               $out_trade_no = $_POST['out_trade_no'];
+               $MoneyInpour = Admin::model('money.inpour');
+               $filters = array(
+                   'Transid' => $out_trade_no,
+                   'Result'  => $MoneyInpour::PROCESSING
+               );
+               $update = array('$set' => array(
+                   'Result' => $MoneyInpour::DELIVER,
+                   'notify_data' => $_POST 
+               ));
+               $options = array('new') => true);
+               $order = $MoneyInpour->findAndModify($filters, $update, null, $options);
+               if(isset($order['Result']) && $order['Result'] == $MoneyInpour::DELIVER) {
+                   $filters = array('_id' => $order['Userid']);
+                   $update  = array('$inc' => array('RoomCard' => $order['Quantity']));
+                   $options = array('new' => true);     
+                   $user    = Admin::model('user.main')->findAndModify($filters, $update);
+                   $status = $user===NULL? ($MoneyInpour::FAILURE) : ($MoneyInpour::SUCCESS);
+                   $filters = array(
+                       'Transid' => $out_trade_no,
+                       'Userid'  => $order['Userid'],
+                       'Result'  => $MoneyInpour::DELIVER
+                   );
+                   $update = array('Result' => $status);
+                   $MoneyInpour->update($filters, $update);
+
+                   if(isset($order['Rebate']) && $order['Rebate']>0 && isset($order['Parent'] && $order['Parent'] != '')) {
+                       $filters = array('Gameid' => $order['Parent']);
+                       $update  = array('$inc' => array('Balance' => $order['Rebate'])); 
+                       Admin::model('trader.main')->findAndModify($filters, $update);
+                   }
+
+                   $sign    = Config::GAME_SERVER_SIGN;
+                   $time    = time();
+                   $userid  = (string)$order['Userid'];
+                   $transid = (string)$order['Transid'];
+                   $kind    = intval($MoneyInpour::GOODS_TYPE_ROOMCARD);
+                   $count   = intval($order['Quantity']);
+                   $curcount= intval($user['RoomCard']);
+
+                   $key = md5($sign.$time.$userid.$transid.$kind.$count.$curcount);
+                   $data = array(
+                       'transid'   => $transid,
+                       'userid'    => $userid,
+                       'kind'      => $kind,
+                       'count'     => $count,
+                       'curcount'  => $curcount,
+                       'timestamp' => $time,
+                       'key'       => $key
+                   );
+                   Helper::curl(Config::GAME_SERVER_HOST, json_encode($data), 'POST');
+               }
+               echo 'success';
+            }      
+        }
+    }
 
     //苹果支付发货
     public function IAPNotifyAction() {
