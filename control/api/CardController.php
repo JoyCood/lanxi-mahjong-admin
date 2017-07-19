@@ -19,6 +19,10 @@ class CardController extends BaseController {
 
     //下单
     public function wxPayAction() {
+        $this->responseJSON(array(
+            'errcode' => 10000,
+            'errmsg'  => '暂未开通支付功能'
+        ));
         $userId    = trim($this->request->post('userId'));         
         $cardId    = trim($this->request->post('cardId'));
         $nonceStr  = trim($this->request->post('nonceStr'));

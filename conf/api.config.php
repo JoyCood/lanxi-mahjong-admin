@@ -28,8 +28,8 @@ class Config {
 
 	const RELEASE_NUMBER = 1;
     const BROADCAST_ENABLED    = TRUE; //是否显示公告栏跑马灯
-    const PHONE_LOGIN_ENABLED  = TRUE; //是否允许手机号登录
-    const PHONE_REG_ENABLED    = TRUE; //是否允许手机注册
+    const PHONE_LOGIN_ENABLED  = FALSE; //是否允许手机号登录
+    const PHONE_REG_ENABLED    = FALSE; //是否允许手机注册
     const BIND_TRADER_ENABLE   = TRUE; //是否打开绑定代理商弹窗 
 
     static function init() {
