@@ -7,6 +7,7 @@ require_once('lib/wxpay/WxPay.Notify.php');
 
 class CardController extends WechatController {
 
+    //通过微信公众号购买房卡
     public function wxPayAction() {
         if(!isset($_SESSION[self::MP_SESSION_OPENID]) || $_SESSION[self::MP_SESSION_OPENID]=='') {
             $baseURL = Config::get('core', 'lx.base.url');
@@ -23,7 +24,11 @@ class CardController extends WechatController {
         $filter = array('_id' => $userId);
         $user = Admin::model('user.main')->findOne($filter);
         if(!$user) {
-             $this->error('玩家不存在，请重新输入');
+            $this->error('玩家不存在，请重新输入');
+        }
+
+        if(Config::BIND_TRADER_ENABLE && empty($user['Build'])) {
+            $this->error('请绑定邀请码再购买房卡');    
         }
 
         //开启绑定代理商的时候购买房卡才给代理商提成
