@@ -89,6 +89,7 @@ class CardController extends WechatController {
         if(!$card) {
             $this->error('您选择的房卡不存在');
         }
+        //$userId = '10000';
         $filter = array('_id' => $_SESSION[Config::SESSION_UID]);
         $user = Admin::model('user.main')->findOne($filter);
         if(!$user) {
@@ -132,16 +133,26 @@ class CardController extends WechatController {
 		$request->setNotifyUrl($core['alipay.notify.url']);
 		$request->setReturnUrl($core['alipay.return.url']);
 		$bizcontent = array(
-		    'body' => $card['Title'],
-			'subject' => $card['Title'],
-			'out_trade_no' => $transId,
+		    'body'            => $card['Title'],
+			'subject'         => $card['Title'],
+			'out_trade_no'    => $transId,
 			'timeout_express' => $core['alipay.timeout.express'],
-			'total_amount' => $card['Money'],
-			'product_code' => 'QUICK_WAP_PAY'
+			'total_amount'    => $card['Money'],
+			'product_code'    => 'QUICK_WAP_PAY'
 		);
 		$request->setBizContent(json_encode($bizcontent));
 		echo $aop->pageExecute($request);
 	}
+
+    //从浏览器通过支付宝wap支付批发房卡
+    public function alipayCustomeRecargeAction() {
+        $filter = array('_id' => $_SESSION[Config::SESSION_UID]);
+        $userinfo = Admin::model('user.main')->findOne($filter);
+        $this->render('card/alipay-recharge.html', array(
+            'options'  => Config::getOptions('card'),
+            'userinfo' => $userinfo
+        ));
+    }
 
 	//代理商给玩家充房卡
 	public function customRechargeAction() {
@@ -165,16 +176,6 @@ class CardController extends WechatController {
         }
 
         $this->render('card/recharge.html', array(
-            'options'  => Config::getOptions('card'),
-            'userinfo' => $userinfo
-        ));
-    }
-
-    //从浏览器通过支付宝wap支付批发房卡
-    public function alipayCustomeRecargeAction() {
-        $filter = array('_id' => $_SESSION[Config::SESSION_UID]);
-        $userinfo = Admin::model('user.main')->findOne($filter);
-        $this->render('card/alipay-recharge.html', array(
             'options'  => Config::getOptions('card'),
             'userinfo' => $userinfo
         ));
