@@ -55,6 +55,12 @@ class CardController extends BaseController {
                 'errmsg'  => '找不到玩信息'
             ));
         }
+        if(Config::BIND_TRADER_ENABLE && empty($user['Build'])) {
+            $this->responseJSON(array(
+                'errcode' => 10003,
+                'errmsg'  => '请输入邀请码' 
+            ));
+        }
         if(Config::BIND_TRADER_ENABLE) {
             $rate = Config::get('core', 'lx.trader.rate');
             $rebate = $card['Money'] * $rate;
@@ -99,7 +105,7 @@ class CardController extends BaseController {
         if(!isset($prepay['prepay_id'])) {
             $this->log->debug(json_encode($prepay));
             $this->responseJSON(array(
-                'errcode' => 10003, 
+                'errcode' => 10004, 
                 'errmsg'  => '暂未开通支付功能，请联系客服'
             ));
         }
@@ -239,6 +245,14 @@ class CardController extends BaseController {
                 'errmsg'  => '找不到玩家信息'
             ));
         }
+        
+        if(Config::BIND_TRADER_ENABLE && empty($user['Build'])) {
+            $this->responseJSON(array(
+                'errcode' => 10003,
+                'errmsg'  => '请输入邀请码' 
+            ));
+        }
+
         if(Config::BIND_TRADER_ENABLE) {
             $rate   = Config::get('core', 'lx.trader.rate');
             $rebate = $card['Money'] * $rate;
@@ -292,7 +306,11 @@ class CardController extends BaseController {
 		);
 		$request->setBizContent(json_encode($bizcontent));
 		$response = $aop->sdkExecute($request);
-		echo htmlspecialchars($response);
+        $data = array(
+            'errcode' => 0,
+            'data'    => $response
+        );
+        $this->renderJSON($data);
 	}
 
     public function alipayNotifyAction() {
