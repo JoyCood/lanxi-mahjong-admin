@@ -167,7 +167,7 @@ class CardController extends WechatController {
             $filters = array(
                 'Transid' => $Transid,
                 'Userid'  => $_SESSION[Config::SESSION_UID],
-                'Paytype' => $MoneyInpour::WEIXIN_WAP 
+                'Paytype' => $MoneyInpour::ALIPAY_WAP 
             );
             $order = $MoneyInpour->findOne($filters); //订单存在,但不代表已支付，除非Result字段的值为0时代表支付成功并已发货
         }

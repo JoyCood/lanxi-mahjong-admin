@@ -138,14 +138,14 @@ class PlayerController extends BaseController {
             $params['accessToken'] = trim($params['accessToken']);
 			$userInfo = $this->getUserByToken($params['accessToken']);
         }
-        /*
+
         //日活跃用户统计
         Statistics::DAU($userInfo['openid']);
         //周活跃用户统计
         Statistics::WAU($userInfo['openid']);
         //月活跃用户统计
         Statistics::MAU($userInfo['openid']);
-         */
+
         $accessToken = $userInfo['access_token'];
 		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
 		$ip *= 1;
