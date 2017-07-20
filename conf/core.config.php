@@ -21,8 +21,8 @@ define('PRO_WX_NOTIFY_URL', PRO_BASE_URL. '/api/notify/wechat');
 define('DEV_ALIPAY_NOTIFY_URL', DEV_BASE_URL. '/api/notify/alipay');
 define('PRO_ALIPAY_NOTIFY_URL', PRO_BASE_URL. '/api/notify/alipay');
 
-define('DEV_ALIPAY_RETURN_URL', DEV_BASE_URL. '/region/card');
-define('PRO_ALIPAY_RETURN_URL', PRO_BASE_URL. '/region/card');
+define('DEV_ALIPAY_RETURN_URL', DEV_BASE_URL. '/region/alipay-result');
+define('PRO_ALIPAY_RETURN_URL', PRO_BASE_URL. '/region/alipay-result');
 
 return array(
     'lx.trader.rate'     => 0.5, //给代理商的返现比例
