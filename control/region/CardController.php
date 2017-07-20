@@ -144,6 +144,13 @@ class CardController extends WechatController {
 		echo $aop->pageExecute($request);
 	}
 
+    public function alipayResultAction() {
+		$aop  = new AopClient();
+        $core = Config::getOptions('core');	
+		$aop->alipayrsaPublicKey = $core['alipay.public.key'];
+		$result = $aop->rsaCheckV1($_GET, $core['alipay.public.key'], $core['alipay.sign.type']);
+	}
+
     //从浏览器通过支付宝wap支付批发房卡
     public function alipayCustomeRecargeAction() {
         $filter = array('_id' => $_SESSION[Config::SESSION_UID]);
