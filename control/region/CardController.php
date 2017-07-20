@@ -154,6 +154,29 @@ class CardController extends WechatController {
         ));
     }
 
+    //支付宝wap支付结果展示
+    public function alipayResultAction() {
+        $aop  = new AopClient();  
+        $core = Config::getOptions('core');
+        $aop->alipayrsaPublicKey = $core['alipay.public.key'];
+        $result = $aop->rsaCheckV1($_GET, $core['alipay.public.key'], $core['alipay.sign.type']);
+        $order = array();
+        if($result) { //签名校验正确通过
+            $Transid = trim($this->request->get('out_trade_no')); 
+            $MoneyInpour = Admin::model('money.inpour');
+            $filters = array(
+                'Transid' => $Transid,
+                'Userid'  => $_SESSION[Config::SESSION_UID],
+                'Paytype' => $MoneyInpour::WEIXIN_WAP 
+            );
+            $order = $MoneyInpour->findOne($filters); //订单存在,但不代表已支付，除非Result字段的值为0时代表支付成功并已发货
+        }
+        $this->render('card/alipay-result.html', array(
+            'order'  => $order,
+            'result' => ($result && !empty($order)) //支付结果:true成功，false失败
+        ));
+    }
+
 	//代理商给玩家充房卡
 	public function customRechargeAction() {
 		if($this->request->isGet()) {
