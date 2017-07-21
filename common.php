@@ -10,7 +10,6 @@ require('lib/ip/ip.php');
 require('helper/helper.php');
 require('helper/phone.php');
 require('src/admin.php');
-require('src/statistics.php');
 
 date_default_timezone_set('Asia/Shanghai');
 

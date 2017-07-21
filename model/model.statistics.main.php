@@ -1,24 +1,25 @@
-<?php
+<?php !defined('TANG_FENG') AND exit('Access Denied!');
 
-class Statistics {
-
+class ModelStatisticsMain {
     const NAME_DAU = 'DAU'; //日活用户
     const NAME_WAU = 'WAU'; //周活跃用户
     const NAME_MAU = 'MAU'; //月活跃用户数
     const NAME_DNU = 'DNU'; //当日注册用户数
     const NAME_DPU = 'DPU'; //日付费用户数
+    const NAME_MPU = 'MPU'; //月付费用户数
     const NAME_USER_COUNTER = 'USER_COUNTER'; //总用户数统计
 
-    public static function collection() {
-        return Admin::db('statics');
+    public function collection() {
+        return Admin::db('statistics');
     }
 
     //日活用户数统计(排重，当天注册并登录的用户未计算)
-    public static function DAU($openid) {
+    public function DAU($openid) {
         $filters = array('Wechat_uid' => $openid);
         $projection = array('Last_login_time'=>1);
         $user = Admin::model('user.main')->findOne($filters, $projection);
-        if(isset($user['Last_login_time']) && $user['Last_login_time']>0) {
+
+        if(!empty($user['Last_login_time'])) {
             $date1 = date('Ymd', $user['Last_login_time']); 
             $date2 = date('Ymd', time());
             if($date1 < $date2) {
@@ -34,17 +35,18 @@ class Statistics {
                     '$inc' => array('total' => 1)
                 );
                 $options = array('upsert' => true);
-                return self::collection()->findAndModify($filters, $update, null, $options);
+                return $this->collection()->findAndModify($filters, $update, null, $options);
             }
         }
         return false;
     } 
-    
+
     //周活跃用户(排重，当天注册并登录的用户未计算)
-    public static function WAU($openid) {
+    public function WAU($openid) {
         $filters = array('Wechat_uid' => $openid);
         $projection = array('Last_login_time' => $openid);
         $user = Admin::model('user.main')->findOne($filters, $projection);
+
         if(!empty($user['Last_login_time'])) {
             $date1 = date('Ymd', $user['Last_login_time']);
             $date2 = date('Ymd', time());
@@ -66,16 +68,17 @@ class Statistics {
                     )
                 );
                 $options = array('upsert' => true);
-                self::collection()->findAndModify($filters, $update, null, $options);
+                $this->collection()->findAndModify($filters, $update, null, $options);
             }
         }
     }
 
     //月活跃用户
-    public static function MAU($openid) {
+    public function MAU($openid) {
         $filters = array('Wechat_uid' => $openid);
         $projection = array('Last_login_time' => $openid);
         $user = Admin::model('user.main')->findOne($filters, $projection);
+
         if(!empty($user['Last_login_time'])) {
             $date1 = date('Ymd', $user['Last_login_time']);
             $date2 = date('Ymd', time());
@@ -97,13 +100,13 @@ class Statistics {
                     )
                 );
                 $options = array('upsert' => true);
-                self::collection()->findAndModify($filters, $update, null, $options);
+                $this->collection()->findAndModify($filters, $update, null, $options);
             }
         }
     }
 
     //日注册用户数统计
-    public static function DNU() {
+    public function DNU() {
         $filters = array(
             'name' => self::NAME_DNU,
             'date' => Helper::today()
@@ -118,11 +121,11 @@ class Statistics {
             )
         );
         $options = array('upsert' => true);
-        self::collection()->findAndModify($filters, $update, null, $options);
+        $this->collection()->findAndModify($filters, $update, null, $options);
     }
 
     //总用户数统计
-    public static function userCount() {
+    public function userCount() {
         $filters = array(
             'name' => self::NAME_USER_COUNTER
         ); 
@@ -132,17 +135,18 @@ class Statistics {
             )
         );
         $options = array('upsert' => true);
-        self::collection()->findAndModify($filters, $update, null, $options);
+        $this->collection()->findAndModify($filters, $update, null, $options);
     }
 
     //当天付费用户数(排重)
-    public static function DPU($userid) {
+    public function DPU($userid) {
+        $MoneyInpour = Admin::model('money.inpour');
         $filters = array(
             'Userid' => $userid,
-            'Result' => 0,
+            'Result' => $MoneyInpour::SUCCESS,
             'Transtime' => array('$gte' => Helper::today()),
         );
-        $order = Admin::db('money.inpour')->findOne($filters); 
+        $order = $MoneyInpour->findOne($filters); 
         if(!$order) { //用户今天没有付过费
             $filters = array(
                 'name' => self::NAME_DPU,
@@ -158,7 +162,38 @@ class Statistics {
                 )
             );
             $options = array('upsert' => true);
-            self::collection()->findAndModify($filters, $update, null, $options);
+            $this->collection()->findAndModify($filters, $update, null, $options);
+        }
+    }
+
+    //月付费用户数(排重)
+    public function MPU($userid) {
+        $MoneyInpour = Admin::model('money.inpour');
+        $date1 = Helper::today();
+        $date2 = strtotime(date('Ym01', $date1));
+
+        $filters = array(
+            'Userid' => $userid,
+            'Transtime' => array('$gte'=>$date2),
+            'Result' => $MoneyInpour::SUCCESS 
+        ); 
+        $count = $MoneyInpour->find($filters)->count();
+        if($count<2) {
+            $filters = array(
+                'name' => self::NAME_MPU,
+                'date' => $date2
+            );     
+            $update = array(
+                '$set' => array(
+                    'name' => self::NAME_MPU,
+                    'date' => $date2,
+                ),
+                '$inc' => array(
+                    'total' => 1
+                )
+            );
+            $options = array('upsert' => true);
+            $this->collection()->findAndModify($filters, $update, null, $options);
         }
     }
 }
