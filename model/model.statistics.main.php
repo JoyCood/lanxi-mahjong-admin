@@ -13,6 +13,18 @@ class ModelStatisticsMain {
         return Admin::db('statistics');
     }
 
+    public function find($filter, $projection=array()) {
+        return $this->collection()->find($filter, $projection);
+    }
+
+    public function findOne($filter, $projection=array()) {
+        return $this->collection()->findOne($filter, $projection);     
+    }
+
+    public function findAndModify($filter, $update, $projection=null, $options=array('new'=>true)) {
+        return $this->collection()->findAndModify($filter, $update, $projection, $options);
+    }
+
     //日活用户数统计(排重，当天注册并登录的用户未计算)
     public function DAU($openid) {
         $filters = array('Wechat_uid' => $openid);
@@ -35,7 +47,7 @@ class ModelStatisticsMain {
                     '$inc' => array('total' => 1)
                 );
                 $options = array('upsert' => true);
-                return $this->collection()->findAndModify($filters, $update, null, $options);
+                return $this->findAndModify($filters, $update, null, $options);
             }
         }
         return false;
@@ -68,7 +80,7 @@ class ModelStatisticsMain {
                     )
                 );
                 $options = array('upsert' => true);
-                $this->collection()->findAndModify($filters, $update, null, $options);
+                $this->findAndModify($filters, $update, null, $options);
             }
         }
     }
@@ -100,7 +112,7 @@ class ModelStatisticsMain {
                     )
                 );
                 $options = array('upsert' => true);
-                $this->collection()->findAndModify($filters, $update, null, $options);
+                $this->findAndModify($filters, $update, null, $options);
             }
         }
     }
@@ -121,7 +133,7 @@ class ModelStatisticsMain {
             )
         );
         $options = array('upsert' => true);
-        $this->collection()->findAndModify($filters, $update, null, $options);
+        $this->findAndModify($filters, $update, null, $options);
     }
 
     //总用户数统计
@@ -135,7 +147,7 @@ class ModelStatisticsMain {
             )
         );
         $options = array('upsert' => true);
-        $this->collection()->findAndModify($filters, $update, null, $options);
+        $this->findAndModify($filters, $update, null, $options);
     }
 
     //当天付费用户数(排重)
@@ -162,7 +174,7 @@ class ModelStatisticsMain {
                 )
             );
             $options = array('upsert' => true);
-            $this->collection()->findAndModify($filters, $update, null, $options);
+            $this->findAndModify($filters, $update, null, $options);
         }
     }
 
@@ -193,7 +205,7 @@ class ModelStatisticsMain {
                 )
             );
             $options = array('upsert' => true);
-            $this->collection()->findAndModify($filters, $update, null, $options);
+            $this->findAndModify($filters, $update, null, $options);
         }
     }
 }
