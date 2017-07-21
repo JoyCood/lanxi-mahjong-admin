@@ -205,6 +205,9 @@ class CardController extends BaseController {
 						'key'       => $key
 					);
 					Helper::curl(Config::GAME_SERVER_HOST, json_encode($data), 'POST');
+
+                    Admin::model('statistics.main')->DPU($userid); //日付费用户数
+                    Admin::model('statistics.main')->MPU($userid); //月付费用户数
 				}
             }
         }
@@ -372,6 +375,9 @@ class CardController extends BaseController {
                        'key'       => $key
                    );
                    Helper::curl(Config::GAME_SERVER_HOST, json_encode($data), 'POST');
+
+                   Admin::model('statistics.main')->DPU($userid); //日付费用户数
+                   Admin::model('statistics.main')->MPU($userid); //月付费用户数
                }
                echo 'success';
             }      
@@ -510,7 +516,11 @@ class CardController extends BaseController {
 			'NotifyRes' => $data,
 		);
         $MoneyInpour->insert($doc);
-		$response = array('errcode' => 0);
+
+        Admin::model('statistics.main')->DPU($userid); //日付费用户数
+        Admin::model('statistics.main')->MPU($userid); //月付费用户数
+        
+        $response = array('errcode' => 0);
 		$this->responseJSON($response);
     }
 }
