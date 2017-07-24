@@ -76,6 +76,9 @@ class Config
 					'/admin/user/form'   => 'GET::UserController::formAction',
 					'/admin/user/save'   => 'POST::UserController::formSaveAction',
 					'/admin/user/delete' => 'POST::UserController::deleteAction',
+
+                    //统计
+                    '/admin/stat/daily' => 'GET::StatisticsController::dailyDataAction',
             )
         );
     }
