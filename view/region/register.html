@@ -19,6 +19,7 @@
     <main class="app-main">
         <div>
             <form id="register-form" class="w">
+                {#
                 <div class="form-row">
                     <label class="form-label">游戏ID:*</label>
                     <input class="form-control" type="text" name="GameId" value="" placeholder="请输入游戏ID" autocomplete="off" app-required="on" />
@@ -27,6 +28,7 @@
                     <label class="form-label">微信号:*</label>
                     <input class="form-control" type="text" name="Wechat" value="" name="Nickname" placeholder="请输入微信号" autocomplete="off" app-required="on" />
                 </div>
+                #}
                 <div class="form-row">
                     <label class="form-label">手机号:*</label>
                     <input id="register-phone" class="form-control" type="tel" value="" name="Phone" placeholder="请输入手机号" autocomplete="off" app-required="on" />
@@ -51,6 +53,8 @@
                 <div class="form-action">
                     <button id="register-submit-btn" type="submit" class="btn btn-success form-control">注册</button>
                 </div>
+                <input type="hidden" name="GameId" value="{{ userinfo._id }}" />
+                <input type="hidden" name="Inviter" value="{{ inviter }}" />
             </form>
         </div>
     </main>

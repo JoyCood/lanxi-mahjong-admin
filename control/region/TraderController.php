@@ -76,9 +76,24 @@ class TraderController extends WechatController {
     //注册表单页面
     public function registerAction() {
         if($this->request->isGet()) {
-            $this->render('register.html', array(
-                'AuthCode' => Admin::model('auth.main')
-            ));
+            $url = Helper::requestURI();
+            $userinfo = $this->login($url);
+            if(isset($userinfo['unionid'])) {
+                $inviter = trim($this->request->get('inviter'));
+                $User = Admin::model('user.main');
+                $filter = array('Wechat_unionid'=>$userinfo['unionid']);
+                $userinfo = $User->findOne($filter);
+                if($userinfo) {
+                    $this->render('register.html', array(
+                        'inviter'  => $inviter,
+                        'userinfo' => $userinfo,
+                        'AuthCode' => Admin::model('auth.main')
+                    ));
+                } else { //非游戏玩家，跳到游戏下载页
+                    $baseURL = Config::get('core', 'lx.base.url'); 
+                    header("Location:{$baseURL}/wechat/download");
+                }
+            }
         } else if($this->request->isPost()) {
             $this->register();
         }
@@ -88,7 +103,7 @@ class TraderController extends WechatController {
     protected function register() {
         $Trader    = Admin::model('trader.main');
         $gameId    = trim($this->request->post('GameId'));
-        $wechat    = trim($this->request->post('Wechat'));
+        $inviter   = trim($this->request->post('Inviter'));
         $phone     = trim($this->request->post('Phone'));
         $code      = trim($this->request->post('Captcha')); 
         $password  = trim($this->request->post('Password'));
@@ -96,9 +111,6 @@ class TraderController extends WechatController {
 
         if(!$gameId) {
             $this->error('请填写游戏ID');
-        }
-        if(!$wechat) {
-            $this->error('请填写微信ID');
         }
         if(!$phone) {
             $this->error('请填写手机号');
@@ -119,16 +131,15 @@ class TraderController extends WechatController {
         if(!Phone::validation($phone)) {
             $this->error('请填写正确的手机号码');
         }
+        $User = Admin::model('user.main');
         $filters = array('_id' => $gameId);
-        $player  = Admin::model('user.main')->findOne($filters);
-        if(!$player) {
+        $user = $User->findOne($filters);
+        if(!$user) {
             $this->error('游戏ID不存在');
         }
         $AuthCode = Admin::model('auth.main');
         $filters  = array('Phone'=>$phone, 'Code'=>$code);
         $auth = $AuthCode->findOne($filters);
-        $debugData = array('auth'=>$auth);
-        $this->log->debug(json_encode($debugData));
         if(!$auth) {
             $this->error('验证码无效，请重新获取验证码', 10086);
         }
@@ -148,8 +159,7 @@ class TraderController extends WechatController {
         $doc = array(
             'Gameid'   => $gameId,
             'Phone'    => $phone,
-            'Nickname' => $player['Nickname'],
-            'Wechat'   => $wechat,
+            'Nickname' => $user['Nickname'],
             'Pwd'      => $Trader->password($password),
             'CIP'      => Admin::getRemoteIP(),
             'CTime'    => time(),
@@ -165,10 +175,24 @@ class TraderController extends WechatController {
         );
         $result = $Trader->insert($doc);
         if($result['ok']==1) {
-            Admin::model('user.main')->update(
-                array('_id' => $gameId),
-                array('IsTrader' => ModelUserMain::TRADER)
-            ); 
+            if(empty($user['Build']) && !empty($inviter)) { //没有绑定过任何人
+                $filters = array('Gameid' => $inviter);
+                $trader = $Trader->findOne($filters);
+                if($trader) { //邀请人真实存在
+                    $User->update(
+                        array('_id' => $gameId),
+                        array(
+                            'Build' => $inviter,
+                            'BuildTime' => time(),
+                            'IsTrader' => $User::TRADER
+                        )); 
+                }
+            } else {
+                $User->update(
+                    array('_id' => $gameId),
+                    array('IsTrader' => $User::TRADER)
+                ); 
+            }
         }
         $this->userLogin($gameId, $doc['Nickname']);
         $this->renderJSON((boolean)$result);
