@@ -1,0 +1,14 @@
+{% set TITLE="邀请玩家" %}
+{% extends "_base.html" %}
+{% block head %}
+{% endblock %}
+{% block body %}
+<div id="qrcode" style="width:150px; height:150px;"></div>
+    <script type="text/javascript">
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            width: 150,
+            height: 150
+        });
+        qrcode.makeCode("{{ gameURL }}");
+    </script>
+{% endblock %}

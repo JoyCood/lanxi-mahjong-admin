@@ -75,6 +75,7 @@ class Config
                         '/region/pwd',
                         '/region/wechatCR',
 						'/region/wxpay',
+                        '/region/invite/user',
                 ),
                 // 路径设置
                 'routes' => array(
@@ -97,6 +98,8 @@ class Config
                         '/region/alipayCR'            => 'GET::CardController::alipayCustomeRecargeAction', //通过浏览器批发房卡
 						'/region/alipay'              => 'POST::CardController::alipayAction',          //支付宝wap支付
                         '/region/alipay-result'       => 'GET::CardController::alipayResultAction',     //支付宝wap支付结果展示
+                        '/region/invite/user'         => 'GET::TraderController::inviteUserAction',     //邀请用户
+                        '/region/invite/trader'       => 'GET::TraderController::inviteTraderAction',   //邀请代理商
                 )
         );
     }

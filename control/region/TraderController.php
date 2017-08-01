@@ -310,6 +310,20 @@ class TraderController extends WechatController {
         ));
     }
 
+    public function inviteUserAction() {
+        $inviter = 10025;//$_SESSION[Config::SESSION_UID];
+        $baseURL = Config::get('core', 'lx.base.url');
+        $gameURL = "{$baseURL}/wechat/download?inviter={$inviter}";
+        $this->render('/trader/invite-user.html', array(
+            'gameURL' => $gameURL,    
+        ));
+    }
+
+    //邀请代理商
+    public function inviteTraderAction() {
+    
+    }
+
     public function agreementAction() {
         $this->render('agreement.html');
     }
