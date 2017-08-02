@@ -310,12 +310,39 @@ class TraderController extends WechatController {
         ));
     }
 
+    //邀请玩家
     public function inviteUserAction() {
         $inviter = 10025;//$_SESSION[Config::SESSION_UID];
         $baseURL = Config::get('core', 'lx.base.url');
         $gameURL = "{$baseURL}/wechat/download?inviter={$inviter}";
+        $timestamp = time();
+        $nonceStr = md5(Helper::mkrand()); 
+        $accessToken = $this->getAccessToken();
+        $accessToken = json_decode($accessToken, true);
+        $ticket = $this->getTicket($accessToken['access_token']);
+        $ticket = json_decode($ticket, true);
+        $ticket = $ticket['ticket'];
+        $url = "{$baseURL}/region/invite/user";
+        $data = array(
+            'noncestr' => $nonceStr,
+            'jsapi_ticket' => $ticket,
+            'timestamp' => $timestamp,
+            'url' => $url
+        );
+        ksort($data);
+        $signature = '';
+        foreach($data as $key=>$value) {
+            $signature .= "{$key}={$value}&"; 
+        }
+        $signature = trim($signature, '&');
+        $signature = sha1($signature);
         $this->render('/trader/invite-user.html', array(
-            'gameURL' => $gameURL,    
+            'gameURL'   => $gameURL,
+            'debug'     => DEBUG,    
+            'appid'     => Config::get('core', 'wx.mp.id'),
+            'timestamp' => $timestamp,
+            'nonceStr'  => $nonceStr,
+            'signature' => $signature
         ));
     }
 

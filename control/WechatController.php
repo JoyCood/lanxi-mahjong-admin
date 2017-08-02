@@ -8,7 +8,7 @@ class WechatController extends BaseController {
 	const MP_SESSION_REFRESH_TOKEN = 'mp_session_refresh_token';
 
 	const MP_BASE_URL = 'https://open.weixin.qq.com';
-	const MP_OAUTH2_URL = 'https://api.weixin.qq.com/sns';
+	const MP_API_URL = 'https://api.weixin.qq.com';
     
     protected function getAppId() {
         return Config::get('core', 'wx.mp.id');
@@ -16,6 +16,20 @@ class WechatController extends BaseController {
 
     protected function getAppSecret() {
         return Config::get('core', 'wx.mp.secret');
+    }
+
+    public function getAccessToken() {
+        $APPID = $this->getAppId();
+        $SECRET = $this->getAppSecret();
+        $URL = self::MP_API_URL; 
+        $api = "{$URL}/cgi-bin/token?grant_type=client_credential&appid={$APPID}&secret={$SECRET}";
+        return Helper::curl($api);
+    }
+
+    public function getTicket($accessToken) {
+        $URL = self::MP_API_URL; 
+        $api = "{$URL}/cgi-bin/ticket/getticket?access_token={$accessToken}&type=jsapi";
+        return Helper::curl($api);
     }
 
 	protected function getCode($redirect) {
@@ -26,25 +40,25 @@ class WechatController extends BaseController {
 		header("Location:{$url}");
 	}
 
-	protected function getAccessToken($code) {
+	protected function getAccessTokenByCode($code) {
 	    $APPID = $this->getAppId();
 		$SECRET = $this->getAppSecret();
-		$OAUTH2_URL = self::MP_OAUTH2_URL;
-		$url = "{$OAUTH2_URL}/oauth2/access_token?appid={$APPID}&secret={$SECRET}&code={$code}&grant_type=authorization_code";
+		$OAUTH2_URL = self::MP_API_URL;
+		$url = "{$OAUTH2_URL}/sns/oauth2/access_token?appid={$APPID}&secret={$SECRET}&code={$code}&grant_type=authorization_code";
 		return Helper::curl($url);
 	}
 
 	protected function freshToken($refreshToken) {
         $APPID = $this->getAppId();
 	    $SECRET = $this->getAppSecret();
-	    $OAUTH2_URL = self::MP_OAUTH2_URL;	
-		$url = "{$OAUTH2_URL}/oauth2/refresh_token?appid={$APPID}&grant_type=refresh_token&refresh_token={$refreshToken}";
+	    $OAUTH2_URL = self::MP_API_URL;	
+		$url = "{$OAUTH2_URL}/sns/oauth2/refresh_token?appid={$APPID}&grant_type=refresh_token&refresh_token={$refreshToken}";
 		return Helper::curl($url);
 	}
 
 	protected function getUserInfo($openid, $accessToken) {
-        $OAUTH2_URL = self::MP_OAUTH2_URL;
-	    $url = "{$OAUTH2_URL}/userinfo?access_token={$accessToken}&openid={$openid}&lang=zh_CN";	
+        $OAUTH2_URL = self::MP_API_URL;
+	    $url = "{$OAUTH2_URL}/sns/userinfo?access_token={$accessToken}&openid={$openid}&lang=zh_CN";	
 		return Helper::curl($url);
 	}
 
@@ -58,13 +72,10 @@ class WechatController extends BaseController {
 		if(isset($_SESSION[self::MP_SESSION_OPENID]) && isset($_SESSION[self::MP_SESSION_ACCESS_TOKEN])) {
 		    $userinfo = $this->getUserInfo($_SESSION[self::MP_SESSION_OPENID], $_SESSION[self::MP_SESSION_ACCESS_TOKEN]);
 			$userinfo = json_decode($userinfo, true);
-			//$data = array('from'=>'session', 'userinfo'=>$userinfo);
-			//$this->log->debug(json_encode($data));
 		}
 
 		if(!$userinfo) {
-		    $token = json_decode($this->getAccessToken($code), true);
-			$userinfo2 = array();
+		    $token = json_decode($this->getAccessTokenByCode($code), true);
 			if(!isset($token['errcode'])) {
 		        $userinfo = $this->getUserInfo($token['openid'], $token['access_token']);
 			    $userinfo = json_decode($userinfo, true);	
@@ -73,44 +84,18 @@ class WechatController extends BaseController {
 				$_SESSION[self::MP_SESSION_ACCESS_TOKEN] = $token['access_token'];
 				$_SESSION[self::MP_SESSION_REFRESH_TOKEN] = $token['refresh_token'];
             }
-            /*
-			$data = array(
-				'from'=>'token', 
-				'userinfo' => $userinfo,
-				'token' => $token,
-			);
-			$this->log->debug(json_encode($data));
-             */
 		}
 		if(isset($userinfo['errcode'])) {
-			$token2 = array();
-			$userinfo2 = array();
 		    if(in_array($userinfo['errcode'], array(40001, 40014, 42001))) {
-			    $token = json_decode($this->getAccessToken($code), true);
-				$token2 = $token;
+			    $token = json_decode($this->getAccessTokenByCode($code), true);
 				$userinfo = $this->getUserInfo($token['openid'], $token['access_token']);
 				$userinfo = json_decode($userinfo, true);
-				$userinfo2 = $userinfo;
 				$_SESSION[self::MP_SESSION_OPENID] = $token['openid'];
 				$_SESSION[self::MP_SESSION_UNIONID] = $token['unionid'];
 				$_SESSION[self::MP_SESSION_ACCESS_TOKEN] = $token['access_token'];
 				$_SESSION[self::MP_SESSION_REFRESH_TOKEN] = $token['refresh_token'];
 			}
-            /*
-			$data = array(
-				'from'=>'token_expire', 
-				'userinfo'=>$userinfo, 
-				'userinfo2' => $userinfo2,
-				'token'=>$token,
-				'token2' => $token2
-			);
-			$this->log->debug(json_encode($data));
-             */
 		}
-        /*
-	    $data = array('from'=>'final', 'userinfo'=>$userinfo);
-		$this->log->debug(json_encode($data));
-         */
         return $userinfo;
 	}
 
