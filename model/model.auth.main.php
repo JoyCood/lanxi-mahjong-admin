@@ -4,6 +4,7 @@ class ModelAuthMain
 {
 	const CHANNEL_PHONE = 1;
 	const CHANNEL_WEIXIN = 2;
+    const CHANNEL_MP = 3;
 
     const AUTHCODE_EXPIRE = 300; //验证码过期时间    
 
@@ -16,6 +17,8 @@ class ModelAuthMain
 		'Unionid',       #string
 		'Access_token',  #string
 		'Refresh_token', #string
+        'NonceStr',      #string
+        'Jsapi_ticket',  #string
     );
 
     public function collection() {

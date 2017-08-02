@@ -314,41 +314,84 @@ class TraderController extends WechatController {
     public function inviteUserAction() {
         $inviter = 10025;//$_SESSION[Config::SESSION_UID];
         $baseURL = Config::get('core', 'lx.base.url');
-        $gameURL = "{$baseURL}/wechat/download?inviter={$inviter}";
-        $timestamp = time();
-        $nonceStr = md5(Helper::mkrand()); 
-        $accessToken = $this->getAccessToken();
-        $accessToken = json_decode($accessToken, true);
-        $ticket = $this->getTicket($accessToken['access_token']);
-        $ticket = json_decode($ticket, true);
-        $ticket = $ticket['ticket'];
+        $link = "{$baseURL}/wechat/download?inviter={$inviter}";
         $url = "{$baseURL}/region/invite/user";
-        $data = array(
-            'noncestr' => $nonceStr,
-            'jsapi_ticket' => $ticket,
-            'timestamp' => $timestamp,
-            'url' => $url
-        );
-        ksort($data);
-        $signature = '';
-        foreach($data as $key=>$value) {
-            $signature .= "{$key}={$value}&"; 
-        }
-        $signature = trim($signature, '&');
-        $signature = sha1($signature);
+        $data = $this->makeSignature($url);
         $this->render('/trader/invite-user.html', array(
-            'gameURL'   => $gameURL,
-            'debug'     => DEBUG,    
-            'appid'     => Config::get('core', 'wx.mp.id'),
-            'timestamp' => $timestamp,
-            'nonceStr'  => $nonceStr,
-            'signature' => $signature
+            'link' => $link,
+            'data' => $data  
         ));
     }
 
     //邀请代理商
     public function inviteTraderAction() {
-    
+        $inviter = 20025; //$_SESSION[Config::SESSION_UID]
+        $baseURL = Config::get('core', 'lx.base.url');
+        $link    = "{$baseURL}/region/register?inviter={$inviter}";
+        $url     = "{$baseURL}/region/invite/trader";
+        $data    = $this->makeSignature($url);
+        $this->render('/trader/invite-trader.html', array(
+            'link' => $link,
+            'data' => $data
+        ));
+    }
+
+    //生成签名
+    protected function makeSignature($url) {
+        $timestamp = time(); 
+        $nonceStr  = md5(Helper::mkrand());
+        $Auth = Admin::model('auth.main');
+        $filters = array(
+            'Channel' => $Auth::CHANNEL_MP
+        );
+        $auth = $Auth->findOne($filters);
+        if(!$auth || ($timestamp-$auth['CTime']) > 7200) {
+            $accessToken = $this->getAccessToken();
+            $accessToken = json_decode($accessToken, true);
+            if(empty($accessToken['access_token'])) {
+                return;
+            }
+            $ticket = $this->getTicket($accessToken['access_token']);
+            $ticket = json_decode($ticket, true);
+            if(empty($ticket['ticket'])) {
+                return;
+            }
+            $data = array(
+                'Channel'       => $Auth::CHANNEL_MP,
+                'Phone'         => '',
+                'Code'          => '',
+                'CTime'         => $timestamp,
+                'Openid'        => '',
+                'Unionid'       => '',
+                'Access_token'  => '',
+                'Refresh_token' => '',
+                'NonceStr'      => $nonceStr,
+                'Jsapi_ticket'  => $ticket['ticket']
+            );
+            $options = array('new'=>true, 'upsert'=>true);
+            $auth = $Auth->findAndModify($filters, $data, null, $options);
+        }
+        $data = array(
+            'noncestr' => $auth['NonceStr'],
+            'jsapi_ticket' => $auth['Jsapi_ticket'],
+            'timestamp' => $auth['CTime'],
+            'url' => $url,
+        );
+        ksort($data);
+        $signature = '';
+        foreach($data as $key=>$value) {
+            $signature .= "{$key}={$value}&";
+        }
+        $signature = trim($signature, '&');
+        $signature = sha1($signature);
+        $data = array(
+            'debug'     => DEBUG,
+            'appid'     => Config::get('core', 'wx.mp.id'),
+            'timestamp' => $auth['CTime'],
+            'nonceStr'  => $auth['NonceStr'],
+            'signature' => $signature,
+        );
+        return $data;
     }
 
     public function agreementAction() {

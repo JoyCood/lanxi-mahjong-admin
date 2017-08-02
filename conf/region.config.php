@@ -76,6 +76,7 @@ class Config
                         '/region/wechatCR',
 						'/region/wxpay',
                         '/region/invite/user',
+                        '/region/invite/trader',
                 ),
                 // 路径设置
                 'routes' => array(

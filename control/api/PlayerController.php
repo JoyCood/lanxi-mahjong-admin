@@ -45,7 +45,9 @@ class PlayerController extends BaseController {
 			'Openid'        => $tokenInfo['openid'],
 			'Unionid'       => $tokenInfo['unionid'],
 			'Access_token'  => $tokenInfo['access_token'],
-			'Refresh_token' => $tokenInfo['refresh_token']
+            'Refresh_token' => $tokenInfo['refresh_token'],
+            'NonceStr'      => '',
+            'Jsapi_ticket'  => '',
 		);
 		$auth = $Auth->findOne($filters);
 		if(!$auth) {
@@ -65,8 +67,10 @@ class PlayerController extends BaseController {
 
 	//根据token获取用户信息
 	protected function getUserByToken($accessToken) {
-		$filters = array('Access_token' => $accessToken);
 		$Auth = Admin::model('auth.main');
+        $filters = array(
+            'Channel' => $Auth::CHANNEL_WEIXIN, 
+            'Access_token' => $accessToken);
 		$auth = $Auth->findOne($filters);
 	    if(!$auth) {
 			$data = array('errcode'=> 40014, 'errmsg'=> 'invalid access_token');

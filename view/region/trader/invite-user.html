@@ -1,4 +1,4 @@
-{% set TITLE="邀请玩家" %}
+{% set TITLE="发展玩家" %}
 {% extends "_base.html" %}
 {% block head %}
 {% endblock %}
@@ -9,14 +9,14 @@
             width: 150,
             height: 150
         });
-        qrcode.makeCode("{{ gameURL }}");
+        qrcode.makeCode("{{ link }}");
 
         wx.config({
-            debug: {{ debug }},
-            appId: "{{ appid }}",
-            timestamp: "{{ timestamp }}",
-            nonceStr: "{{ nonceStr }}",
-            signature: "{{ signature }}",
+            debug: {{ data.debug }},
+            appId: "{{ data.appid }}",
+            timestamp: "{{ data.timestamp }}",
+            nonceStr: "{{ data.nonceStr }}",
+            signature: "{{ data.signature }}",
             jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone']
         });
 
