@@ -69,7 +69,7 @@ $(document).ready(function() {
     $('#register-captcha-btn').on('click', function() {
         var btn = $(this);
         var txt = btn.text();
-        var sec = "{{constant('ModelAuthMain::AUTHCODE_EXPIRE')}}" * 1;
+        var sec = "{{authcode_expire}}" * 1;
         var num = $.trim($('#register-phone').val());
         if(num == '') {
             App.alert('请输入有效的手机号码');

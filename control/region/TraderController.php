@@ -83,10 +83,12 @@ class TraderController extends WechatController {
                 $User = Admin::model('user.main');
                 $filter = array('Wechat_unionid'=>$userinfo['unionid']);
                 $userinfo = $User->findOne($filter);
-                if($userinfo) {
+				if($userinfo) {
+					$Auth = Admin::model('auth.main');
                     $this->render('register.html', array(
                         'inviter'  => $inviter,
                         'userinfo' => $userinfo,
+                        'authcode_expire' => $Auth::AUTHCODE_EXPIRE
                     ));
                 } else { //非游戏玩家，跳到游戏下载页
                     $baseURL = Config::get('core', 'lx.base.url'); 
