@@ -6,15 +6,17 @@
 <img id="qrcode-logo" src="images/icon.png" style="position:absolute; widht:45px; height:45px; display:none;" />
 <div id="qrcode"></div>
     <script type="text/javascript">
-        $('#qrcode').qrcode({
-            text: '{{ link }}',
-            background: '#FFF',
-            radius: 0.5,
-            ecLevel: "H"
-        });
+        $(document).ready(function() {		
+				$('#qrcode').qrcode({
+					text: '{{ link }}',
+					background: '#FFF',
+					radius: 0.5,
+					ecLevel: "H"
+				});
 
-        var margin = ($('#qrcode').height() - $('#qrcode-logo').height()) / 2;
-		$('#qrcode-logo').css({"margin": margin, "display":"inline"});
+				var margin = ($('#qrcode').height() - $('#qrcode-logo').height()) / 2;
+				$('#qrcode-logo').css({"margin": margin, "display":"inline"});
+		});
 
         wx.config({
             debug: {{ data.debug }},
