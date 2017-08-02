@@ -87,7 +87,6 @@ class TraderController extends WechatController {
                     $this->render('register.html', array(
                         'inviter'  => $inviter,
                         'userinfo' => $userinfo,
-                        'AuthCode' => Admin::model('auth.main')
                     ));
                 } else { //非游戏玩家，跳到游戏下载页
                     $baseURL = Config::get('core', 'lx.base.url'); 
@@ -137,13 +136,13 @@ class TraderController extends WechatController {
         if(!$user) {
             $this->error('游戏ID不存在');
         }
-        $AuthCode = Admin::model('auth.main');
+        $Auth = Admin::model('auth.main');
         $filters  = array('Phone'=>$phone, 'Code'=>$code);
-        $auth = $AuthCode->findOne($filters);
+        $auth = $Auth->findOne($filters);
         if(!$auth) {
             $this->error('验证码无效，请重新获取验证码', 10086);
         }
-        if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
+        if(time()-$auth['CTime']>$Auth::AUTHCODE_EXPIRE) {
             $this->error('验证码已过期，请重新获取验证码', 10086);
         }
         $filters = array( 
@@ -209,7 +208,7 @@ class TraderController extends WechatController {
 
 	//重置密码
     public function resetPwdAction() {
-        $AuthCode = Admin::model('auth.main');
+        $Auth = Admin::model('auth.main');
 
 		if($this->request->isGet()) {
 			$this->render('pwd.html');	
@@ -227,11 +226,11 @@ class TraderController extends WechatController {
 			}
 
 			$filters = array('Phone' => $phone, 'Code' => $code);
-			$auth = $AuthCode->findOne($filters);
+			$auth = $Auth->findOne($filters);
 			if(!$auth) {
 				$this->error('验证码无效，请重新获取验证码', 10086);
 			}
-			if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
+			if(time()-$auth['CTime']>$Auth::AUTHCODE_EXPIRE) {
 				$this->error('验证码已过期，请重新获取验证码', 10086);
 			}
 		    
@@ -263,24 +262,31 @@ class TraderController extends WechatController {
             $this->error('请填写正确的手机号码');
         }
         $code = '';
-        $AuthCode = Admin::model('auth.main');
+        $Auth = Admin::model('auth.main');
         $filters = array('Phone' => $phone);
-        $auth = $AuthCode->findOne($filters);
+        $auth = $Auth->findOne($filters);
         if(!$auth) {
             $code = substr(mt_rand(), -6);
             $doc = array(
+				'Channel' => $Auth::CHANNEL_PHONE,
                 'Phone' => $phone,
                 'Code'  => $code,
-                'CTime' => time()
+				'CTime' => time(),
+			    'Openid' => '',
+				'Unionid' => '',
+				'Access_token' => '',
+				'Refresh_token' => '',
+				'NonceSTR' => '',
+				'Jsapi_ticket' => ''
             );
-            $AuthCode->insert($doc);
+            $Auth->insert($doc);
         }
 
-        if(time()-$auth['CTime']>$AuthCode::AUTHCODE_EXPIRE) {
+        if(time()-$auth['CTime']>$Auth::AUTHCODE_EXPIRE) {
             $code = substr(mt_rand(), -6);
             $auth['Code']  = $code;
             $auth['CTime'] = time();
-            $AuthCode->update($filters, $auth);
+            $Auth->update($filters, $auth);
         }
         $code = $code ? $code : $auth['Code'];
         $msg = "【兰溪雀神】您的验证码是{$code}";
