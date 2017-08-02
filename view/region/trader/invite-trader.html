@@ -6,11 +6,17 @@
 {% block body %}
 <div id="qrcode" style="width:150px; height:150px;"></div>
     <script type="text/javascript">
-        var qrcode = new QRCode(document.getElementById("qrcode"), {
-            width: 150,
-            height: 150
+        $('#qrcode').qrcode({
+            render: 'image',
+            width: 400,
+            height: 400,
+            color: '#000',
+            text: '{{ link }}',
+            bgColor: '#FFF',
+            radius: 0.5,
+            image: 'images/icon.jpeg',
+            //mode: 4
         });
-        qrcode.makeCode("{{ link }}");
 
         wx.config({
             debug: {{ data.debug }},
