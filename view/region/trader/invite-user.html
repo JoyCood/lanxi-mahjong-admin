@@ -3,19 +3,21 @@
 {% block head %}
 {% endblock %}
 {% block body %}
+<img id="qrcode-logo" src="images/icon.jpeg" style="display:none;" />
 <div id="qrcode"></div>
     <script type="text/javascript">
         $('#qrcode').qrcode({
             render: 'image',
-            width: 400,
-            height: 400,
+            width: 100,
+            height: 100,
+			mSize: 0.3,
             color: '#000',
             text: '{{ link }}',
             background: '#FFF',
             radius: 0.5,
             ecLevel: "H",
-            image: 'images/icon.jpeg',
-            //mode: 4
+            image: $('#qrcode-logo').get(0),
+            mode: 4
         });
 
         wx.config({

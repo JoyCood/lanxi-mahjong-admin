@@ -164,28 +164,28 @@ class ModelStatisticsMain {
                 'name' => self::NAME_DPU,
                 'date' => Helper::today()
             ); 
-            $update = array(
-                '$set' => array(
-                    'name' => self::NAME_DPU,
-                    'date' => Helper::today()
-                ),
-                '$inc' => array(
-                    'total' => 1
-                )
-            );
-            $options = array('upsert' => true);
-            $this->findAndModify($filters, $update, null, $options);
-        }
-    }
+			$update = array(
+'$set' => array(
+'name' => self::NAME_DPU,
+'date' => Helper::today()
+),
+'$inc' => array(
+'total' => 1
+)
+);
+$options = array('upsert' => true);
+$this->findAndModify($filters, $update, null, $options);
+}
+}
 
-    //月付费用户数(排重)
-    public function MPU($userid) {
-        $MoneyInpour = Admin::model('money.inpour');
-        $date1 = Helper::today();
-        $date2 = strtotime(date('Ym01', $date1));
+//月付费用户数(排重)
+public function MPU($userid) {
+$MoneyInpour = Admin::model('money.inpour');
+$date1 = Helper::today();
+$date2 = strtotime(date('Ym01', $date1));
 
-        $filters = array(
-            'Userid' => $userid,
+$filters = array(
+'Userid' => $userid,
             'Transtime' => array('$gte'=>$date2),
             'Result' => $MoneyInpour::SUCCESS 
         ); 

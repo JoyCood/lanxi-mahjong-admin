@@ -7,7 +7,7 @@ return array(
     ),
     'ios' => array(
         'version'  => '1.0.0',
-        'download' => 'https://itunes.apple.com/cn/app/兰溪雀神/id1227216207',
+        'download' => 'https://itunes.apple.com/app/id1227216207',
         'summary'  => '版本更新描述'
     ) 
 );
