@@ -320,12 +320,13 @@ class TraderController extends WechatController {
 
     //邀请玩家
     public function inviteUserAction() {
-        $inviter = 10025;//$_SESSION[Config::SESSION_UID];
+        $inviter = $_SESSION[Config::SESSION_UID];
         $baseURL = Config::get('core', 'lx.base.url');
         $link = "{$baseURL}/wechat/download?inviter={$inviter}";
         $url = "{$baseURL}/region/invite/user";
         $data = $this->makeSignature($url);
         $this->render('/trader/invite-user.html', array(
+            'baseURL' => $baseURL,
             'link' => $link,
             'data' => $data  
         ));
@@ -333,12 +334,13 @@ class TraderController extends WechatController {
 
     //邀请代理商
     public function inviteTraderAction() {
-        $inviter = 20025; //$_SESSION[Config::SESSION_UID]
+        $inviter = $_SESSION[Config::SESSION_UID];
         $baseURL = Config::get('core', 'lx.base.url');
         $link    = "{$baseURL}/region/register?inviter={$inviter}";
         $url     = "{$baseURL}/region/invite/trader";
         $data    = $this->makeSignature($url);
         $this->render('/trader/invite-trader.html', array(
+            'baseURL' => $baseURL,
             'link' => $link,
             'data' => $data
         ));
