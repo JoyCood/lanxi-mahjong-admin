@@ -402,6 +402,25 @@ class TraderController extends WechatController {
         return $data;
     }
 
+    public function userListAction() {
+        $pn = $this->request->get('pn');
+        $User = Admin::model('user.main');
+        
+        $filters = array(
+            'IsTrader' => $User::PLAYER, 
+            'Build'=>$_SESSION[Config::SESSION_UID]
+        );
+        $params = array(
+            'sort' => 'BuildTime',
+            'filters' => $filters,
+            'pn' => $pn
+        ); 
+        $data = $User->pagination($params);
+        $this->render('user/index.html', array(
+            'data' => $data,
+        ));
+    }
+
     public function agreementAction() {
         $this->render('agreement.html');
     }

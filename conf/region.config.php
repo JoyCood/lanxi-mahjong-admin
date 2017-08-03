@@ -75,8 +75,6 @@ class Config
                         '/region/pwd',
                         '/region/wechatCR',
 						'/region/wxpay',
-                        '/region/invite/user',
-                        '/region/invite/trader',
                 ),
                 // 路径设置
                 'routes' => array(
@@ -101,6 +99,7 @@ class Config
                         '/region/alipay-result'       => 'GET::CardController::alipayResultAction',     //支付宝wap支付结果展示
                         '/region/invite/user'         => 'GET::TraderController::inviteUserAction',     //邀请用户
                         '/region/invite/trader'       => 'GET::TraderController::inviteTraderAction',   //邀请代理商
+                        '/region/user/list'           => 'GET::TraderController::userListAction',       //我的玩家
                 )
         );
     }

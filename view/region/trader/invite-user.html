@@ -3,19 +3,84 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-<img id="qrcode-logo" src="images/icon.png" style="position:absolute; widht:45px; height:45px; display:none;" />
-<div id="qrcode"></div>
+
+<div style="position: relative; text-align: center; margin-top: 40px;">
+    <div id="qrcode" style="margin: 0 auto 40px; width: 280px; height: 280px;"></div>
+    <img id="qrcode-logo" src="images/icon.png" style="
+        position: absolute; top: 140px; left: 50%;
+        width:46px; height:46px; margin: -23px 0 0 -23px;
+    "/>
+    <button id="share-btn" type="button" style="
+        margin: 0 auto;
+        background-color: #449d44; color: #fff;
+        border-radius: 4px; border: 1px solid #4cae4c;
+        height: 44px; width: 280px;
+        font-size: 14px;
+    ">分享招募玩家</button>
+</div>
+<div id="share-layer" style="
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background-color: rgba(33, 33, 33, .6);
+    display: none;
+">
+    <style>
+        #share-layer>div {
+            position: absolute;
+            top: 60px; right: 20px;
+            width: 274px;
+            border: 3px dotted #fff; border-radius: 4px;
+            font-size: 14px; color: #fff;
+            padding: 0px;
+            background-color: rgba(33, 33, 33, .5);
+        }
+        #share-layer>div>p {
+            padding: 10px 20px;
+            line-height: 22px;
+        }
+        span.icon { 
+            float: left;
+            width: 44px; height: 44px; line-height: 44px;
+            background-color: #ccc;
+            background-size: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 4px;
+            margin: 0px 0 20px 20px;
+        }
+        span.arrow {
+            position: absolute; top: -32px; right: 0;
+            width: 44px; height: 44px;
+            background: url('images/arrow-top-right.png') center no-repeat;
+            background-size: 44px 44px;
+            transform: rotate(310deg);
+        }
+    </style>
+    <div>
+        <p>请点击右上角，选择“发送给朋友”或“分享到朋友圈”，然后点击发送。</p>
+        <div>
+            <span class="arrow"></span>
+            <span class="icon" style="background-image: url('images/to-friends.png');background-size: 68%; margin-left: 80px;"></span>
+            <span class="icon" style="background-image: url('images/to-circles.png');"></span>
+        </div>
+    </div>
+</div>
     <script type="text/javascript">
         $(document).ready(function() {		
 				$('#qrcode').qrcode({
+                    render: 'image',
 					text: '{{ link }}',
 					background: '#FFF',
 					radius: 0.5,
-					ecLevel: "H"
+					ecLevel: "H",
+                    size: 280
 				});
 
-				var margin = ($('#qrcode').height() - $('#qrcode-logo').height()) / 2;
-				$('#qrcode-logo').css({"margin": margin, "display":"inline"});
+				$('#qrcode-logo').show();
+
+                $('#share-btn').on('click', function() {
+                    $('#share-layer').show();
+                });
 		});
 
         wx.config({
@@ -32,7 +97,7 @@
             wx.onMenuShareTimeline({
                 title: '分享标题', //分享标题 
                 link: 'http://yiiyu.cn', //分享链接
-                imgUrl: '', //分享图标
+                imgUrl: $('#qrcode>img').attr('src'), //分享图标
                 success: function() {
                     // 用户确认分享后执行的回调函数 
                 },
@@ -43,8 +108,8 @@
 
             //分享给朋友
             wx.onMenuShareAppMessage({
-                title: 'title', //分享标题 
-                desc: 'desc', //分享描述
+                title: '快来赚钱啦', //分享标题 
+                desc: '今天赚了300块', //分享描述
                 link: 'http://yiiyu.cn', //分享连接
                 imgUrl: 'http://yiiyu.cn/log.png', //分享图标
                 type: 'link', //分享类型：music、video、link
@@ -103,3 +168,4 @@
         });
     </script>
 {% endblock %}
+
