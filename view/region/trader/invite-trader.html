@@ -4,9 +4,12 @@
 {% endblock %}
 {% block body %}
 
-<div style="text-align: center;">
-    <div id="qrcode" style="margin: 40px auto; width: 280px; height: 280px;"></div>
-    <img id="qrcode-logo" src="images/icon.png" style="widht:45px; height:45px; display:none;" />
+<div style="position: relative; text-align: center; margin-top: 40px;">
+    <div id="qrcode" style="margin: 0 auto 40px; width: 280px; height: 280px;"></div>
+    <img id="qrcode-logo" src="images/icon.png" style="
+        position: absolute; top: 140px; left: 50%;
+        width:46px; height:46px; margin: -23px 0 0 -23px;
+    "/>
     <button id="share-btn" type="button" style="
         margin: 0 auto;
         background-color: #449d44; color: #fff;
@@ -79,7 +82,7 @@
                     $('#share-layer').show();
                 });
 		});
-  
+
         wx.config({
             debug: {{ data.debug }},
             appId: "{{ data.appid }}",
