@@ -175,7 +175,8 @@ class PlayerController extends BaseController {
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
 	    $clientIp = Admin::getRemoteIP();
-        $result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $params['deviceId'], $params['deviceName']);
+        $codes = Maxmind::getCountryCode($clientIp);
+        $result = $this->apply_ip("1", $user['_id'], $clientIp, $codes['country_code'], $codes['city_code'], $params['deviceId'], $params['deviceName']);
 
         $user['time'] = $time;
         $user['serverIp'] = $result[0];

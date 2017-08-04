@@ -1,5 +1,5 @@
 <?php !defined('TANG_FENG') AND exit('Access Denied!');
-    
+
 class Helper
 {
     const ENCRYPT_METHOD = 'aes-256-cbc';
