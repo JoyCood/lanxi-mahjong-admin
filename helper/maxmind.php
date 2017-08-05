@@ -1,5 +1,5 @@
 <?php 
-require_once('lib/maxmindDB/vendor/autoload.php');
+//require_once('lib/maxmindDB/vendor/autoload.php');
 use MaxMind\Db\Reader;
 
 class Maxmind {
