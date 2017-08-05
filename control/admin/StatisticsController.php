@@ -35,14 +35,16 @@ class StatisticsController extends BaseController {
         $cursor = Admin::model('statistics.main')->find($filters, $projection)->sort($sort);
         foreach($cursor as $item) {
             $date = date('Ymd', $item['date']);
-            echo "{$date} - {$item['name']} = {$item['total']}</br>"; 
+           // echo "{$date} - {$item['name']} = {$item['total']}</br>"; 
         }
 
         //总用户数
         $filters = array('name' => $Statistics::NAME_USER_COUNTER);
         $projection = array('_id' => 0);
         $totalUser = $Statistics->findOne($filters, $projection);
-        print_r($totalUser);
+		$this->render('statistics/daily-user.html', array(
+		
+		));
     }
 
 }
