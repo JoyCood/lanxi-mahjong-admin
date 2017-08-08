@@ -16,11 +16,28 @@ class StatisticsController extends BaseController {
             $end = Helper::today();
             $end = date('Ymd 00:00:00', $end);
         }
-        $start = strtotime($start);
-        $end   = strtotime($end);
+        $start = new MongoDate(strtotime($start));
+        $end   = new MongoDate(strtotime($end));
         
+        $Statistics = Admin::model('statistics.main');
+        $filters = [
+            ['$match' => ['$and'=> [['Time'=> ['$gte'=>$start, '$lte'=>$end]]]]],
+            ['$group' => ['_id' => ['UserId'=>'$UserId','month'=> ['$month'=>'$Time'], 'day'=> ['$dayOfMonth'=>'$Time'], 'year'=> ['$year'=>'$Time']], 'count'=>['$sum'=>1]]],
+            //['$count' => 'count']
+        ];
+
+        $res = Admin::db('login_log')->aggregate($filters);
+        print_r($res);
+        exit();
         //每日基础数据()
         $filters = array(
+            'name' => array(
+                '$in' => array(
+                    $Statistics::NAME_DAU,
+                    $Statistics::NAME_DNU,
+                    $Statistics::NAME_DPU,
+                )
+            ),
             '$and' => array(
                 array(
                 'date' => array(
@@ -31,7 +48,6 @@ class StatisticsController extends BaseController {
         );
         $projection = array('_id'=>0);
         $sort = array('date' => -1);
-        $Statistics = Admin::model('statistics.main');
         $cursor = Admin::model('statistics.main')->find($filters, $projection)->sort($sort);
         foreach($cursor as $item) {
             $date = date('Ymd', $item['date']);
