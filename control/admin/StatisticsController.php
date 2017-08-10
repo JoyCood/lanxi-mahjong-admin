@@ -9,58 +9,69 @@ class StatisticsController extends BaseController {
         $end   = $this->request->post('end');
 
         if(empty($start)) {
-            $start = strtotime('-7 days');
-            $start = date('Ymd 00:00:00', $start);
+            $start = strtotime('-7 days midnight');
         }
         if(empty($end)) {
-            $end = Helper::today();
-            $end = date('Ymd 00:00:00', $end);
+            $end = strtotime('today midnight');
         }
-        $start = new MongoDate(strtotime($start));
-        $end   = new MongoDate(strtotime($end));
-        
-        $Statistics = Admin::model('statistics.main');
-        $filters = [
-            ['$match' => ['$and'=> [['Time'=> ['$gte'=>$start, '$lte'=>$end]]]]],
-            ['$group' => ['_id' => ['UserId'=>'$UserId','month'=> ['$month'=>'$Time'], 'day'=> ['$dayOfMonth'=>'$Time'], 'year'=> ['$year'=>'$Time']], 'count'=>['$sum'=>1]]],
-            //['$count' => 'count']
-        ];
-
-        $res = Admin::db('login_log')->aggregate($filters);
-        print_r($res);
-        exit();
-        //每日基础数据()
-        $filters = array(
-            'name' => array(
-                '$in' => array(
-                    $Statistics::NAME_DAU,
-                    $Statistics::NAME_DNU,
-                    $Statistics::NAME_DPU,
-                )
-            ),
-            '$and' => array(
-                array(
-                'date' => array(
-                    '$gte'=>$start,
-                    '$lte'=>$end
-                ))
-            )
-        );
-        $projection = array('_id'=>0);
-        $sort = array('date' => -1);
-        $cursor = Admin::model('statistics.main')->find($filters, $projection)->sort($sort);
-        foreach($cursor as $item) {
-            $date = date('Ymd', $item['date']);
-           // echo "{$date} - {$item['name']} = {$item['total']}</br>"; 
+        $tmpStart = $start;
+        $tmpEnd = $end;
+        $DAU = array();
+        $DNU = array();
+        while($tmpStart < $tmpEnd) {
+            $date = date('Y-m-d', $tmpStart);
+            $DAU[$date] = 0;
+            $DNU[$date] = 0;
+            $tmpStart = strtotime('+1 days', $tmpStart);
         }
 
-        //总用户数
-        $filters = array('name' => $Statistics::NAME_USER_COUNTER);
-        $projection = array('_id' => 0);
-        $totalUser = $Statistics->findOne($filters, $projection);
+        $DAU = array_merge($DAU, $this->DAU($start, $end));
+        $DNU = array_merge($DNU, $this->DNU($start, $end));
 		$this->render('statistics/daily-user.html', array(
 		
 		));
     }
+
+    protected function DAU($start, $end) {
+        $start = new MongoDate($start);
+        $end   = new MongoDate($end);
+        
+        $DAU = array();
+        $filters = [
+            ['$match' => ['$and'=> [['Time'=> ['$gte'=>$start, '$lte'=>$end]]]]],
+            ['$group' => ['_id' => ['date'=> ['$dateToString'=>['format'=>'%Y-%m-%d', 'date'=>'$Time']]], 'count'=>['$sum'=>1]]],
+        ];
+
+        $res = Admin::db('login_log')->aggregate($filters);
+        foreach($res['result'] as $item) {
+            $DAU[$item['_id']['date']] = $item['count'];
+        }
+        return $DAU;
+    }
+
+    protected function DNU($start, $end) {
+        $start = new MongoDate($start);
+        $end   = new MongoDate($end); 
+
+        $DNU = array();
+        $filters = [
+            ['$match' => ['$and'=> [['Time'=> ['$gte'=>$start, '$lte'=>$end]]]]],
+            ['$group' => ['_id' => ['date'=> ['$dateToString'=>['format'=>'%Y-%m-%d', 'date'=>'$Create_time']]], 'count'=>['$sum'=>1]]],
+        ];
+
+        $res = Admin::model('user.main')->collectioin()->aggregate($filters);
+        foreach($res['result'] as $item) {
+            $DNU[$item['_id']['date']] = $item['count'];
+        }
+        return $DNU;
+    }
+
+    protected function DPU($start, $end) {
+     
+    }
+
+    protected function WAU($start, $end) {
+    
+    } 
 
 }

@@ -6,7 +6,7 @@ class Maxmind {
     const DBFile = 'lib/maxmindDB/GeoLite2-City.mmdb';
     private static $maxmindDB;
 
-    static public function getCountryCode($ip) {
+    static public function getRegionCode($ip) {
         if(!is_object(self::$maxmindDB)) {
             self::$maxmindDB = new Reader(self::DBFile);
         } 
