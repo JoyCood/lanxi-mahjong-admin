@@ -143,10 +143,6 @@ class PlayerController extends BaseController {
 			$userInfo = $this->getUserByToken($params['accessToken']);
         }
 
-       // Admin::model('statistics.main')->DAU($userInfo['openid']); //日活跃用户统计 
-       // Admin::model('statistics.main')->WAU($userInfo['openid']); //周活跃用户统计
-       // Admin::model('statistics.main')->MAU($userInfo['openid']); //月活跃用户统计
-
         $accessToken = $userInfo['access_token'];
 		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
 		$ip *= 1;
