@@ -71,7 +71,6 @@ class StatisticsController extends BaseController {
     }
 
     protected function WAU($start, $end) {
-        //-----------------周----------------------
         $start = strtotime('-4 weeks midnight');
         $end   = strtotime('today midnight');
         $timestamp = $end - $start;
@@ -82,10 +81,6 @@ class StatisticsController extends BaseController {
         for($i=0; $i<$weeks; $i++) {
             $end2  = strtotime('+7 days', $start);
             $end3  = $end2 > $end ? $end : $end2;
-            echo date('Y-m-d H:i:s', $start);
-            echo "<br/>";
-            echo date('Y-m-d H:i:s', $end3);
-            echo "<br/>";
 
             $start2 = new MongoDate($start);
             $end4   = new MongoDate($end3);
@@ -95,5 +90,25 @@ class StatisticsController extends BaseController {
             $start = $end3;
         }
     } 
+
+    protected function MAU($start, $end) {
+        $start = strtotime('-4 months midnight');
+        $start = strtotime('first day of this month midnight', $start);
+        $end   = strtotime('first day of this month midnight');
+        $timestamp = $end - $start;
+        $months = floor($timestamp/(3600*24*30));
+        $client = new MongoClient();
+        $days = floor(4.5);
+        $collection = $client->selectCollection('lanxi_db', 'test');
+        for($i=0; $i<$months; $i++) {
+            date('Y-m-d H:i:s', $start);
+            $end2 = strtotime('first day of next month midnight', $start);
+            $start2 = new MongoDate($start);
+            $end3   = new MongoDate($end);
+            $filters = array('$and'=>array(array('Time'=>array('$gte'=>$start2, '$lt'=>$end3))));
+            $count = $collection->find($filters)->count();
+            $start = $end2;
+        }
+    }
 
 }
