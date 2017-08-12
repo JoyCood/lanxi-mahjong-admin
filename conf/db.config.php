@@ -17,5 +17,6 @@ return array(
 	    'agent_rebate_record', //提现记录
 		'sequence', //自增ID
         'statistics', //统计数据
+        'login_log',
     )
 );

@@ -143,10 +143,6 @@ class PlayerController extends BaseController {
 			$userInfo = $this->getUserByToken($params['accessToken']);
         }
 
-        Admin::model('statistics.main')->DAU($userInfo['openid']); //日活跃用户统计 
-        Admin::model('statistics.main')->WAU($userInfo['openid']); //周活跃用户统计
-        Admin::model('statistics.main')->MAU($userInfo['openid']); //月活跃用户统计
-
         $accessToken = $userInfo['access_token'];
 		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
 		$ip *= 1;
@@ -161,21 +157,20 @@ class PlayerController extends BaseController {
 			'Sex'             => $userInfo['sex'],
 			'Sign'            => '',
 			'Photo'           => (string)$userInfo['headimgurl'],
-			'Last_login_time' => time(),
+			'Last_login_time' => new MongoDate(time()),
 			'Last_Login_ip'   => $ip
 		));
 		$options = array('new' => true);
 		$user = $User->findAndModify($filters, $update, null, $options);
 	    if($user===null) {
 			$user = $this->registerAction($userInfo);
-            Admin::model('statistics.main')->DNU(); //日注册用户数统计
-            Admin::model('statistics.main')->userCount(); //总用户数统计
 		}
+        $user['Create_time'] = $user['Create_time']->sec;
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
 	    $clientIp = Admin::getRemoteIP();
-        $codes = Maxmind::getCountryCode($clientIp);
+        $codes = Maxmind::getRegionCode($clientIp);
         $result = $this->apply_ip("1", $user['_id'], $clientIp, $codes['country_code'], $codes['city_code'], $params['deviceId'], $params['deviceName']);
 
         $user['time'] = $time;
@@ -202,7 +197,7 @@ class PlayerController extends BaseController {
 			'Pwd'             => isset($userInfo['pwd'])? $userInfo['pwd'] : '',
 			'Birth'           => time(),	
 			'Create_ip'       => $ip, 
-			'Create_time'     => time(),
+			'Create_time'     => new MongoDate(time()),
 			'Coin'            => 0,
 			'Exp'             => 0,
 			'Diamond'         => 0,
@@ -231,7 +226,7 @@ class PlayerController extends BaseController {
 			'FyAccountId'     => '',
 			'FyAccountPwd'    => '',
 			'IsTrader'        => $User::PLAYER,
-			'Last_login_time' => time(),
+			'Last_login_time' => new MongoDate(time()),
 			'Last_Login_ip'   => $ip 	
 		);    
 		$User->insert($user);
@@ -388,12 +383,13 @@ class PlayerController extends BaseController {
             );
             $this->responseJSON($response);
         }
-        
+        $user['Create_time'] = $user['Create_time']->sec; 
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
 	    $clientIp = Admin::getRemoteIP();
-		$result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $deviceId, $deviceName);
+        $codes = Maxmind::getRegionCode($clientIp);
+		$result = $this->apply_ip("1", $user['_id'], $clientIp, $codes['country_code'], $codes['city_code'], $deviceId, $deviceName);
 
         $user['time'] = $time;
         $user['token'] = $token;
@@ -481,11 +477,13 @@ class PlayerController extends BaseController {
         );
         $user = $this->registerAction($userInfo);
 
+        $user['Create_time'] = $user['Create_time']->sec;
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
 	    $clientIp = Admin::getRemoteIP();
-		$result = $this->apply_ip("1", $user['_id'], $clientIp, "CN", "12", $deviceId, $deviceName);
+        $codes = Maxmind::getRegionCode($clientIp);
+		$result = $this->apply_ip("1", $user['_id'], $clientIp, $codes['country_code'], $codes['city_code'], $deviceId, $deviceName);
         
         $user['time']  = $time;
         $user['token'] = $token;
@@ -534,6 +532,21 @@ class PlayerController extends BaseController {
             'serverIp'    => "{$data['serverIp']}:" . Config::GAME_SERVER_PORT,
         );
         $this->responseJSON($userData);
+    }
+
+    private function updateDate() {
+        $User = Admin::model('user.main');
+        $filters = array('Wechat_unionid'=>array('$ne'=>'', '$exists'=>true));     
+        $projection = array('Create_time'=>1, 'Last_login_time'=>1);
+        $cursor = $User->find($filters, $projection);
+        foreach($cursor as $item) {
+            $filters = array('_id'=>$item['_id']);
+            $update = array(
+                'Create_time' =>new MongoDate($item['Create_time']),
+                'Last_login_time'=> new MongoDate($item['Last_login_time'])
+            ); 
+            $User->update($filters, $update);
+        }
     }
 
 }

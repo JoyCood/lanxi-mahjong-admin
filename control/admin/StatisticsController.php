@@ -9,48 +9,108 @@ class StatisticsController extends BaseController {
         $end   = $this->request->post('end');
 
         if(empty($start)) {
-            $start = strtotime('-7 days');
-            $start = date('Ymd 00:00:00', $start);
+            $start = strtotime('-7 days midnight');
         }
         if(empty($end)) {
-            $end = Helper::today();
-            $end = date('Ymd 00:00:00', $end);
+            $end = strtotime('today midnight');
         }
-        $start = strtotime($start);
-        $end   = strtotime($end);
-        
-        //每日基础数据()
-        $filters = array(
-			'name' => array('$in'=>array('DAU', 'DNU')),
-            '$and' => array(
-                array(
-                'date' => array(
-                    '$gte'=>$start,
-                    '$lte'=>$end
-                ))
-            )
-        );
-        $projection = array('_id'=>0);
-        $sort = array('date' => -1);
-        $Statistics = Admin::model('statistics.main');
-        $cursor = Admin::model('statistics.main')->find($filters, $projection)->sort($sort);
-		$data = array();
-		$dates = array();
-        foreach($cursor as $item) {
-            $date = date('n-d', $item['date']);
-			$data[$item['name']][$date] = $item['total'];
-			$dates[] = $date;
+        $tmpStart = $start;
+        $tmpEnd = $end;
+        $DAU = array();
+        $DNU = array();
+        while($tmpStart < $tmpEnd) {
+            $date = date('Y-m-d', $tmpStart);
+            $DAU[$date] = 0;
+            $DNU[$date] = 0;
+            $tmpStart = strtotime('+1 days', $tmpStart);
         }
 		print_r($data);
 
-        //总用户数
-        $filters = array('name' => $Statistics::NAME_USER_COUNTER);
-        $projection = array('_id' => 0);
-        $totalUser = $Statistics->findOne($filters, $projection);
+        $DAU = array_merge($DAU, $this->DAU($start, $end));
+        $DNU = array_merge($DNU, $this->DNU($start, $end));
 		$this->render('statistics/daily-user.html', array(
 			'data'  => $data,
 	        'dates' => array_unique($dates)	
 		));
+    }
+
+    protected function DAU($start, $end) {
+        $start = new MongoDate($start);
+        $end   = new MongoDate($end);
+        
+        $DAU = array();
+        $filters = [
+            ['$match' => ['$and'=> [['Time'=> ['$gte'=>$start, '$lte'=>$end]]]]],
+            ['$group' => ['_id' => ['date'=> ['$dateToString'=>['format'=>'%Y-%m-%d', 'date'=>'$Time']]], 'count'=>['$sum'=>1]]],
+        ];
+
+        $res = Admin::db('login_log')->aggregate($filters);
+        foreach($res['result'] as $item) {
+            $DAU[$item['_id']['date']] = $item['count'];
+        }
+        return $DAU;
+    }
+
+    protected function DNU($start, $end) {
+        $start = new MongoDate($start);
+        $end   = new MongoDate($end); 
+
+        $DNU = array();
+        $filters = [
+            ['$match' => ['$and'=> [['Time'=> ['$gte'=>$start, '$lte'=>$end]]]]],
+            ['$group' => ['_id' => ['date'=> ['$dateToString'=>['format'=>'%Y-%m-%d', 'date'=>'$Create_time']]], 'count'=>['$sum'=>1]]],
+        ];
+
+        $res = Admin::model('user.main')->collectioin()->aggregate($filters);
+        foreach($res['result'] as $item) {
+            $DNU[$item['_id']['date']] = $item['count'];
+        }
+        return $DNU;
+    }
+
+    protected function DPU($start, $end) {
+     
+    }
+
+    protected function WAU($start, $end) {
+        $start = strtotime('-4 weeks midnight');
+        $end   = strtotime('today midnight');
+        $timestamp = $end - $start;
+        $days = $timestamp/(3600*24);
+        $weeks = ceil($days/7);
+        $client = new MongoClient();
+        $colleciton = $client->selectCollection('lanxi_db', 'test');
+        for($i=0; $i<$weeks; $i++) {
+            $end2  = strtotime('+7 days', $start);
+            $end3  = $end2 > $end ? $end : $end2;
+
+            $start2 = new MongoDate($start);
+            $end4   = new MongoDate($end3);
+            $filters = array('$and'=>array(array('Time'=>array('$gte'=>$start2, '$lt'=>$end4))));
+            $count = $colleciton->find($filters, array('_id'=>1))->count(); 
+            echo "{$count}<br/>";
+            $start = $end3;
+        }
+    } 
+
+    protected function MAU($start, $end) {
+        $start = strtotime('-4 months midnight');
+        $start = strtotime('first day of this month midnight', $start);
+        $end   = strtotime('first day of this month midnight');
+        $timestamp = $end - $start;
+        $months = floor($timestamp/(3600*24*30));
+        $client = new MongoClient();
+        $days = floor(4.5);
+        $collection = $client->selectCollection('lanxi_db', 'test');
+        for($i=0; $i<$months; $i++) {
+            date('Y-m-d H:i:s', $start);
+            $end2 = strtotime('first day of next month midnight', $start);
+            $start2 = new MongoDate($start);
+            $end3   = new MongoDate($end);
+            $filters = array('$and'=>array(array('Time'=>array('$gte'=>$start2, '$lt'=>$end3))));
+            $count = $collection->find($filters)->count();
+            $start = $end2;
+        }
     }
 
 }
