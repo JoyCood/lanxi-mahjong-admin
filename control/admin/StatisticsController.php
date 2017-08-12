@@ -21,6 +21,7 @@ class StatisticsController extends BaseController {
         
         //每日基础数据()
         $filters = array(
+			'name' => array('$in'=>array('DAU', 'DNU')),
             '$and' => array(
                 array(
                 'date' => array(
@@ -33,17 +34,22 @@ class StatisticsController extends BaseController {
         $sort = array('date' => -1);
         $Statistics = Admin::model('statistics.main');
         $cursor = Admin::model('statistics.main')->find($filters, $projection)->sort($sort);
+		$data = array();
+		$dates = array();
         foreach($cursor as $item) {
-            $date = date('Ymd', $item['date']);
-           // echo "{$date} - {$item['name']} = {$item['total']}</br>"; 
+            $date = date('n-d', $item['date']);
+			$data[$item['name']][$date] = $item['total'];
+			$dates[] = $date;
         }
+		print_r($data);
 
         //总用户数
         $filters = array('name' => $Statistics::NAME_USER_COUNTER);
         $projection = array('_id' => 0);
         $totalUser = $Statistics->findOne($filters, $projection);
 		$this->render('statistics/daily-user.html', array(
-		
+			'data'  => $data,
+	        'dates' => array_unique($dates)	
 		));
     }
 
