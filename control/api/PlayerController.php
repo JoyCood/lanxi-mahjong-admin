@@ -165,7 +165,7 @@ class PlayerController extends BaseController {
 	    if($user===null) {
 			$user = $this->registerAction($userInfo);
 		}
-        $user['Create_time'] = $user['Create_time']->sec;
+        $user['Create_time'] = is_object($user['Create_time'])? $user['Create_time']->sec : $user['Create_time'];
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
@@ -383,7 +383,7 @@ class PlayerController extends BaseController {
             );
             $this->responseJSON($response);
         }
-        $user['Create_time'] = $user['Create_time']->sec; 
+        $user['Create_time'] = is_object($user['Create_time'])? $user['Create_time']->sec : $user['Create_time']; 
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
@@ -477,7 +477,7 @@ class PlayerController extends BaseController {
         );
         $user = $this->registerAction($userInfo);
 
-        $user['Create_time'] = $user['Create_time']->sec;
+        $user['Create_time'] = is_object($user['Create_time'])? $user['Create_time']->sec : $user['Create_time'];
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
@@ -542,7 +542,7 @@ class PlayerController extends BaseController {
         foreach($cursor as $item) {
             $filters = array('_id'=>$item['_id']);
             $update = array(
-                'Create_time' =>new MongoDate($item['Create_time']),
+                'Create_time' => new MongoDate($item['Create_time']),
                 'Last_login_time'=> new MongoDate($item['Last_login_time'])
             ); 
             $User->update($filters, $update);
