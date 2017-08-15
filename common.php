@@ -6,7 +6,6 @@ define('BASE_URL', DOC_DIR == DIRECTORY_SEPARATOR? '' : DOC_DIR);
 define('LIB_DIR', dirname(__FILE__).'/lib/');
 
 require('lib/Slim/Slim.php');
-require('lib/ip/ip.php');
 require('helper/helper.php');
 require('helper/phone.php');
 require('src/admin.php');

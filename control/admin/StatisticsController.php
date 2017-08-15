@@ -3,7 +3,6 @@ require(DOC_ROOT. '/control/BaseController.php');
 
 class StatisticsController extends BaseController {
 
-    //每日基础数据
     public function dailyDataAction() {
         $start = $this->request->post('start'); 
         $end   = $this->request->post('end');
@@ -29,8 +28,13 @@ class StatisticsController extends BaseController {
         $DAU = array_merge($DAU, $this->DAU($start, $end));
         $DNU = array_merge($DNU, $this->DNU($start, $end));
 		$this->render('statistics/daily-user.html', array(
+<<<<<<< HEAD
 			'data'  => $data,
 	        'dates' => array_unique($dates)	
+=======
+	        'DAU' => $DAU,
+            'DNU' => $DNU,    
+>>>>>>> 3145df073a8c0403f0726a702cfd646c999f0dc6
 		));
     }
 
@@ -40,7 +44,7 @@ class StatisticsController extends BaseController {
         
         $DAU = array();
         $filters = [
-            ['$match' => ['$and'=> [['Time'=> ['$gte'=>$start, '$lte'=>$end]]]]],
+            ['$match' => ['$and'=> [['Time'=> ['$gt'=>$start, '$lt'=>$end]]]]],
             ['$group' => ['_id' => ['date'=> ['$dateToString'=>['format'=>'%Y-%m-%d', 'date'=>'$Time']]], 'count'=>['$sum'=>1]]],
         ];
 
@@ -57,11 +61,11 @@ class StatisticsController extends BaseController {
 
         $DNU = array();
         $filters = [
-            ['$match' => ['$and'=> [['Time'=> ['$gte'=>$start, '$lte'=>$end]]]]],
+            ['$match' => ['$and'=> [['Create_time'=> ['$gt'=>$start, '$lt'=>$end]]]]],
             ['$group' => ['_id' => ['date'=> ['$dateToString'=>['format'=>'%Y-%m-%d', 'date'=>'$Create_time']]], 'count'=>['$sum'=>1]]],
         ];
 
-        $res = Admin::model('user.main')->collectioin()->aggregate($filters);
+        $res = Admin::model('user.main')->collection()->aggregate($filters);
         foreach($res['result'] as $item) {
             $DNU[$item['_id']['date']] = $item['count'];
         }

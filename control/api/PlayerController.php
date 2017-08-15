@@ -144,7 +144,8 @@ class PlayerController extends BaseController {
         }
 
         $accessToken = $userInfo['access_token'];
-		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
+        $ips = explode(',', Admin::getRemoteIP());
+		$ip = sprintf('%u', ip2long($ips[0]));
 		$ip *= 1;
 		$User = Admin::model('user.main');
 
@@ -165,13 +166,13 @@ class PlayerController extends BaseController {
 	    if($user===null) {
 			$user = $this->registerAction($userInfo);
 		}
-        $user['Create_time'] = $user['Create_time']->sec;
+        $user['Create_time'] = is_object($user['Create_time'])? $user['Create_time']->sec : $user['Create_time'];
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
-	    $clientIp = Admin::getRemoteIP();
-        $codes = Maxmind::getRegionCode($clientIp);
-        $result = $this->apply_ip("1", $user['_id'], $clientIp, $codes['country_code'], $codes['city_code'], $params['deviceId'], $params['deviceName']);
+	    $ips = explode(',', Admin::getRemoteIP());
+        $codes = Maxmind::getRegionCode($ips[0]);
+        $result = $this->apply_ip("1", $user['_id'], $ips[0], $codes['country_code'], $codes['city_code'], $params['deviceId'], $params['deviceName']);
 
         $user['time'] = $time;
         $user['serverIp'] = $result[0];
@@ -182,7 +183,8 @@ class PlayerController extends BaseController {
 
 	//注册
 	protected function registerAction($userInfo) {
-		$ip = sprintf('%u', ip2long(Admin::getRemoteIP()));
+        $ips = explode(',', Admin::getRemoteIP());
+		$ip = sprintf('%u', ip2long($ips[0]));
 		$ip *= 1;
 		$id = (string)Admin::model('sequence.main')->nextSequence('userId');	
 		$User = Admin::model('user.main');
@@ -382,13 +384,13 @@ class PlayerController extends BaseController {
             );
             $this->responseJSON($response);
         }
-        $user['Create_time'] = is_object($user['Create_time'])? $user['Create_time']->sec: $user['Create_time']; 
+        $user['Create_time'] = is_object($user['Create_time'])? $user['Create_time']->sec : $user['Create_time']; 
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
-	    $clientIp = Admin::getRemoteIP();
-        $codes = Maxmind::getRegionCode($clientIp);
-		$result = $this->apply_ip("1", $user['_id'], $clientIp, $codes['country_code'], $codes['city_code'], $deviceId, $deviceName);
+	    $ips = explode(',', Admin::getRemoteIP());
+        $codes = Maxmind::getRegionCode($ips[0]);
+		$result = $this->apply_ip("1", $user['_id'], $ips[0], $codes['country_code'], $codes['city_code'], $deviceId, $deviceName);
 
         $user['time'] = $time;
         $user['token'] = $token;
@@ -476,13 +478,13 @@ class PlayerController extends BaseController {
         );
         $user = $this->registerAction($userInfo);
 
-        $user['Create_time'] = $user['Create_time']->sec;
+        $user['Create_time'] = is_object($user['Create_time'])? $user['Create_time']->sec : $user['Create_time'];
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
-	    $clientIp = Admin::getRemoteIP();
-        $codes = Maxmind::getRegionCode($clientIp);
-		$result = $this->apply_ip("1", $user['_id'], $clientIp, $codes['country_code'], $codes['city_code'], $deviceId, $deviceName);
+        $ips = explode(',', Admin::getRemoteIP());
+        $codes = Maxmind::getRegionCode($ips[0]);
+		$result = $this->apply_ip("1", $user['_id'], $ips[0], $codes['country_code'], $codes['city_code'], $deviceId, $deviceName);
         
         $user['time']  = $time;
         $user['token'] = $token;
@@ -540,9 +542,12 @@ class PlayerController extends BaseController {
         $projection = array('Create_time'=>1, 'Last_login_time'=>1);
         $cursor = $User->find($filters, $projection);
         foreach($cursor as $item) {
+            if(is_object($item['Create_time']) || is_object($item['Last_login_time'])) {
+                continue;
+            }
             $filters = array('_id'=>$item['_id']);
             $update = array(
-                'Create_time' =>new MongoDate($item['Create_time']),
+                'Create_time' => new MongoDate($item['Create_time']),
                 'Last_login_time'=> new MongoDate($item['Last_login_time'])
             ); 
             $User->update($filters, $update);
