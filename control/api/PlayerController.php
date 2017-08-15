@@ -542,6 +542,9 @@ class PlayerController extends BaseController {
         $projection = array('Create_time'=>1, 'Last_login_time'=>1);
         $cursor = $User->find($filters, $projection);
         foreach($cursor as $item) {
+            if(is_object($item['Create_time']) || is_object($item['Last_login_time'])) {
+                continue;
+            }
             $filters = array('_id'=>$item['_id']);
             $update = array(
                 'Create_time' => new MongoDate($item['Create_time']),
