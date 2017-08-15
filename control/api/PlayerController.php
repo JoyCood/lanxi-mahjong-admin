@@ -365,7 +365,6 @@ class PlayerController extends BaseController {
 			);
 			$this->responseJSON($response);
 		}
-
         $User = Admin::model('user.main');
         $filters = array('Phone' => $phone);
         $user = $User->findOne($filters);
@@ -383,7 +382,7 @@ class PlayerController extends BaseController {
             );
             $this->responseJSON($response);
         }
-        $user['Create_time'] = $user['Create_time']->sec; 
+        $user['Create_time'] = is_object($user['Create_time'])? $user['Create_time']->sec: $user['Create_time']; 
 		$time = time();
 		$sign = Config::GAME_SERVER_SIGN;
 		$token = md5("{$sign}{$user['_id']}{$time}{$user['Create_time']}");
@@ -531,6 +530,7 @@ class PlayerController extends BaseController {
             'timestamp'   => $data['time'],
             'serverIp'    => "{$data['serverIp']}:" . Config::GAME_SERVER_PORT,
         );
+		$this->log->debug(json_encode($userData));
         $this->responseJSON($userData);
     }
 
