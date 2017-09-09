@@ -23,18 +23,12 @@ class StatisticsController extends BaseController {
             $DNU[$date] = 0;
             $tmpStart = strtotime('+1 days', $tmpStart);
         }
-		print_r($data);
-
         $DAU = array_merge($DAU, $this->DAU($start, $end));
         $DNU = array_merge($DNU, $this->DNU($start, $end));
+
 		$this->render('statistics/daily-user.html', array(
-<<<<<<< HEAD
-			'data'  => $data,
-	        'dates' => array_unique($dates)	
-=======
 	        'DAU' => $DAU,
             'DNU' => $DNU,    
->>>>>>> 3145df073a8c0403f0726a702cfd646c999f0dc6
 		));
     }
 

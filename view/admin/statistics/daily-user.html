@@ -35,15 +35,14 @@ option = {
     xAxis:  {
         type: 'category',
         boundaryGap: false,
-<<<<<<< HEAD
-        data: ['7-08','7-09','7-10','7-11','7-12','7-13','7-14']
-=======
         data: [
+			
                 {% for date, num in DAU %}
-                    {{ date }} {% if loop.last == false %},{% endif %}
+                    '{{ date }}' {% if loop.last == false %},{% endif %}
                 {% endfor %}
+				
+			
         ]    
->>>>>>> 3145df073a8c0403f0726a702cfd646c999f0dc6
     },
     yAxis: {
         type: 'value',
