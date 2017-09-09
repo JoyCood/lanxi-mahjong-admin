@@ -532,7 +532,6 @@ class PlayerController extends BaseController {
             'timestamp'   => $data['time'],
             'serverIp'    => "{$data['serverIp']}:" . Config::GAME_SERVER_PORT,
         );
-		$this->log->debug(json_encode($userData));
         $this->responseJSON($userData);
     }
 

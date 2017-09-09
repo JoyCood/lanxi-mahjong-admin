@@ -36,7 +36,7 @@ class NoticeController extends AdminBaseController{
 
     // 创建或更新公告
     public function formSaveAction() {
-        $id  = $this->request->post('id', '');
+        $id  = $this->request->post('Id', '');
         $doc = array(
             'Title'   => trim($this->request->post('Title')),
             'Content' => trim($this->request->post('Content')),
@@ -63,6 +63,7 @@ class NoticeController extends AdminBaseController{
             }
         } else {
             $rs = $Notice->update($doc, $id);
+			$doc['Id'] = $id;
         }
 
         $this->renderJSON(array(
