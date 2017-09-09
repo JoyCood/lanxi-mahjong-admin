@@ -74,7 +74,7 @@ class NoticeController extends AdminBaseController{
 
     // 删除公告
     public function deleteAction() {
-        $Notice = Admin::model('notice.main');
+		$Notice = Admin::model('notice.main');
         $items  = array($this->request->post('Id'));
         $result = $Notice->deleteById($items);	
 
